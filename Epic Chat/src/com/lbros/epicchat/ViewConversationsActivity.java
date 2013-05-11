@@ -83,7 +83,6 @@ public class ViewConversationsActivity extends FragmentActivity {
 		//Set up the action bar
 		actionBar = getActionBar();
 		actionBar.setDisplayHomeAsUpEnabled(true);
-		actionBar.setBackgroundDrawable(new ColorDrawable(0xFF33B5E5));
 		
 		conversationFragments = new Vector<ViewConversationFragment>();
 		

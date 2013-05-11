@@ -283,7 +283,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 				
 				//Download the image for the contact from the server
 				contactImagePath = MainActivity.DIRECTORY_USER_IMAGES+contactId+".jpg";
-				downloadContactImage = new DownloadFileTask("http://tomhomewood.dyndns.org/epicChat/getUserImage.php?userId="+contactId+"&size=200", contactImagePath);
+				downloadContactImage = new DownloadFileTask("http://tomhomewood.dyndns.org/epicChat/getUserImage.php?userId="+contactId+"&size=500", contactImagePath);
 				downloadContactImage.setHandler(downloadImageHandler);
 				downloadContactImage.setUniqueId(ID_DOWNLOAD_USER_IMAGE);		//Add the loop index to this task, this helps us keep track of 
 				downloadContactImage.execute();				//Execute the task asynchronously. If there is a previous copy of this task running (i.e. from a previous iteration of this loop) then execution will wait for it to finish
