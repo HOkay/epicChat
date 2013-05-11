@@ -37,7 +37,10 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -598,7 +601,7 @@ public class ViewConversationFragment extends Fragment {
 	 */
 	public class MessageListAdapter extends BaseAdapter {
 		private ArrayList<Message> messageList;
-
+		LayoutInflater layoutInflater;
 		Context context;
 
 		/**
@@ -608,6 +611,7 @@ public class ViewConversationFragment extends Fragment {
 		 */
 		MessageListAdapter(Context newContext){
 			context = newContext;
+			layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 			refresh();
 		}
 		
@@ -653,7 +657,6 @@ public class ViewConversationFragment extends Fragment {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			//long startTime = System.currentTimeMillis();
-			int viewType = getItemViewType(position);
 			View view = null;
 			boolean convertViewValid = false;
 
@@ -661,8 +664,6 @@ public class ViewConversationFragment extends Fragment {
 				convertViewValid = true;
 			}
 
-			LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			
 			//Get the Message object from the list
 			Message message = messageList.get(position);
 
@@ -672,9 +673,9 @@ public class ViewConversationFragment extends Fragment {
 			int messageStatus = message.getStatus();
 			String messageID = message.getId();
 
-			Contact contact = database.getContact(senderId);
+			final Contact contact = database.getContact(senderId);
 			String senderFirstName;
-
+			
 			ImageView userImage, messageImage;
 			TextView messageHeading, messageBody;
 			switch(messageType){
@@ -683,7 +684,7 @@ public class ViewConversationFragment extends Fragment {
 					view = convertView;
 				}
 				else{
-					view = vi.inflate(R.layout.activity_view_conversation_message_list_item, null);					//Inflate the standard version of the layout
+					view = layoutInflater.inflate(R.layout.activity_view_conversation_message_list_item, null);					//Inflate the standard version of the layout
 				}
 				messageBody = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_contents);
 				messageBody.setText(message.getContents(null));
@@ -693,7 +694,7 @@ public class ViewConversationFragment extends Fragment {
 					view = convertView;
 				}
 				else{
-					view = vi.inflate(R.layout.activity_view_conversation_message_list_item_image, null);		//Inflate a list item template for displaying an image
+					view = layoutInflater.inflate(R.layout.activity_view_conversation_message_list_item_image, null);		//Inflate a list item template for displaying an image
 				}
 				
 				messageImage = (ImageView) view.findViewById(R.id.activity_view_conversation_message_list_item_image);
@@ -770,6 +771,14 @@ public class ViewConversationFragment extends Fragment {
 			}
 
 			userImage = (ImageView) view.findViewById(R.id.activity_view_conversation_message_list_item_user_image);
+			userImage.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					showContactDetails(contact);
+					
+				}
+			});
 
 			messageHeading = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_heading);
 			
@@ -819,6 +828,12 @@ public class ViewConversationFragment extends Fragment {
 			return view;
 		}
     }
+	
+	protected void showContactDetails(Contact contact) {
+		Intent showContactDetailsIntent = new Intent(fragmentActivity, ViewContactInformationActivity.class);
+		showContactDetailsIntent.putExtra("contact", contact);
+		startActivity(showContactDetailsIntent);
+	}
 	/**
 	 * Listens for new GCM messages
 	 */

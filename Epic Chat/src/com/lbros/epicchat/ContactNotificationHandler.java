@@ -1,7 +1,7 @@
-/**
- * 
- */
 package com.lbros.epicchat;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
@@ -53,8 +53,15 @@ public class ContactNotificationHandler extends BroadcastReceiver {
 							messageConversation = new Conversation(conversationId, contact.getImagePath());
 							database.addConversation(messageConversation);
 						}
-						//We can now add the message
-						database.addMessage(message);
+						//Any messages sent by this contact up to this point have been stored in the pending messages table. We can use this to add all these messages to the conversation.
+						//This means that if the contact sent more than one message before the local user added them as a contact, all this messages will be visible 
+						ArrayList<Message> pendingMessages = database.getPendingMessages(conversationId);
+						Iterator<Message> iterator = pendingMessages.iterator();
+						
+						while(iterator.hasNext()){
+							database.addMessage(iterator.next());		//Add each message
+						}
+						
 						//Send a broadcast to indicate a contact sync event has occured
 						Intent newMessageIntent = new Intent(MainActivity.intentSignatureConversationsModified);
 						context.sendBroadcast(newMessageIntent, null);

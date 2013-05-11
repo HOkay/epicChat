@@ -8,5 +8,6 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_choose_contact">Choose Contact</string>
+    <string name="title_activity_view_contact_information">ViewContactInformationActivity</string>
 
 </resources>

@@ -181,7 +181,7 @@ public class ConversationsListFragment extends Fragment {
 				}
 			}
 			
-			conversationImage.setImageBitmap(conversation.getImageBitmap(120, 120, 6));		//Get the image bitmap
+			conversationImage.setImageBitmap(conversation.getImageBitmap(120, 120, null));		//Get the image bitmap
 			conversationName.setText(userFirstNames);               				//Get the conversation's full name
 			
 			//Get the contents of the latest message in this particalar conversation

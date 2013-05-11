@@ -239,7 +239,7 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 				
 				//Download the image for the contact from the server
 				contactImagePath = MainActivity.DIRECTORY_USER_IMAGES+contactId+".jpg";
-				downloadContactImage = new DownloadFileTask("http://tomhomewood.dyndns.org/epicChat/getUserImage.php?userId="+contactId+"&size=200", contactImagePath);
+				downloadContactImage = new DownloadFileTask("http://tomhomewood.dyndns.org/epicChat/getUserImage.php?userId="+contactId+"&size=500", contactImagePath);
 				downloadContactImage.setHandler(contactAddedHandler);
 				downloadContactImage.setUniqueId(i);		//Add the loop index to this task, this helps us keep track of which contact's image is being downloaded
 				downloadContactImage.execute();				//Execute the task asynchronously. If there is a previous copy of this task running (i.e. from a previous iteration of this loop) then execution will wait for it to finish

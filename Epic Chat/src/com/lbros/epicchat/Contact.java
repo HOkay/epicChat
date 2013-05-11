@@ -80,7 +80,7 @@ public class Contact implements Serializable{
 	}
 	
 	/**
-	 * Returns the contact's phone number, if set, or null if not
+	 * Returns the contact's phone number if set, or null if not
 	 * @return		The contact's phone number, or null
 	 */
 	public String getPhoneNumber(){

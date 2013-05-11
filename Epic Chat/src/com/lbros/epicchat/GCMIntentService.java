@@ -20,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
@@ -394,14 +395,24 @@ public class GCMIntentService extends GCMBaseIntentService{
 		
 		notificationBuilder.setSubText(newContact.getId());
 		
+		//Add an intent to the notification
+		Intent confirmContactIntent = new Intent(context, ViewContactInformationActivity.class);
+		confirmContactIntent.putExtra("contact", newContact);
+		if(newMessage!=null){
+			confirmContactIntent.putExtra("message", newMessage);
+		}
+		confirmContactIntent.setAction(action+ViewContactInformationActivity.ACTION_SUFFIX_NEW_CONTACT_CONFIRM);
+		PendingIntent confirmContactIntentPending = PendingIntent.getActivity(context, 0, confirmContactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		notificationBuilder.setContentIntent(confirmContactIntentPending);
+		
 		//Add a button that allows the user to add the contact
-		Intent addContactIntent = new Intent(context, ContactNotificationHandler.class);
+		Intent addContactIntent = new Intent(context, ViewContactInformationActivity.class);
 		addContactIntent.putExtra("contact", newContact);
 		if(newMessage!=null){
 			addContactIntent.putExtra("message", newMessage);
 		}
-		addContactIntent.setAction(action+".add");
-		PendingIntent addContactIntentPending = PendingIntent.getBroadcast(context, 0, addContactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		addContactIntent.setAction(action+ViewContactInformationActivity.ACTION_SUFFIX_NEW_CONTACT_ADD);
+		PendingIntent addContactIntentPending = PendingIntent.getActivity(context, 0, addContactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notificationBuilder.addAction(android.R.drawable.ic_menu_add, "Add", addContactIntentPending);
 		
 		//Add a button that allows the user to add the contact
@@ -409,8 +420,8 @@ public class GCMIntentService extends GCMBaseIntentService{
 		ignoreContactIntent.putExtra("contact", newContact);
 		if(newMessage!=null){
 			addContactIntent.putExtra("message", newMessage);
-		}ignoreContactIntent.setAction(action+".block");
-		PendingIntent ignoreContactIntentPending = PendingIntent.getBroadcast(context, 0, ignoreContactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+		}ignoreContactIntent.setAction(action+ViewContactInformationActivity.ACTION_SUFFIX_NEW_CONTACT_BLOCK);
+		PendingIntent ignoreContactIntentPending = PendingIntent.getActivity(context, 0, ignoreContactIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		notificationBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Ignore", ignoreContactIntentPending);
 		
 		Notification notification = notificationBuilder.build();	//Build the notification
