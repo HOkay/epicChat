@@ -563,8 +563,7 @@ public class Database extends SQLiteOpenHelper {
     	Conversation conversation = null;
     	String[] columnsToRetrieve = {KEY_ID, KEY_IMAGE_PATH};
     	SQLiteDatabase database = this.getReadableDatabase();	//Connect to the database
-    	Log.d(TAG, "Conversation ID: "+sortedConversationId);
-        Cursor cursor = database.query(TABLE_CONVERSATIONS, columnsToRetrieve, KEY_ID + "=?", new String[] { sortedConversationId },  null, null, null, null);
+    	Cursor cursor = database.query(TABLE_CONVERSATIONS, columnsToRetrieve, KEY_ID + "=?", new String[] { sortedConversationId },  null, null, null, null);
         if (cursor.moveToFirst()){		//True if we got a result from the database
             conversation = new Conversation(cursor.getString(0), cursor.getString(1));           
         }

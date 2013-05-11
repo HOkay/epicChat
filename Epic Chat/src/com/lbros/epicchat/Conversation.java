@@ -72,7 +72,7 @@ public class Conversation implements Serializable{
 	 * @param width			The width of the image
 	 * @param height		The height of the image
 	 * @param cornerRadius	The desired radius of the bitmap's corners. Set to null for no rounding
-	 * @return			A Bitmap image, with dimensions as specified, or original size if not
+	 * @return				A Bitmap image, with dimensions as specified, or original size if not
 	 */
 	public Bitmap getImageBitmap(Integer width, Integer height, Integer cornerRadius){
 		Bitmap imageBitmap = null;
@@ -87,11 +87,9 @@ public class Conversation implements Serializable{
 		}
 		if(imageBitmap==null){		//True if the bitmap was not in the cache. So we must load from disk instead
 			//Open the file
-			long startTime = System.currentTimeMillis();
 			FileInputStream imageInputStream;
 			try {
 				imageInputStream = new FileInputStream(imagePath);
-				Log.d(TAG, "File path: "+imagePath);
 				imageBitmap = BitmapFactory.decodeStream(imageInputStream);
 				if(imageBitmap!=null && width!=null && height!=null){
 					imageBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
@@ -100,13 +98,12 @@ public class Conversation implements Serializable{
 			catch (FileNotFoundException e) {
 				Log.e(TAG, "Error opening image input stream: "+e.toString());
 			}
-			long endTime = System.currentTimeMillis();
-			int kB = 0;
+			//int kB = 0;
 			if(imageBitmap!=null){
-				kB = imageBitmap.getByteCount() / 1024;
+				//kB = imageBitmap.getByteCount() / 1024;
 				MainActivity.bitmapCache.put(imagePathFull, imageBitmap);
 			}
-			Log.d(TAG, "Image loaded from disk, time = "+(endTime - startTime)+"ms, size: "+kB);
+			//Log.d(TAG, "Image loaded from disk, time = "+(endTime - startTime)+"ms, size: "+kB);
 		}
 		
 		if(cornerRadius!=null && imageBitmap!=null){		//If the calling class specified a corner radius, round the bitmap

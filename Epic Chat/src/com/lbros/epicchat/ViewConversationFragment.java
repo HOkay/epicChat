@@ -219,11 +219,7 @@ public class ViewConversationFragment extends Fragment {
         	}
         }
         registerMessageReceiver();
-        Log.d(TAG, "View created, conversation: "+conversation.getId());
-        
-        
-        
-		return fragmentLayout;
+        return fragmentLayout;
     }
     
     
@@ -231,7 +227,6 @@ public class ViewConversationFragment extends Fragment {
     public void onSaveInstanceState(Bundle state) {
     	super.onSaveInstanceState(state);
     	Parcelable listViewState = chatList.onSaveInstanceState();
-    	Log.d(TAG, "SAVING STATE");
     	state.putParcelable("listViewState", listViewState);
     }
 
@@ -258,7 +253,6 @@ public class ViewConversationFragment extends Fragment {
     	super.onResume();
     	isVisible = true;
     	clearNotificationAndPendingMessages();
-    	Log.d(TAG, "View resumed, conversation: "+conversation.getId());
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
     }
@@ -270,7 +264,6 @@ public class ViewConversationFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
 		isVisible = false;
-		Log.d(TAG, "View paused, conversation: "+conversation.getId());
 	}
 	
 	/**
@@ -282,7 +275,6 @@ public class ViewConversationFragment extends Fragment {
 			unregisterMessageReceiver();
 		}
 		super.onDestroy();
-        Log.d(TAG, "View destroyed, conversation: "+conversation.getId());
 	}
 	
 	@Override
@@ -631,17 +623,8 @@ public class ViewConversationFragment extends Fragment {
 			return position;
 		}
 		
-		/**
-		 * Adds a message to the chat list
-		 * @param message		A Message object containing all the message's information
-		 */
-		public void add(Message message){
-			Log.d(TAG, "COUNT: "+getCount());
-		}
-		
 		public void refresh(){
 			messageList = database.getMessagesByConversation(conversation.getId(), 0, nMessagesToShow, true);
-			Log.d(TAG, "SIZE: "+messageList.size());
 			notifyDataSetChanged();
 		}
 		
@@ -669,7 +652,7 @@ public class ViewConversationFragment extends Fragment {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
-			long startTime = System.currentTimeMillis();
+			//long startTime = System.currentTimeMillis();
 			int viewType = getItemViewType(position);
 			View view = null;
 			boolean convertViewValid = false;
@@ -831,8 +814,8 @@ public class ViewConversationFragment extends Fragment {
 				messageStatusImage.setVisibility(View.INVISIBLE);
 				break;
 			}
-			long endTime = System.currentTimeMillis();
-			Log.d(TAG, "GETVIEW TIME: "+(endTime - startTime)+", TYPE: "+viewType);
+			//long endTime = System.currentTimeMillis();
+			//Log.d(TAG, "GETVIEW TIME: "+(endTime - startTime)+", TYPE: "+viewType);
 			return view;
 		}
     }

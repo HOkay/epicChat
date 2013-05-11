@@ -58,6 +58,11 @@ public class ContactNotificationHandler extends BroadcastReceiver {
 						//Send a broadcast to indicate a contact sync event has occured
 						Intent newMessageIntent = new Intent(MainActivity.intentSignatureConversationsModified);
 						context.sendBroadcast(newMessageIntent, null);
+						//Finally, launch the conversation
+						Intent launchConversationIntent = new Intent(context, ViewConversationsActivity.class);
+						launchConversationIntent.putExtra("conversationId", conversationId);
+						launchConversationIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+						context.startActivity(launchConversationIntent);
 					}
 				}
 				else if(action.endsWith("block")){		//There is a new Contact to add to the block list
