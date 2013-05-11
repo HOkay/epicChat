@@ -88,6 +88,7 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 		//Setup the UI
 		setContentView(R.layout.activity_conversation_image_gallery);		
 		actionBar = getActionBar();
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		
 		mainImage = (ViewPager) findViewById(R.id.activity_conversation_image_gallery_main_image_pager);
 		mainImageAdapter = new ImagePagerAdapter(getSupportFragmentManager());
@@ -185,7 +186,7 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 	    	String subTitle = "Sent at "+imageResource.getFormattedTime();
 	    	actionBar.setSubtitle(subTitle);
 	    	//Also update the image
-			Bitmap conversationImage = sender.getImageBitmap(100, 100, 8);
+			Bitmap conversationImage = sender.getImageBitmap(100, 100, null);
 	    	Drawable imageDrawable = new BitmapDrawable(getResources(), conversationImage);
 	    	actionBar.setIcon(imageDrawable);
 		}
@@ -195,6 +196,20 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 			messageText = "";
 		}
 		mainImageCaption.setText(messageText);
+	}
+	
+	/**
+	 * Called when the options menu or action bar icon is touched 
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case android.R.id.home:		//App icon in action bar clicked, so go to the main activity	            
+	        	finish();
+	            return true;
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 	
 	public static class ImageDetailFragment extends Fragment {

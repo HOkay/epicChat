@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -200,7 +202,8 @@ public class ContactsListFragment extends Fragment {
 	 */
 	private OnItemClickListener contactsListItemClickListener = new OnItemClickListener() {
 		private final int MENU_ITEM_OPEN_CHAT = 0;
-		private final int MENU_ITEM_REMOVE_CONTACT = 1;
+		private final int MENU_ITEM_VIEW_PROFILE = 1;
+		private final int MENU_ITEM_REMOVE_CONTACT = 2;
 		@Override
 		public void onItemClick(AdapterView<?> adapterView, View itemView, int index, long arg3) {
 			final Contact contact = (Contact) contactsListAdapter.getItem(index);
@@ -209,7 +212,11 @@ public class ContactsListFragment extends Fragment {
 			final String contactFullName = contact.getFullName();
 			AlertDialog.Builder contextDialogBuilder = new AlertDialog.Builder(getActivity());
 			contextDialogBuilder.setTitle(contactFullName);
-			String[] menuOptions = new String[]{"Chat", "Remove"};
+			//Set the icon
+			Bitmap contactImage = contact.getImageBitmap(100, 100, null);
+	    	Drawable imageDrawable = new BitmapDrawable(getResources(), contactImage);
+	    	contextDialogBuilder.setIcon(imageDrawable);
+			String[] menuOptions = new String[]{"Chat", "View profile", "Remove"};
 			contextDialogBuilder.setItems(menuOptions, new OnClickListener() {				
 				@Override
 				public void onClick(DialogInterface arg0, int index) {
@@ -217,6 +224,11 @@ public class ContactsListFragment extends Fragment {
 					case MENU_ITEM_OPEN_CHAT:		//First item is the "Chat" button
 						String conversationId = contactId+","+userId;
 						openChatWithUser(conversationId);
+						break;
+					case MENU_ITEM_VIEW_PROFILE:		//First item is the "Chat" button
+						Intent viewProfileIntent = new Intent(parentActivity, ViewContactProfileActivity.class);
+						viewProfileIntent.putExtra("contact", contact);
+						startActivity(viewProfileIntent);
 						break;
 					case MENU_ITEM_REMOVE_CONTACT:		//First item is the "Chat" button
 						database.deleteContact(contact, true);

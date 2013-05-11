@@ -120,7 +120,7 @@ public class Contact implements Serializable{
 			try {
 				imageInputStream = new FileInputStream(imagePath);
 				imageBitmap = BitmapFactory.decodeStream(imageInputStream);
-				if(imageBitmap!=null && width!=null && height!=null){
+				if(imageBitmap!=null && width!=null && height!=null){			//If the height or width properties were set, use them to scale the image
 					imageBitmap = Bitmap.createScaledBitmap(imageBitmap, width, height, false);
 				}
 			}

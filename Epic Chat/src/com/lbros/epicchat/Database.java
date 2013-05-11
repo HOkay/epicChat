@@ -297,7 +297,8 @@ public class Database extends SQLiteOpenHelper {
      * @param message						The Message to remove
      * @param alsoDeletePendingMessage		If true, this message will also be removed from the pending messages table, if it is found there
      */
-    private void deleteMessage(Message message, boolean alsoDeletePendingMessage) {
+    @SuppressWarnings("unused")
+	private void deleteMessage(Message message, boolean alsoDeletePendingMessage) {
     	SQLiteDatabase database = this.getWritableDatabase();		//Connect to the database
     	database.execSQL("DELETE FROM "+TABLE_MESSAGES+" WHERE "+KEY_ID+"=\""+message.getId()+"\"");	//Delete the Message from the table
         database.close();

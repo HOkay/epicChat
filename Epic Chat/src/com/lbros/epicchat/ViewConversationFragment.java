@@ -37,10 +37,7 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.Html;
-import android.text.Spanned;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -292,9 +289,7 @@ public class ViewConversationFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case android.R.id.home:		//App icon in action bar clicked, so go to the main activity	            
-	            Intent intent = new Intent(fragmentActivity, MainActivity.class);
-	            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-	            startActivity(intent);
+	            fragmentActivity.finish();
 	            return true;
 	        case R.id.menu_view_conversation_item_gallery:		//User touched the gallery button
 	        	selectImageFromGallery();
@@ -830,7 +825,7 @@ public class ViewConversationFragment extends Fragment {
     }
 	
 	protected void showContactDetails(Contact contact) {
-		Intent showContactDetailsIntent = new Intent(fragmentActivity, ViewContactInformationActivity.class);
+		Intent showContactDetailsIntent = new Intent(fragmentActivity, ViewContactProfileActivity.class);
 		showContactDetailsIntent.putExtra("contact", contact);
 		startActivity(showContactDetailsIntent);
 	}

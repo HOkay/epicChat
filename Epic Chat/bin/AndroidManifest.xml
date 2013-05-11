@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lbros.epicchat"
     android:versionCode="1"
-    android:versionName="0.49d" >
+    android:versionName="0.49e" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -123,7 +123,7 @@
             android:label="@string/title_activity_choose_contact" >
         </activity>
         <activity
-            android:name="com.lbros.epicchat.ViewContactInformationActivity"
+            android:name="com.lbros.epicchat.ViewContactProfileActivity"
             android:label="@string/title_activity_view_contact_information" >
         </activity>
     </application>
