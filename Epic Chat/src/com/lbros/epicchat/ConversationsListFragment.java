@@ -82,8 +82,8 @@ public class ConversationsListFragment extends Fragment {
 	
 	public void onResume(){
 		super.onResume();
-		conversationsList = database.getAllConversations(null);
-		conversationsListAdapter.notifyDataSetChanged();		
+		conversationsListAdapter = new ConversationsListAdapter(conversationsList, fragmentActivity);
+    	listViewConversations.setAdapter(conversationsListAdapter);
 	}
 	
 	public void onPause(){
