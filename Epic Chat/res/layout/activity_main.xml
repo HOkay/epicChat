@@ -1,0 +1,20 @@
+<android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_main_viewpager"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity" >
+
+    <android.support.v4.view.PagerTabStrip
+        android:id="@+id/activity_main_viewpager_tab_strip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:background="#99cc00"
+        android:paddingBottom="4dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingTop="4dp"
+        android:textColor="#fff" />
+
+</android.support.v4.view.ViewPager>

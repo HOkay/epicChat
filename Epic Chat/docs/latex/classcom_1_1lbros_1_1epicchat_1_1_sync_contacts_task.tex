@@ -1,0 +1,87 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task}{\section{com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task}\index{com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task@{com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task}}
+}
+
+
+Inherits Async\-Task$<$ Void, Void, Boolean $>$.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_ae1e38489f338eb74840045ffb4a955ab}{Sync\-Contacts\-Task} (Context new\-Context)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a0da5abdb285b263735b0d237b8265e97}{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D} = 1
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a09a66dc065eaf8d14c34b93dac145f65}{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E} = 2
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a559e57000b4d04ce625b509b0fd39da9}{on\-Pre\-Execute} ()
+\item 
+Boolean \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a8f16c26a096277f99549f8fc01cb8756}{do\-In\-Background} (Void...\-arg0)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a69ec1e4b363d8f08ff4432fcc271fd03}{on\-Post\-Execute} (Boolean success)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class that handles the syncing of the user's contact details . This is done by checking the list of contacts on the local device for Google email addresses. The set of matching addresses found is then sent to the server, which will return details for each matching contact that it found in the database \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_ae1e38489f338eb74840045ffb4a955ab}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!Sync\-Contacts\-Task@{Sync\-Contacts\-Task}}
+\index{Sync\-Contacts\-Task@{Sync\-Contacts\-Task}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{Sync\-Contacts\-Task}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-Sync\-Contacts\-Task (
+\begin{DoxyParamCaption}
+\item[{Context}]{new\-Context}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_ae1e38489f338eb74840045ffb4a955ab}
+Constructor. Takes a Context from the calling activity or service as input, as this is needed for some function calls 
+\begin{DoxyParams}{Parameters}
+{\em new\-Context} & The Context of the calling activity or service \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a8f16c26a096277f99549f8fc01cb8756}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!do\-In\-Background@{do\-In\-Background}}
+\index{do\-In\-Background@{do\-In\-Background}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{do\-In\-Background}]{\setlength{\rightskip}{0pt plus 5cm}Boolean com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-do\-In\-Background (
+\begin{DoxyParamCaption}
+\item[{Void...}]{arg0}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a8f16c26a096277f99549f8fc01cb8756}
+Called on the background thread to run the entire process, from scanning the contacts list to adding new \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} objects \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a69ec1e4b363d8f08ff4432fcc271fd03}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!on\-Post\-Execute@{on\-Post\-Execute}}
+\index{on\-Post\-Execute@{on\-Post\-Execute}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{on\-Post\-Execute}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-on\-Post\-Execute (
+\begin{DoxyParamCaption}
+\item[{Boolean}]{success}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a69ec1e4b363d8f08ff4432fcc271fd03}
+Called on the main thread immediately after \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a8f16c26a096277f99549f8fc01cb8756}{do\-In\-Background()} has finished executing \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a559e57000b4d04ce625b509b0fd39da9}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!on\-Pre\-Execute@{on\-Pre\-Execute}}
+\index{on\-Pre\-Execute@{on\-Pre\-Execute}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{on\-Pre\-Execute}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-on\-Pre\-Execute (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a559e57000b4d04ce625b509b0fd39da9}
+Called on the main thread immediately before \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a8f16c26a096277f99549f8fc01cb8756}{do\-In\-Background()} 
+
+\subsection{Member Data Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a09a66dc065eaf8d14c34b93dac145f65}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E@{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E}}
+\index{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E@{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-C\-O\-M\-P\-L\-E\-T\-E = 2\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a09a66dc065eaf8d14c34b93dac145f65}
+Signals that a full contacts sync was just completed \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a0da5abdb285b263735b0d237b8265e97}{\index{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}!S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D@{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D}}
+\index{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D@{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D}!com::lbros::epicchat::SyncContactsTask@{com\-::lbros\-::epicchat\-::\-Sync\-Contacts\-Task}}
+\subsubsection[{S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Sync\-Contacts\-Task.\-S\-T\-A\-T\-U\-S\-\_\-\-S\-Y\-N\-C\-\_\-\-S\-T\-A\-R\-T\-E\-D = 1\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_sync_contacts_task_a0da5abdb285b263735b0d237b8265e97}
+Signals that a full contacts sync was just started 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Sync\-Contacts\-Task.\-java\end{DoxyCompactItemize}

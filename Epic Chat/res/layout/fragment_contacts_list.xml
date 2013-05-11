@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".ContactsListFragment" >
+
+    <ListView
+        android:id="@+id/fragment_contacts_listview"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/fragment_conversations_button_sync"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="5dp"
+        android:divider="#cccccc"
+        android:dividerHeight="1px" >
+    </ListView>
+
+    <ProgressBar
+        android:id="@+id/fragment_conversations_sync_status_progress"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/fragment_conversations_sync_status_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/fragment_conversations_sync_status_progress"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/fragment_conversations_sync_status_progress"
+        android:text="Syncing contacts..."
+        android:textSize="12sp"
+        android:visibility="invisible" />
+
+    <ImageButton
+        android:id="@+id/fragment_conversations_button_sync"
+        android:layout_width="78dp"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="2dp"
+        android:layout_marginRight="2dp"
+        android:src="@android:drawable/stat_notify_sync" />
+
+</RelativeLayout>

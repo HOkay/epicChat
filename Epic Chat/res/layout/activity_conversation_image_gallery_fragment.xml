@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_conversation_image_gallery_fragment_image"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:src="@drawable/default_user_image" />

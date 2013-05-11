@@ -1,0 +1,181 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource}{\section{com.\-lbros.\-epicchat.\-Resource Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_resource}\index{com.\-lbros.\-epicchat.\-Resource@{com.\-lbros.\-epicchat.\-Resource}}
+}
+
+
+Inherits Serializable.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a48b92f4f72f5a37c319ae7a7ad698356}{Resource} (String new\-Id, int new\-Type, int new\-Timestamp, String new\-Conversation\-Id, String new\-From\-User, String new\-Path, String new\-Text)
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_af21adfe62914e726d62a31e019f3d833}{get\-Id} ()
+\item 
+int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a510947e76f56b8b8bcc9bcc459a73776}{get\-Type} ()
+\item 
+int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a199b6ea81d67882d9ab3fb87452892e4}{get\-Timestamp} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_afa8c7075bbacb17b2943288e0f181aef}{get\-Formatted\-Time} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_aefe35aa14136d43142e9fdc4e48f41b2}{get\-Conversation\-Id} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a6b9029e2353505036abf7540d5c2dc3c}{get\-From\-User} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a7b8106f8bc7e69e4633df437de370120}{get\-Path} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_acbff8c79cf208122f5908428bfef6049}{get\-Text} ()
+\end{DoxyCompactItemize}
+\subsection*{Static Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a2129c157c8f5f38bc70555dfb4037502}{T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T} = -\/1
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a33e666a895cedd2039d9d780bd44aded}{T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E} = 1
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_addfd165d7ba653dab61af55ce76f112c}{T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O} = 2
+\item 
+static final int \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource_a3856fb8009d3a6b0bc6202b207f98129}{T\-Y\-P\-E\-\_\-\-F\-I\-L\-E} = 3
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class used to represent resources in the system. A resource is a file sent from one user to another, and may be an image, video or any permitted file type This class is serialisable as this allows us to send \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} objects between activities in Intents \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a48b92f4f72f5a37c319ae7a7ad698356}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!Resource@{Resource}}
+\index{Resource@{Resource}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{Resource}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Resource.\-Resource (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Id, }
+\item[{int}]{new\-Type, }
+\item[{int}]{new\-Timestamp, }
+\item[{String}]{new\-Conversation\-Id, }
+\item[{String}]{new\-From\-User, }
+\item[{String}]{new\-Path, }
+\item[{String}]{new\-Text}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a48b92f4f72f5a37c319ae7a7ad698356}
+Constructor 
+\begin{DoxyParams}{Parameters}
+{\em new\-Id} & The I\-D of the the resource, which is typically provided by the server \\
+\hline
+{\em new\-Type} & The type of the resource \\
+\hline
+{\em new\-Timestamp} & The timestamp at which this resources was created \\
+\hline
+{\em new\-Conversation\-Id} & The conversation to which the resource belongs \\
+\hline
+{\em new\-From\-User} & The user I\-D of the sender \\
+\hline
+{\em new\-Path} & The path to the resource, relative to the system root \\
+\hline
+{\em new\-Text} & The text associated with this resource (e.\-g. a caption for an image resource) \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_aefe35aa14136d43142e9fdc4e48f41b2}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Conversation\-Id@{get\-Conversation\-Id}}
+\index{get\-Conversation\-Id@{get\-Conversation\-Id}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Conversation\-Id}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-Conversation\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_aefe35aa14136d43142e9fdc4e48f41b2}
+Returns the I\-D of the conversation to which the resource belongs \begin{DoxyReturn}{Returns}
+The conversation I\-D associated with the contact 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_afa8c7075bbacb17b2943288e0f181aef}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Formatted\-Time@{get\-Formatted\-Time}}
+\index{get\-Formatted\-Time@{get\-Formatted\-Time}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Formatted\-Time}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-Formatted\-Time (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_afa8c7075bbacb17b2943288e0f181aef}
+Returns the resources's timestamp formatted as a String, in the format\-: H\-H\-:mm \begin{DoxyReturn}{Returns}
+The formatted string 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a6b9029e2353505036abf7540d5c2dc3c}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-From\-User@{get\-From\-User}}
+\index{get\-From\-User@{get\-From\-User}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-From\-User}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-From\-User (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a6b9029e2353505036abf7540d5c2dc3c}
+Returns the I\-D of the user who sent this resource \begin{DoxyReturn}{Returns}
+The user I\-D associated with the contact who sent the resource 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_af21adfe62914e726d62a31e019f3d833}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_af21adfe62914e726d62a31e019f3d833}
+Returns the resource's I\-D \begin{DoxyReturn}{Returns}
+The unique I\-D of the resource 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a7b8106f8bc7e69e4633df437de370120}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Path@{get\-Path}}
+\index{get\-Path@{get\-Path}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Path}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-Path (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a7b8106f8bc7e69e4633df437de370120}
+Returns the path of the resource, relative to the system root \begin{DoxyReturn}{Returns}
+The resource's path, or null if not set 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_acbff8c79cf208122f5908428bfef6049}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Text@{get\-Text}}
+\index{get\-Text@{get\-Text}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Text}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Resource.\-get\-Text (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_acbff8c79cf208122f5908428bfef6049}
+Returns the text belonging to the resource \begin{DoxyReturn}{Returns}
+The resource's path, or null if no text is present 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a199b6ea81d67882d9ab3fb87452892e4}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Timestamp@{get\-Timestamp}}
+\index{get\-Timestamp@{get\-Timestamp}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Timestamp}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-lbros.\-epicchat.\-Resource.\-get\-Timestamp (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a199b6ea81d67882d9ab3fb87452892e4}
+Returns the resource's timestamp \begin{DoxyReturn}{Returns}
+The resource's timestamp 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a510947e76f56b8b8bcc9bcc459a73776}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!get\-Type@{get\-Type}}
+\index{get\-Type@{get\-Type}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{get\-Type}]{\setlength{\rightskip}{0pt plus 5cm}int com.\-lbros.\-epicchat.\-Resource.\-get\-Type (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a510947e76f56b8b8bcc9bcc459a73776}
+Returns the type of the resource \begin{DoxyReturn}{Returns}
+The resource's type, or null if a type was not set 
+\end{DoxyReturn}
+
+
+\subsection{Member Data Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a3856fb8009d3a6b0bc6202b207f98129}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!T\-Y\-P\-E\-\_\-\-F\-I\-L\-E@{T\-Y\-P\-E\-\_\-\-F\-I\-L\-E}}
+\index{T\-Y\-P\-E\-\_\-\-F\-I\-L\-E@{T\-Y\-P\-E\-\_\-\-F\-I\-L\-E}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{T\-Y\-P\-E\-\_\-\-F\-I\-L\-E}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Resource.\-T\-Y\-P\-E\-\_\-\-F\-I\-L\-E = 3\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a3856fb8009d3a6b0bc6202b207f98129}
+Type representing a file resource \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a33e666a895cedd2039d9d780bd44aded}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E@{T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E}}
+\index{T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E@{T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Resource.\-T\-Y\-P\-E\-\_\-\-I\-M\-A\-G\-E = 1\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a33e666a895cedd2039d9d780bd44aded}
+Type representing an image resource \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_a2129c157c8f5f38bc70555dfb4037502}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T@{T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T}}
+\index{T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T@{T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Resource.\-T\-Y\-P\-E\-\_\-\-N\-O\-T\-\_\-\-S\-E\-T = -\/1\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_a2129c157c8f5f38bc70555dfb4037502}
+Type used when a \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} does not have a type explicitly set \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_resource_addfd165d7ba653dab61af55ce76f112c}{\index{com\-::lbros\-::epicchat\-::\-Resource@{com\-::lbros\-::epicchat\-::\-Resource}!T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O@{T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O}}
+\index{T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O@{T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O}!com::lbros::epicchat::Resource@{com\-::lbros\-::epicchat\-::\-Resource}}
+\subsubsection[{T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O}]{\setlength{\rightskip}{0pt plus 5cm}final int com.\-lbros.\-epicchat.\-Resource.\-T\-Y\-P\-E\-\_\-\-V\-I\-D\-E\-O = 2\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_resource_addfd165d7ba653dab61af55ce76f112c}
+Type representing a video resource 
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Resource.\-java\end{DoxyCompactItemize}

@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/dialog_preview_image_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:adjustViewBounds="true"
+        android:src="@null" />
+
+    <EditText
+        android:id="@+id/dialog_preview_image_caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/dialog_preview_image_image"
+        android:background="#99000000"
+        android:hint="Comment"
+        android:inputType="textCapSentences|textMultiLine"
+        android:maxLength="100"
+        android:paddingBottom="10dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="20sp" >
+
+        <requestFocus />
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dialog_preview_image_caption"
+        android:orientation="horizontal"
+        android:weightSum="2" >
+
+        <Button
+            android:id="@+id/dialog_preview_image_button_cancel"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Cancel" />
+
+        <Button
+            android:id="@+id/dialog_preview_image_button_send"
+            style="@android:style/Widget.Holo.Light.Button.Borderless.Small"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Send" />
+    </LinearLayout>
+
+</RelativeLayout>

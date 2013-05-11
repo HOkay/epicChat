@@ -1,0 +1,43 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p}{\section{com.\-lbros.\-epicchat.\-H\-T\-T\-P Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p}\index{com.\-lbros.\-epicchat.\-H\-T\-T\-P@{com.\-lbros.\-epicchat.\-H\-T\-T\-P}}
+}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_ab02692501c8001f127e1fc1d948e6642}{static String {\bfseries do\-Http\-Get} (String address, int maximum\-Retries)}\label{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_ab02692501c8001f127e1fc1d948e6642}
+
+\item 
+static String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_a5db934e0b29b0510a57798d487ff4ac3}{do\-Http\-Post} (String address, String parameters, int maximum\-Retries)
+\item 
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_a978b3d249140eb8680e186157b784e7f}{static String {\bfseries read\-Stream} (Input\-Stream in)  throws I\-O\-Exception }\label{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_a978b3d249140eb8680e186157b784e7f}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_a5db934e0b29b0510a57798d487ff4ac3}{\index{com\-::lbros\-::epicchat\-::\-H\-T\-T\-P@{com\-::lbros\-::epicchat\-::\-H\-T\-T\-P}!do\-Http\-Post@{do\-Http\-Post}}
+\index{do\-Http\-Post@{do\-Http\-Post}!com::lbros::epicchat::HTTP@{com\-::lbros\-::epicchat\-::\-H\-T\-T\-P}}
+\subsubsection[{do\-Http\-Post}]{\setlength{\rightskip}{0pt plus 5cm}static String com.\-lbros.\-epicchat.\-H\-T\-T\-P.\-do\-Http\-Post (
+\begin{DoxyParamCaption}
+\item[{String}]{address, }
+\item[{String}]{parameters, }
+\item[{int}]{maximum\-Retries}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p_a5db934e0b29b0510a57798d487ff4ac3}
+Executes an \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_h_t_t_p}{H\-T\-T\-P} P\-O\-S\-T request to the specified address, attaching the provided parameters as P\-O\-S\-T variables 
+\begin{DoxyParams}{Parameters}
+{\em address} & The address to connect to \\
+\hline
+{\em parameters} & A String containing the variables to be sent, in the form\-: \char`\"{}var1=value1,var2=value2\char`\"{} \\
+\hline
+{\em maximum\-Retrys} & How many times the connecion to be retried before giving up \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A string containing the server's response, or null if there was no response 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/H\-T\-T\-P.\-java\end{DoxyCompactItemize}

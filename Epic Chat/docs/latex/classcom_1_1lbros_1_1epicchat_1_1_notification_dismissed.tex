@@ -1,0 +1,41 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_notification_dismissed}{\section{com.\-lbros.\-epicchat.\-Notification\-Dismissed Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_notification_dismissed}\index{com.\-lbros.\-epicchat.\-Notification\-Dismissed@{com.\-lbros.\-epicchat.\-Notification\-Dismissed}}
+}
+
+
+Inherits Broadcast\-Receiver.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_notification_dismissed_a5d4c560d0f5108bcaa3cab1b85e3bce5}{on\-Receive} (Context context, Intent intent)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Receives a broadcast intent from the O\-S when the user dismisses a notification from the notification drawer (either by swiping it away or by touching the clear all notifications button) \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_notification_dismissed_a5d4c560d0f5108bcaa3cab1b85e3bce5}{\index{com\-::lbros\-::epicchat\-::\-Notification\-Dismissed@{com\-::lbros\-::epicchat\-::\-Notification\-Dismissed}!on\-Receive@{on\-Receive}}
+\index{on\-Receive@{on\-Receive}!com::lbros::epicchat::NotificationDismissed@{com\-::lbros\-::epicchat\-::\-Notification\-Dismissed}}
+\subsubsection[{on\-Receive}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Notification\-Dismissed.\-on\-Receive (
+\begin{DoxyParamCaption}
+\item[{Context}]{context, }
+\item[{Intent}]{intent}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_notification_dismissed_a5d4c560d0f5108bcaa3cab1b85e3bce5}
+Called by the O\-S when the notification is dismissed. Handles the removal of all messages from the pending messages database table that are associated with this particular notification 
+\begin{DoxyParams}{Parameters}
+{\em context} & The context of the notification \\
+\hline
+{\em intent} & The intent that was attached to the notification when it was created \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Notification\-Dismissed.\-java\end{DoxyCompactItemize}

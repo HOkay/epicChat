@@ -1,0 +1,176 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task}{\section{com.\-lbros.\-epicchat.\-Upload\-File\-Task Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task}\index{com.\-lbros.\-epicchat.\-Upload\-File\-Task@{com.\-lbros.\-epicchat.\-Upload\-File\-Task}}
+}
+
+
+Inherits Async\-Task$<$ Void, Integer, Boolean $>$.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a8aa91adfce184b374ea05253fb615c1f}{Upload\-File\-Task} (String new\-Remote\-Location, String new\-File\-Path)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a6da2005ca957b72e9c9fbcd18d4d42d1}{set\-Handler} (Handler new\-Handler)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_afa592ffdc5c8b191563d0b19e9fe2988}{set\-Upload\-Chunk\-Size} (int new\-Size)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a23763c92b12a03547bda7499ebfb6195}{set\-Minimum\-Progress\-Update\-Interval} (long new\-Interval)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_ac98b0de5af01afc8e10733e0db1d5033}{set\-Tag} (String new\-Tag)
+\item 
+Integer \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_aeedb38bf803104fad2f2ba9db9045715}{get\-File\-Size} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acda14be8c9c0294c6679f7d200df6ad4}{get\-Response\-String} ()
+\item 
+J\-S\-O\-N\-Object \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a9bc427b122335137fcb5ecc5c932d062}{get\-Response\-J\-S\-O\-N} ()
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Boolean \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a0a50e55c7c83d819c1594ba7df43e152}{do\-In\-Background} (Void...\-arg)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acc4ea336394f139d87f18f0fe04fc68b}{on\-Progress\-Update} (Integer...\-progress)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a93ec70bdb277c3dba7ea7e0f8a3ee1b2}{on\-Post\-Execute} (Boolean result)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class used for uploading a file to a server on the background thread, which may be configured to send status events to a Handler object at various stages during the upload. Alternatively, it may be run as a \char`\"{}fire and forget\char`\"{} task (i.\-e. no status events are returned) \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a8aa91adfce184b374ea05253fb615c1f}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!Upload\-File\-Task@{Upload\-File\-Task}}
+\index{Upload\-File\-Task@{Upload\-File\-Task}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{Upload\-File\-Task}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-Upload\-File\-Task (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Remote\-Location, }
+\item[{String}]{new\-File\-Path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a8aa91adfce184b374ea05253fb615c1f}
+Constructor 
+\begin{DoxyParams}{Parameters}
+{\em new\-Remote\-Location} & The U\-R\-L that the file should be sent to, including '\href{http://'}{\tt http\-://'} \\
+\hline
+{\em new\-File\-Path} & The file's path on the local device \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a0a50e55c7c83d819c1594ba7df43e152}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!do\-In\-Background@{do\-In\-Background}}
+\index{do\-In\-Background@{do\-In\-Background}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{do\-In\-Background}]{\setlength{\rightskip}{0pt plus 5cm}Boolean com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-do\-In\-Background (
+\begin{DoxyParamCaption}
+\item[{Void...}]{arg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a0a50e55c7c83d819c1594ba7df43e152}
+Handles the download of the image on the background thread \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_aeedb38bf803104fad2f2ba9db9045715}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!get\-File\-Size@{get\-File\-Size}}
+\index{get\-File\-Size@{get\-File\-Size}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{get\-File\-Size}]{\setlength{\rightskip}{0pt plus 5cm}Integer com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-get\-File\-Size (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_aeedb38bf803104fad2f2ba9db9045715}
+Returns the size of the file in bytes, or null if the file does not exist \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a9bc427b122335137fcb5ecc5c932d062}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!get\-Response\-J\-S\-O\-N@{get\-Response\-J\-S\-O\-N}}
+\index{get\-Response\-J\-S\-O\-N@{get\-Response\-J\-S\-O\-N}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{get\-Response\-J\-S\-O\-N}]{\setlength{\rightskip}{0pt plus 5cm}J\-S\-O\-N\-Object com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-get\-Response\-J\-S\-O\-N (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a9bc427b122335137fcb5ecc5c932d062}
+Returns the server response as a J\-S\-O\-N\-Object if it has been set (i.\-e. after the server responded to the request), or null otherwise \begin{DoxyReturn}{Returns}
+J\-S\-O\-N\-Object containing the server's response 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acda14be8c9c0294c6679f7d200df6ad4}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!get\-Response\-String@{get\-Response\-String}}
+\index{get\-Response\-String@{get\-Response\-String}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{get\-Response\-String}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-get\-Response\-String (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acda14be8c9c0294c6679f7d200df6ad4}
+Returns the server response as a string if it has been set (i.\-e. after the server responded to the request), or null otherwise \begin{DoxyReturn}{Returns}
+String containing the server's response 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a93ec70bdb277c3dba7ea7e0f8a3ee1b2}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!on\-Post\-Execute@{on\-Post\-Execute}}
+\index{on\-Post\-Execute@{on\-Post\-Execute}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{on\-Post\-Execute}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-on\-Post\-Execute (
+\begin{DoxyParamCaption}
+\item[{Boolean}]{result}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a93ec70bdb277c3dba7ea7e0f8a3ee1b2}
+Called on the U\-I thread when \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a0a50e55c7c83d819c1594ba7df43e152}{do\-In\-Background()} has finished executing 
+\begin{DoxyParams}{Parameters}
+{\em result} & Boolean representing whether or not the download was successfull \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acc4ea336394f139d87f18f0fe04fc68b}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!on\-Progress\-Update@{on\-Progress\-Update}}
+\index{on\-Progress\-Update@{on\-Progress\-Update}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{on\-Progress\-Update}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-on\-Progress\-Update (
+\begin{DoxyParamCaption}
+\item[{Integer...}]{progress}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_acc4ea336394f139d87f18f0fe04fc68b}
+Runs on the U\-I thread when publish\-Progress() is called 
+\begin{DoxyParams}{Parameters}
+{\em progress} & The number of bytes uploaded so far \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a6da2005ca957b72e9c9fbcd18d4d42d1}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!set\-Handler@{set\-Handler}}
+\index{set\-Handler@{set\-Handler}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{set\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-set\-Handler (
+\begin{DoxyParamCaption}
+\item[{Handler}]{new\-Handler}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a6da2005ca957b72e9c9fbcd18d4d42d1}
+Set the Handler that the task should sent events to. This method does not have to be called if you do not wish to recieve events 
+\begin{DoxyParams}{Parameters}
+{\em new\-Handler} & \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a23763c92b12a03547bda7499ebfb6195}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!set\-Minimum\-Progress\-Update\-Interval@{set\-Minimum\-Progress\-Update\-Interval}}
+\index{set\-Minimum\-Progress\-Update\-Interval@{set\-Minimum\-Progress\-Update\-Interval}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{set\-Minimum\-Progress\-Update\-Interval}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-set\-Minimum\-Progress\-Update\-Interval (
+\begin{DoxyParamCaption}
+\item[{long}]{new\-Interval}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_a23763c92b12a03547bda7499ebfb6195}
+Sets the minimum time between E\-V\-E\-N\-T\-\_\-\-U\-P\-L\-O\-A\-D\-\_\-\-P\-R\-O\-G\-R\-E\-S\-S\-\_\-\-U\-P\-D\-A\-T\-E\-D events being sent. This can be set to a higher value to reduce the frequency at which updates are received. If not set, the interval is 100ms, which sends 10 updates per second, or 10 F\-P\-S 
+\begin{DoxyParams}{Parameters}
+{\em new\-Interval} & The new interval, in ms \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_ac98b0de5af01afc8e10733e0db1d5033}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!set\-Tag@{set\-Tag}}
+\index{set\-Tag@{set\-Tag}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{set\-Tag}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-set\-Tag (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Tag}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_ac98b0de5af01afc8e10733e0db1d5033}
+Adds a tag to the task, which will be sent with any event message as a String called \char`\"{}tag\char`\"{}. This is useful if you create multiple instances of this task and want to know which instance sent the message Calling this method is optional. 
+\begin{DoxyParams}{Parameters}
+{\em new\-Tag} & The tag to set \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_afa592ffdc5c8b191563d0b19e9fe2988}{\index{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}!set\-Upload\-Chunk\-Size@{set\-Upload\-Chunk\-Size}}
+\index{set\-Upload\-Chunk\-Size@{set\-Upload\-Chunk\-Size}!com::lbros::epicchat::UploadFileTask@{com\-::lbros\-::epicchat\-::\-Upload\-File\-Task}}
+\subsubsection[{set\-Upload\-Chunk\-Size}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Upload\-File\-Task.\-set\-Upload\-Chunk\-Size (
+\begin{DoxyParamCaption}
+\item[{int}]{new\-Size}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_upload_file_task_afa592ffdc5c8b191563d0b19e9fe2988}
+Sets the chunk size to use during the upload. If not set, the chunk size is 4\-K\-B 
+\begin{DoxyParams}{Parameters}
+{\em new\-Size} & The new chunk size, in bytes \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Upload\-File\-Task.\-java\end{DoxyCompactItemize}

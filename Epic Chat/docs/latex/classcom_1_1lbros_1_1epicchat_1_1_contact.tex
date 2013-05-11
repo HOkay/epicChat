@@ -1,0 +1,148 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact}{\section{com.\-lbros.\-epicchat.\-Contact Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_contact}\index{com.\-lbros.\-epicchat.\-Contact@{com.\-lbros.\-epicchat.\-Contact}}
+}
+
+
+Inherits Serializable.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_ae8dc4ccd10a0c973b3b82ec90e18e851}{Contact} (String new\-Id, String new\-First\-Name, String new\-Last\-Name, String new\-Phone\-Number, String new\-Image\-Path)
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_a371d42b33ec31cc58205934c7ae0275c}{get\-Id} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_a9e54f6f1a9258731b749bf73a5c624c4}{get\-First\-Name} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_a013fd5e20c4b49ea772c0791340b6640}{get\-Last\-Name} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_aee8c0516c4e425bcafda564667854b9f}{get\-Full\-Name} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_af02151efe98b88fd67603ec34cd7c93a}{get\-Phone\-Number} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_aaa22893e593650a5820b6bb292755b74}{get\-Image\-Path} ()
+\item 
+Bitmap \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact_a40a9f98d02f8e130599b0b1fcb92f138}{get\-Image\-Bitmap} (Integer width, Integer height, Integer corner\-Radius)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class used to represent contacts in the system. Each \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} has a user I\-D, a first name, a second name and an optional phone number. This class is serialisable as this allows us to send \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} objects between activities in Intents \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_ae8dc4ccd10a0c973b3b82ec90e18e851}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!Contact@{Contact}}
+\index{Contact@{Contact}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{Contact}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Contact.\-Contact (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Id, }
+\item[{String}]{new\-First\-Name, }
+\item[{String}]{new\-Last\-Name, }
+\item[{String}]{new\-Phone\-Number, }
+\item[{String}]{new\-Image\-Path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_ae8dc4ccd10a0c973b3b82ec90e18e851}
+Constructor 
+\begin{DoxyParams}{Parameters}
+{\em new\-Id} & The I\-D of the the contact \\
+\hline
+{\em new\-First\-Name} & The contact's first name \\
+\hline
+{\em new\-Last\-Name} & The contact's last name \\
+\hline
+{\em new\-Phone\-Number} & The phone number for the contact. May be null \\
+\hline
+{\em new\-Image\-Path} & The location of the image to user for this user, relative to the system root. May be null, in which case a default image is used \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_a9e54f6f1a9258731b749bf73a5c624c4}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-First\-Name@{get\-First\-Name}}
+\index{get\-First\-Name@{get\-First\-Name}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-First\-Name}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-First\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_a9e54f6f1a9258731b749bf73a5c624c4}
+Returns the contact's first name \begin{DoxyReturn}{Returns}
+The first name of the contact 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_aee8c0516c4e425bcafda564667854b9f}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Full\-Name@{get\-Full\-Name}}
+\index{get\-Full\-Name@{get\-Full\-Name}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Full\-Name}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-Full\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_aee8c0516c4e425bcafda564667854b9f}
+Returns the contact's full name \begin{DoxyReturn}{Returns}
+The combination of the contact's first and last name 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_a371d42b33ec31cc58205934c7ae0275c}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_a371d42b33ec31cc58205934c7ae0275c}
+Returns the contact's I\-D \begin{DoxyReturn}{Returns}
+The unique I\-D of the contact 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_a40a9f98d02f8e130599b0b1fcb92f138}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Image\-Bitmap@{get\-Image\-Bitmap}}
+\index{get\-Image\-Bitmap@{get\-Image\-Bitmap}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Image\-Bitmap}]{\setlength{\rightskip}{0pt plus 5cm}Bitmap com.\-lbros.\-epicchat.\-Contact.\-get\-Image\-Bitmap (
+\begin{DoxyParamCaption}
+\item[{Integer}]{width, }
+\item[{Integer}]{height, }
+\item[{Integer}]{corner\-Radius}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_a40a9f98d02f8e130599b0b1fcb92f138}
+Returns a Bitmap of the contact's image ready for use with Image\-View objects, or null if a bitmap could not be produced for some reason This method uses bitmap caching to improve performance. The cache is a static global Lru\-Cache located in the Main\-Activity, so that all classes may share it 
+\begin{DoxyParams}{Parameters}
+{\em width} & The width of the image \\
+\hline
+{\em height} & The height of the image \\
+\hline
+{\em corner\-Radius} & The desired radius of the bitmap's corners. Set to null for no rounding \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Bitmap image, with dimensions as specified, or original size if not 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_aaa22893e593650a5820b6bb292755b74}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Image\-Path@{get\-Image\-Path}}
+\index{get\-Image\-Path@{get\-Image\-Path}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Image\-Path}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-Image\-Path (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_aaa22893e593650a5820b6bb292755b74}
+Returns the path of the image used for this contact, relative to the system root \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_a013fd5e20c4b49ea772c0791340b6640}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Last\-Name@{get\-Last\-Name}}
+\index{get\-Last\-Name@{get\-Last\-Name}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Last\-Name}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-Last\-Name (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_a013fd5e20c4b49ea772c0791340b6640}
+Returns the contact's last name \begin{DoxyReturn}{Returns}
+The last name of the contact 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_contact_af02151efe98b88fd67603ec34cd7c93a}{\index{com\-::lbros\-::epicchat\-::\-Contact@{com\-::lbros\-::epicchat\-::\-Contact}!get\-Phone\-Number@{get\-Phone\-Number}}
+\index{get\-Phone\-Number@{get\-Phone\-Number}!com::lbros::epicchat::Contact@{com\-::lbros\-::epicchat\-::\-Contact}}
+\subsubsection[{get\-Phone\-Number}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Contact.\-get\-Phone\-Number (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_contact_af02151efe98b88fd67603ec34cd7c93a}
+Returns the contact's phone number, if set, or null if not \begin{DoxyReturn}{Returns}
+The contact's phone number, or null 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Contact.\-java\end{DoxyCompactItemize}

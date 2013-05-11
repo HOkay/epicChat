@@ -1,0 +1,104 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task}{\section{com.\-lbros.\-epicchat.\-Download\-Image\-Task Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task}\index{com.\-lbros.\-epicchat.\-Download\-Image\-Task@{com.\-lbros.\-epicchat.\-Download\-Image\-Task}}
+}
+
+
+Inherits Async\-Task$<$ Void, Void, Boolean $>$.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a6f27a70f86456db67b2a2c7c5b9a23f4}{Download\-Image\-Task} (String new\-Remote\-Location, String new\-Save\-Path)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a489dffc633e5da58819087783287770b}{set\-Handler} (Handler new\-Handler)
+\item 
+Bitmap \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_aed610c9cc2e02bb3fc486ef516a04a15}{get\-Image\-Bitmap} (Integer width, Integer height)
+\end{DoxyCompactItemize}
+\subsection*{Protected Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+Boolean \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a3670858e9c12671d0d5fe7baad3a59eb}{do\-In\-Background} (Void...\-arg)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a9c3ad8d7a90252084e8fe038a20831fb}{on\-Post\-Execute} (Boolean result)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Class used for downloading an image from a server on the background thread, which may be configured to send status events to a Handler object at various stages during the download. Alternatively, it may be run as a \char`\"{}fire and forget\char`\"{} task (i.\-e. no status events are returned) \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a6f27a70f86456db67b2a2c7c5b9a23f4}{\index{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}!Download\-Image\-Task@{Download\-Image\-Task}}
+\index{Download\-Image\-Task@{Download\-Image\-Task}!com::lbros::epicchat::DownloadImageTask@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}}
+\subsubsection[{Download\-Image\-Task}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Download\-Image\-Task.\-Download\-Image\-Task (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Remote\-Location, }
+\item[{String}]{new\-Save\-Path}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a6f27a70f86456db67b2a2c7c5b9a23f4}
+Constructor 
+\begin{DoxyParams}{Parameters}
+{\em new\-Remote\-Location} & The U\-R\-L of the image to retrieve, including '\href{http://'}{\tt http\-://'} \\
+\hline
+{\em new\-Save\-Path} & The path to save the image on the local device \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a3670858e9c12671d0d5fe7baad3a59eb}{\index{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}!do\-In\-Background@{do\-In\-Background}}
+\index{do\-In\-Background@{do\-In\-Background}!com::lbros::epicchat::DownloadImageTask@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}}
+\subsubsection[{do\-In\-Background}]{\setlength{\rightskip}{0pt plus 5cm}Boolean com.\-lbros.\-epicchat.\-Download\-Image\-Task.\-do\-In\-Background (
+\begin{DoxyParamCaption}
+\item[{Void...}]{arg}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a3670858e9c12671d0d5fe7baad3a59eb}
+Handles the download of the image on the background thread \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_aed610c9cc2e02bb3fc486ef516a04a15}{\index{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}!get\-Image\-Bitmap@{get\-Image\-Bitmap}}
+\index{get\-Image\-Bitmap@{get\-Image\-Bitmap}!com::lbros::epicchat::DownloadImageTask@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}}
+\subsubsection[{get\-Image\-Bitmap}]{\setlength{\rightskip}{0pt plus 5cm}Bitmap com.\-lbros.\-epicchat.\-Download\-Image\-Task.\-get\-Image\-Bitmap (
+\begin{DoxyParamCaption}
+\item[{Integer}]{width, }
+\item[{Integer}]{height}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_aed610c9cc2e02bb3fc486ef516a04a15}
+Returns a Bitmap of the contact's image ready for use with Image\-View objects, or null if a bitmap could not be produced for some reason 
+\begin{DoxyParams}{Parameters}
+{\em width} & The width of the image \\
+\hline
+{\em height} & The height of the image \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Bitmap image, with dimensions as specified, or original size if not 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a9c3ad8d7a90252084e8fe038a20831fb}{\index{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}!on\-Post\-Execute@{on\-Post\-Execute}}
+\index{on\-Post\-Execute@{on\-Post\-Execute}!com::lbros::epicchat::DownloadImageTask@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}}
+\subsubsection[{on\-Post\-Execute}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Download\-Image\-Task.\-on\-Post\-Execute (
+\begin{DoxyParamCaption}
+\item[{Boolean}]{result}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [protected]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a9c3ad8d7a90252084e8fe038a20831fb}
+Called on the U\-I thread when \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a3670858e9c12671d0d5fe7baad3a59eb}{do\-In\-Background()} has finished executing 
+\begin{DoxyParams}{Parameters}
+{\em result} & Boolean representing whether or not the download was successfull \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a489dffc633e5da58819087783287770b}{\index{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}!set\-Handler@{set\-Handler}}
+\index{set\-Handler@{set\-Handler}!com::lbros::epicchat::DownloadImageTask@{com\-::lbros\-::epicchat\-::\-Download\-Image\-Task}}
+\subsubsection[{set\-Handler}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Download\-Image\-Task.\-set\-Handler (
+\begin{DoxyParamCaption}
+\item[{Handler}]{new\-Handler}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_download_image_task_a489dffc633e5da58819087783287770b}
+Set the Handler that the task should sent events to. This method does not have to be called if you do not wish to recieve events 
+\begin{DoxyParams}{Parameters}
+{\em new\-Handler} & \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Download\-Image\-Task.\-java\end{DoxyCompactItemize}

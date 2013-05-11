@@ -1,0 +1,33 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    tools:context=".ViewConversationImageGalleryActivity" >
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/activity_conversation_image_gallery_main_image_pager"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#000000" />
+
+    <RelativeLayout
+        android:id="@+id/activity_conversation_image_gallery_bottom_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="#66000000" >
+
+        <TextView
+            android:id="@+id/activity_conversation_image_gallery_main_image_caption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginBottom="2dp"
+            android:text="Example image caption"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

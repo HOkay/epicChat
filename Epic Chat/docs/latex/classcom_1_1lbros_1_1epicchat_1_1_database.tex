@@ -1,0 +1,402 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database}{\section{com.\-lbros.\-epicchat.\-Database Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_database}\index{com.\-lbros.\-epicchat.\-Database@{com.\-lbros.\-epicchat.\-Database}}
+}
+
+
+Inherits S\-Q\-Lite\-Open\-Helper.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a23f9bfb1ecfa5ffa6f05b935aa510aee}{Database} (Context new\-Context)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_aeb50e7b935a7c12f65b2cdead3e7b8a5}{on\-Create} (S\-Q\-Lite\-Database database)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_aacce6e202944051d5881ab39357cd702}{on\-Upgrade} (S\-Q\-Lite\-Database database, int old\-Version, int new\-Version)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a7cec8a7baf9ad78d4369b6aa74693e71}{add\-Message} (\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} message)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a2538b44d288a382d6a68a048435d214c}{update\-Message\-Status} (String message\-Id, int new\-Status)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_ab0c37889bac45168867650ab9e8b2c45}{update\-Message\-Contents} (String message\-Id, String new\-Contents)
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a74ca149bfbefa14e408dccd9d0671fc6}{get\-Message} (String message\-Id)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a8e400103fcbedf22d8471a122ecb2715}{get\-Messages\-By\-Conversation} (String conversation, Integer start\-From, Integer limit)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_ace56849a58cca9cea9b0799e0f001638}{get\-Un\-Acked\-Messages} ()
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a362cf97145d3a9c9425c4d3d4b109465}{add\-Pending\-Message} (\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} pending\-Message)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a6b624069710df5074ca83d4b576664e9}{get\-Pending\-Messages} (String conversation\-Id)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a667530df5babf6aa4a99bc56df25c454}{empty\-Pending\-Messages} ()
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_abd33c8b84b5357de1eb76ab9cfb4da6c}{delete\-Pending\-Messages\-From\-Conversation} (String conversation\-Id)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a62006bda78c2a6aa5900532a006f91ce}{add\-Contact} (\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} contact)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a897d537b35791879f21c3ae72762d55b}{delete\-Contact} (String user\-Id)
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a184d7a5234574f8f3cc706ccaf6bf4d8}{get\-Contact} (String user\-Id)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a5f6162f0b116075bc3d91b7bb01a1358}{get\-All\-Contacts} (boolean include\-Local\-User)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a1529ac5122015e13f5eb3cbf05c774d4}{add\-Conversation} (\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} conversation)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_ac2a5e0009484ee8c064af5944a044d6a}{delete\-Conversation} (String conversation\-Id)
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a16dcff5a54f3bd1024e0227b2b39337a}{get\-Conversation} (String conversation\-Id)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a22e6f0f96ccd881b8c22d0a57e557b5b}{get\-All\-Conversations} ()
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_ae99ecb1e1cac6b8fddd187fa776f5b5a}{add\-Resource} (\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} resource)
+\item 
+void \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a5617e596141cd4875a7dd38fc8e64cdd}{delete\-Resource} (String resource\-Id)
+\item 
+\hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_a822d9196eab2f5e307c855186f3dc579}{get\-Resource} (String resource\-Id)
+\item 
+Array\-List$<$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} $>$ \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database_ab135c54b201f180c3d0a6ab90db4149d}{get\-Resources\-By\-Conversation} (String conversation\-Id, Integer start\-From, Integer limit)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A global database class that holds all persistent data that cannot be stored in the Shared Preferences \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Constructor \& Destructor Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a23f9bfb1ecfa5ffa6f05b935aa510aee}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!Database@{Database}}
+\index{Database@{Database}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{Database}]{\setlength{\rightskip}{0pt plus 5cm}com.\-lbros.\-epicchat.\-Database.\-Database (
+\begin{DoxyParamCaption}
+\item[{Context}]{new\-Context}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a23f9bfb1ecfa5ffa6f05b935aa510aee}
+Constructor for the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database}{Database}. Upgrading between database versions is handled by the system 
+\begin{DoxyParams}{Parameters}
+{\em new\-Context} & The context of the activity or service that instantiated the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_database}{Database} \\
+\hline
+\end{DoxyParams}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a62006bda78c2a6aa5900532a006f91ce}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!add\-Contact@{add\-Contact}}
+\index{add\-Contact@{add\-Contact}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{add\-Contact}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-add\-Contact (
+\begin{DoxyParamCaption}
+\item[{{\bf Contact}}]{contact}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a62006bda78c2a6aa5900532a006f91ce}
+Adds a contact to the database 
+\begin{DoxyParams}{Parameters}
+{\em contact} & A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} object containing the contact's details \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a1529ac5122015e13f5eb3cbf05c774d4}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!add\-Conversation@{add\-Conversation}}
+\index{add\-Conversation@{add\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{add\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-add\-Conversation (
+\begin{DoxyParamCaption}
+\item[{{\bf Conversation}}]{conversation}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a1529ac5122015e13f5eb3cbf05c774d4}
+Adds a \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} object to the conversation table 
+\begin{DoxyParams}{Parameters}
+{\em conversation} & A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} object containing the I\-D and image path of the conversation \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a7cec8a7baf9ad78d4369b6aa74693e71}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!add\-Message@{add\-Message}}
+\index{add\-Message@{add\-Message}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{add\-Message}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-add\-Message (
+\begin{DoxyParamCaption}
+\item[{{\bf Message}}]{message}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a7cec8a7baf9ad78d4369b6aa74693e71}
+Adds a message to the messages table 
+\begin{DoxyParams}{Parameters}
+{\em message} & The \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} to add to the database \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a362cf97145d3a9c9425c4d3d4b109465}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!add\-Pending\-Message@{add\-Pending\-Message}}
+\index{add\-Pending\-Message@{add\-Pending\-Message}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{add\-Pending\-Message}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-add\-Pending\-Message (
+\begin{DoxyParamCaption}
+\item[{{\bf Message}}]{pending\-Message}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a362cf97145d3a9c9425c4d3d4b109465}
+Adds a \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} object to the pending\-Messages table, which contains a list of messages that have been delivered to the device but have not been read. This list is used to generate 'inbox style' notifications which can show up to 5 separate lines of text, one per message. 
+\begin{DoxyParams}{Parameters}
+{\em pending\-Message} & A message object representing the message that has not been read yet \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_ae99ecb1e1cac6b8fddd187fa776f5b5a}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!add\-Resource@{add\-Resource}}
+\index{add\-Resource@{add\-Resource}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{add\-Resource}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-add\-Resource (
+\begin{DoxyParamCaption}
+\item[{{\bf Resource}}]{resource}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_ae99ecb1e1cac6b8fddd187fa776f5b5a}
+Adds a resource to the database 
+\begin{DoxyParams}{Parameters}
+{\em resource} & A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} object containing the resource's details \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a897d537b35791879f21c3ae72762d55b}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!delete\-Contact@{delete\-Contact}}
+\index{delete\-Contact@{delete\-Contact}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{delete\-Contact}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-delete\-Contact (
+\begin{DoxyParamCaption}
+\item[{String}]{user\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a897d537b35791879f21c3ae72762d55b}
+Deletes a contact from the database 
+\begin{DoxyParams}{Parameters}
+{\em user\-Id} & The I\-D of the contact to delete \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_ac2a5e0009484ee8c064af5944a044d6a}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!delete\-Conversation@{delete\-Conversation}}
+\index{delete\-Conversation@{delete\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{delete\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-delete\-Conversation (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_ac2a5e0009484ee8c064af5944a044d6a}
+Deletes a conversation from the database 
+\begin{DoxyParams}{Parameters}
+{\em conversation\-Id} & The I\-D of the contact to delete \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_abd33c8b84b5357de1eb76ab9cfb4da6c}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!delete\-Pending\-Messages\-From\-Conversation@{delete\-Pending\-Messages\-From\-Conversation}}
+\index{delete\-Pending\-Messages\-From\-Conversation@{delete\-Pending\-Messages\-From\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{delete\-Pending\-Messages\-From\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-delete\-Pending\-Messages\-From\-Conversation (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_abd33c8b84b5357de1eb76ab9cfb4da6c}
+Removes all messages from the specified conversatiob from the pending messages table 
+\begin{DoxyParams}{Parameters}
+{\em conversation\-Id} & The id of the conversation \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a5617e596141cd4875a7dd38fc8e64cdd}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!delete\-Resource@{delete\-Resource}}
+\index{delete\-Resource@{delete\-Resource}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{delete\-Resource}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-delete\-Resource (
+\begin{DoxyParamCaption}
+\item[{String}]{resource\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a5617e596141cd4875a7dd38fc8e64cdd}
+Deletes a resource from the database 
+\begin{DoxyParams}{Parameters}
+{\em resource\-Id} & The I\-D of the resource to delete \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a667530df5babf6aa4a99bc56df25c454}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!empty\-Pending\-Messages@{empty\-Pending\-Messages}}
+\index{empty\-Pending\-Messages@{empty\-Pending\-Messages}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{empty\-Pending\-Messages}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-empty\-Pending\-Messages (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a667530df5babf6aa4a99bc56df25c454}
+Removes all messages from the pending\-Messages table \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a5f6162f0b116075bc3d91b7bb01a1358}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-All\-Contacts@{get\-All\-Contacts}}
+\index{get\-All\-Contacts@{get\-All\-Contacts}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-All\-Contacts}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Contact}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-All\-Contacts (
+\begin{DoxyParamCaption}
+\item[{boolean}]{include\-Local\-User}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a5f6162f0b116075bc3d91b7bb01a1358}
+Retrieves all available Contacts from the database 
+\begin{DoxyParams}{Parameters}
+{\em include\-Local\-User} & Whether or not the details of the local user should be included in the list of Contacts returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An Array\-List containing a \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} object for each contact found in the database, or null if no contacts were found 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a22e6f0f96ccd881b8c22d0a57e557b5b}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-All\-Conversations@{get\-All\-Conversations}}
+\index{get\-All\-Conversations@{get\-All\-Conversations}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-All\-Conversations}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Conversation}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-All\-Conversations (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a22e6f0f96ccd881b8c22d0a57e557b5b}
+Retrieves all available Conversations from the database \begin{DoxyReturn}{Returns}
+An Array\-List containing a \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} object for each contact found in the database, or null if no contacts were found 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a184d7a5234574f8f3cc706ccaf6bf4d8}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Contact@{get\-Contact}}
+\index{get\-Contact@{get\-Contact}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Contact}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Contact} com.\-lbros.\-epicchat.\-Database.\-get\-Contact (
+\begin{DoxyParamCaption}
+\item[{String}]{user\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a184d7a5234574f8f3cc706ccaf6bf4d8}
+Retrieves a single contact from the database 
+\begin{DoxyParams}{Parameters}
+{\em user\-Id} & The I\-D of the contact to retrieve details for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_contact}{Contact} object containing all the contact's information, or null if no contact was found with the specified I\-D 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a16dcff5a54f3bd1024e0227b2b39337a}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Conversation@{get\-Conversation}}
+\index{get\-Conversation@{get\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Conversation} com.\-lbros.\-epicchat.\-Database.\-get\-Conversation (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a16dcff5a54f3bd1024e0227b2b39337a}
+Retrieves a single conversation from the database 
+\begin{DoxyParams}{Parameters}
+{\em conversation\-Id} & The I\-D of the conversation to retrieve details for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation}{Conversation} object containing all the conversation's information, or null if no conversation was found with the specified I\-D 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a74ca149bfbefa14e408dccd9d0671fc6}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Message@{get\-Message}}
+\index{get\-Message@{get\-Message}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Message}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Message} com.\-lbros.\-epicchat.\-Database.\-get\-Message (
+\begin{DoxyParamCaption}
+\item[{String}]{message\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a74ca149bfbefa14e408dccd9d0671fc6}
+Retrieves a single message from the database using its unique id. Useful for retrieving single messages for forwarding to others, etc etc 
+\begin{DoxyParams}{Parameters}
+{\em message\-Id} & The unique id of the message to retrieve \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A message object representing the message 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a8e400103fcbedf22d8471a122ecb2715}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Messages\-By\-Conversation@{get\-Messages\-By\-Conversation}}
+\index{get\-Messages\-By\-Conversation@{get\-Messages\-By\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Messages\-By\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Message}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-Messages\-By\-Conversation (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation, }
+\item[{Integer}]{start\-From, }
+\item[{Integer}]{limit}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a8e400103fcbedf22d8471a122ecb2715}
+Returns an Array\-List containing all the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} objects that belong to the specified conversation. Messages are sorted with respect to their sent timestamps, with the latest message first in the list 
+\begin{DoxyParams}{Parameters}
+{\em conversation} & The id of the conversation \\
+\hline
+{\em start\-From} & The first result to return. If 0 or null then the first result returned is the first overall result \\
+\hline
+{\em limit} & How many messages to return. May be null, in which case all messages are returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An Array\-List of \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} objects 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a6b624069710df5074ca83d4b576664e9}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Pending\-Messages@{get\-Pending\-Messages}}
+\index{get\-Pending\-Messages@{get\-Pending\-Messages}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Pending\-Messages}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Message}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-Pending\-Messages (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a6b624069710df5074ca83d4b576664e9}
+Returns an Array\-List containing all the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} objects are in the pending\-Messages\-Table 
+\begin{DoxyParams}{Parameters}
+{\em conversation\-Id} & The conversation I\-D. If set, only pending message from this conversation will be returned. If null, all pending messages are returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An Array\-List of \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} objects 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a822d9196eab2f5e307c855186f3dc579}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Resource@{get\-Resource}}
+\index{get\-Resource@{get\-Resource}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Resource}]{\setlength{\rightskip}{0pt plus 5cm}{\bf Resource} com.\-lbros.\-epicchat.\-Database.\-get\-Resource (
+\begin{DoxyParamCaption}
+\item[{String}]{resource\-Id}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a822d9196eab2f5e307c855186f3dc579}
+Retrieves a single resource from the database 
+\begin{DoxyParams}{Parameters}
+{\em resource\-Id} & The I\-D of the resource to retrieve details for \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} object containing all the resource's information, or null if no resource was found with the specified I\-D 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_ab135c54b201f180c3d0a6ab90db4149d}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Resources\-By\-Conversation@{get\-Resources\-By\-Conversation}}
+\index{get\-Resources\-By\-Conversation@{get\-Resources\-By\-Conversation}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Resources\-By\-Conversation}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Resource}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-Resources\-By\-Conversation (
+\begin{DoxyParamCaption}
+\item[{String}]{conversation\-Id, }
+\item[{Integer}]{start\-From, }
+\item[{Integer}]{limit}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_ab135c54b201f180c3d0a6ab90db4149d}
+Returns an Array\-List containing all the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} objects that belong to the specified conversation. Resources are sorted with respect to their timestamps, with the latest resource first in the list 
+\begin{DoxyParams}{Parameters}
+{\em conversation\-Id} & The id of the conversation \\
+\hline
+{\em start\-From} & The first result to return. If 0 or null then the first result returned is the first overall result \\
+\hline
+{\em limit} & How many resources to return. May be null, in which case all messages are returned \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+An Array\-List of \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_resource}{Resource} objects 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_ace56849a58cca9cea9b0799e0f001638}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!get\-Un\-Acked\-Messages@{get\-Un\-Acked\-Messages}}
+\index{get\-Un\-Acked\-Messages@{get\-Un\-Acked\-Messages}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{get\-Un\-Acked\-Messages}]{\setlength{\rightskip}{0pt plus 5cm}Array\-List$<${\bf Message}$>$ com.\-lbros.\-epicchat.\-Database.\-get\-Un\-Acked\-Messages (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_ace56849a58cca9cea9b0799e0f001638}
+Returns an Array\-List containing all Messages that have not had A\-C\-Ks recieved \begin{DoxyReturn}{Returns}
+An Array\-List of \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} objects 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_aeb50e7b935a7c12f65b2cdead3e7b8a5}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!on\-Create@{on\-Create}}
+\index{on\-Create@{on\-Create}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{on\-Create}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-on\-Create (
+\begin{DoxyParamCaption}
+\item[{S\-Q\-Lite\-Database}]{database}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_aeb50e7b935a7c12f65b2cdead3e7b8a5}
+Called when the database is created. Handles creation of the various tables \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_aacce6e202944051d5881ab39357cd702}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!on\-Upgrade@{on\-Upgrade}}
+\index{on\-Upgrade@{on\-Upgrade}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{on\-Upgrade}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-on\-Upgrade (
+\begin{DoxyParamCaption}
+\item[{S\-Q\-Lite\-Database}]{database, }
+\item[{int}]{old\-Version, }
+\item[{int}]{new\-Version}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_aacce6e202944051d5881ab39357cd702}
+Called when the database is upgraded. Handles any changes we define \hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_ab0c37889bac45168867650ab9e8b2c45}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!update\-Message\-Contents@{update\-Message\-Contents}}
+\index{update\-Message\-Contents@{update\-Message\-Contents}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{update\-Message\-Contents}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-update\-Message\-Contents (
+\begin{DoxyParamCaption}
+\item[{String}]{message\-Id, }
+\item[{String}]{new\-Contents}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_ab0c37889bac45168867650ab9e8b2c45}
+Updates the status of a message in the messages table 
+\begin{DoxyParams}{Parameters}
+{\em message\-Id} & The unique id of the message to update \\
+\hline
+{\em new\-Contents} & The new contents of the message \\
+\hline
+\end{DoxyParams}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_database_a2538b44d288a382d6a68a048435d214c}{\index{com\-::lbros\-::epicchat\-::\-Database@{com\-::lbros\-::epicchat\-::\-Database}!update\-Message\-Status@{update\-Message\-Status}}
+\index{update\-Message\-Status@{update\-Message\-Status}!com::lbros::epicchat::Database@{com\-::lbros\-::epicchat\-::\-Database}}
+\subsubsection[{update\-Message\-Status}]{\setlength{\rightskip}{0pt plus 5cm}void com.\-lbros.\-epicchat.\-Database.\-update\-Message\-Status (
+\begin{DoxyParamCaption}
+\item[{String}]{message\-Id, }
+\item[{int}]{new\-Status}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_database_a2538b44d288a382d6a68a048435d214c}
+Updates the status of a message in the messages table 
+\begin{DoxyParams}{Parameters}
+{\em message\-Id} & The unique id of the message to update \\
+\hline
+{\em new\-Status} & The new status of the message. Possible values are defined as fields in the \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_message}{Message} class \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Database.\-java\end{DoxyCompactItemize}

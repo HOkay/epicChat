@@ -1,0 +1,91 @@
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_conversation}{\section{com.\-lbros.\-epicchat.\-Conversation Class Reference}
+\label{classcom_1_1lbros_1_1epicchat_1_1_conversation}\index{com.\-lbros.\-epicchat.\-Conversation@{com.\-lbros.\-epicchat.\-Conversation}}
+}
+
+
+Inherits Serializable.
+
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation_afedabb7d97ff7ba70ed4a9ac8b64130e}{get\-Id} ()
+\item 
+String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4fd1f64ac69b7cbab8e0f735c2b09721}{get\-Image\-Path} ()
+\item 
+Bitmap \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4479dae703dc561e7c74765022fe0348}{get\-Image\-Bitmap} (Integer width, Integer height, Integer corner\-Radius)
+\end{DoxyCompactItemize}
+\subsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static String \hyperlink{classcom_1_1lbros_1_1epicchat_1_1_conversation_aff70cf16e69f4caa31dc536de2e69b94}{sort\-Conversation\-Id} (String new\-Conversation\-Id)
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+A class that represents a conversation within the application \begin{DoxyAuthor}{Author}
+Tom 
+\end{DoxyAuthor}
+
+
+\subsection{Member Function Documentation}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_conversation_afedabb7d97ff7ba70ed4a9ac8b64130e}{\index{com\-::lbros\-::epicchat\-::\-Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}!get\-Id@{get\-Id}}
+\index{get\-Id@{get\-Id}!com::lbros::epicchat::Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}}
+\subsubsection[{get\-Id}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Conversation.\-get\-Id (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_conversation_afedabb7d97ff7ba70ed4a9ac8b64130e}
+Returns the conversation's I\-D \begin{DoxyReturn}{Returns}
+The unique I\-D of the conversation 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4479dae703dc561e7c74765022fe0348}{\index{com\-::lbros\-::epicchat\-::\-Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}!get\-Image\-Bitmap@{get\-Image\-Bitmap}}
+\index{get\-Image\-Bitmap@{get\-Image\-Bitmap}!com::lbros::epicchat::Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}}
+\subsubsection[{get\-Image\-Bitmap}]{\setlength{\rightskip}{0pt plus 5cm}Bitmap com.\-lbros.\-epicchat.\-Conversation.\-get\-Image\-Bitmap (
+\begin{DoxyParamCaption}
+\item[{Integer}]{width, }
+\item[{Integer}]{height, }
+\item[{Integer}]{corner\-Radius}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4479dae703dc561e7c74765022fe0348}
+Returns a Bitmap of the contact's image ready for use with Image\-View objects, or null if a bitmap could not be produced for some reason This method uses bitmap caching to improve performance. The cache is a static global Lru\-Cache located in the Main\-Activity, so that all classes may share it 
+\begin{DoxyParams}{Parameters}
+{\em width} & The width of the image \\
+\hline
+{\em height} & The height of the image \\
+\hline
+{\em corner\-Radius} & The desired radius of the bitmap's corners. Set to null for no rounding \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+A Bitmap image, with dimensions as specified, or original size if not 
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4fd1f64ac69b7cbab8e0f735c2b09721}{\index{com\-::lbros\-::epicchat\-::\-Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}!get\-Image\-Path@{get\-Image\-Path}}
+\index{get\-Image\-Path@{get\-Image\-Path}!com::lbros::epicchat::Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}}
+\subsubsection[{get\-Image\-Path}]{\setlength{\rightskip}{0pt plus 5cm}String com.\-lbros.\-epicchat.\-Conversation.\-get\-Image\-Path (
+\begin{DoxyParamCaption}
+{}
+\end{DoxyParamCaption}
+)}}\label{classcom_1_1lbros_1_1epicchat_1_1_conversation_a4fd1f64ac69b7cbab8e0f735c2b09721}
+Returns the path of the image used for this conversation \begin{DoxyReturn}{Returns}
+
+\end{DoxyReturn}
+\hypertarget{classcom_1_1lbros_1_1epicchat_1_1_conversation_aff70cf16e69f4caa31dc536de2e69b94}{\index{com\-::lbros\-::epicchat\-::\-Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}!sort\-Conversation\-Id@{sort\-Conversation\-Id}}
+\index{sort\-Conversation\-Id@{sort\-Conversation\-Id}!com::lbros::epicchat::Conversation@{com\-::lbros\-::epicchat\-::\-Conversation}}
+\subsubsection[{sort\-Conversation\-Id}]{\setlength{\rightskip}{0pt plus 5cm}static String com.\-lbros.\-epicchat.\-Conversation.\-sort\-Conversation\-Id (
+\begin{DoxyParamCaption}
+\item[{String}]{new\-Conversation\-Id}
+\end{DoxyParamCaption}
+)\hspace{0.3cm}{\ttfamily [static]}}}\label{classcom_1_1lbros_1_1epicchat_1_1_conversation_aff70cf16e69f4caa31dc536de2e69b94}
+Sorts a conversation I\-D (a comma-\/separated string of user ids) alphabetically. Static so that other classes may use it 
+\begin{DoxyParams}{Parameters}
+{\em new\-Conversation\-Id} & The unsorted conversation I\-D \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+The sorted conversation I\-D 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\-:\begin{DoxyCompactItemize}
+\item 
+src/com/lbros/epicchat/Conversation.\-java\end{DoxyCompactItemize}
