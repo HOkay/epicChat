@@ -1000,3 +1000,4 @@ public class ViewConversationFragment extends Fragment {
 		database.deletePendingMessagesFromConversation(conversation);				//Also remove any pending messages sent from this conversation from the database
 	}
 }
+//THIS SHIT JUST GOT REAL
