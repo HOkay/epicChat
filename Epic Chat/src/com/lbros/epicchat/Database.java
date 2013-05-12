@@ -25,7 +25,7 @@ public class Database extends SQLiteOpenHelper {
 	private Context context;
 	 
     //Database Version
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
  
     //Database Name
     private static final String DATABASE_NAME = "epicChatDatabase";
@@ -36,6 +36,7 @@ public class Database extends SQLiteOpenHelper {
     private final String TABLE_CONTACTS = "contacts";
     private final String TABLE_CONVERSATIONS = "conversations";
     private final String TABLE_RESOURCES = "resources";
+    private final String TABLE_GAMES = "games";
     		   
     //Shared column names
     private final String KEY_ID = "id";
@@ -60,12 +61,21 @@ public class Database extends SQLiteOpenHelper {
     private final String KEY_PATH = "path";
     private final String KEY_TEXT = "text";
     
+    //Games column names
+    private final String KEY_GENRE = "genre";
+    private final String KEY_RELEASE_DATE = "releaseDate";
+    private final String KEY_SHORT_NAME = "shortName";
+    private final String KEY_LONG_NAME = "longName";
+    private final String KEY_DESCRIPTION = "description";
+    private final String KEY_RATING = "rating";
+    
     //Creation statements for each of the tables
-    String createTableMessages = "CREATE TABLE IF NOT EXISTS "+TABLE_MESSAGES+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_TIMESTAMP+" INTEGER,"+KEY_USER_LIST+" TEXT,"+KEY_FROM_USER+" TEXT, "+KEY_CONTENTS+" TEXT, "+KEY_MESSAGE_TYPE+" INTEGER , "+KEY_STATUS+" INTEGER)";
-    String createTablePendingMessages = "CREATE TABLE IF NOT EXISTS "+TABLE_PENDING_MESSAGES+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_TIMESTAMP+" INTEGER,"+KEY_USER_LIST+" TEXT,"+KEY_FROM_USER+" TEXT, "+KEY_CONTENTS+" TEXT, "+KEY_MESSAGE_TYPE+" INTEGER)";
-    String createTableContacts = "CREATE TABLE IF NOT EXISTS "+TABLE_CONTACTS+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_FIRST_NAME+" TEXT,"+KEY_LAST_NAME+" TEXT,"+KEY_PHONE_NUMBER+" TEXT, "+KEY_IMAGE_PATH+" TEXT)";
-    String createTableConversations = "CREATE TABLE IF NOT EXISTS "+TABLE_CONVERSATIONS+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_IMAGE_PATH+" TEXT)";
-    String createTableResources = "CREATE TABLE IF NOT EXISTS "+TABLE_RESOURCES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_TYPE+" INTEGER, "+KEY_TIMESTAMP+" INTEGER, "+KEY_CONVERSATION_ID+" TEXT, "+KEY_PATH+" TEXT, "+KEY_FROM_USER+" TEXT, "+KEY_TEXT+" TEXT)";
+    private String createTableMessages = "CREATE TABLE IF NOT EXISTS "+TABLE_MESSAGES+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_TIMESTAMP+" INTEGER,"+KEY_USER_LIST+" TEXT,"+KEY_FROM_USER+" TEXT, "+KEY_CONTENTS+" TEXT, "+KEY_MESSAGE_TYPE+" INTEGER , "+KEY_STATUS+" INTEGER)";
+    private String createTablePendingMessages = "CREATE TABLE IF NOT EXISTS "+TABLE_PENDING_MESSAGES+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_TIMESTAMP+" INTEGER,"+KEY_USER_LIST+" TEXT,"+KEY_FROM_USER+" TEXT, "+KEY_CONTENTS+" TEXT, "+KEY_MESSAGE_TYPE+" INTEGER)";
+    private String createTableContacts = "CREATE TABLE IF NOT EXISTS "+TABLE_CONTACTS+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_FIRST_NAME+" TEXT,"+KEY_LAST_NAME+" TEXT,"+KEY_PHONE_NUMBER+" TEXT, "+KEY_IMAGE_PATH+" TEXT)";
+    private String createTableConversations = "CREATE TABLE IF NOT EXISTS "+TABLE_CONVERSATIONS+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_IMAGE_PATH+" TEXT)";
+    private String createTableResources = "CREATE TABLE IF NOT EXISTS "+TABLE_RESOURCES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_TYPE+" INTEGER, "+KEY_TIMESTAMP+" INTEGER, "+KEY_CONVERSATION_ID+" TEXT, "+KEY_PATH+" TEXT, "+KEY_FROM_USER+" TEXT, "+KEY_TEXT+" TEXT)";
+    private String createTableGames = "CREATE TABLE IF NOT EXISTS "+TABLE_GAMES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_GENRE+" INTEGER, "+KEY_SHORT_NAME+" TEXT, "+KEY_LONG_NAME+" TEXT, "+KEY_DESCRIPTION+" TEXT, "+KEY_RATING+" INTEGER, "+KEY_RELEASE_DATE+" INTEGER, "+KEY_IMAGE_PATH+" TEXT)";
 
     /**
      * Constructor for the Database. Upgrading between database versions is handled by the system
@@ -87,6 +97,7 @@ public class Database extends SQLiteOpenHelper {
         database.execSQL(createTableContacts);
         database.execSQL(createTableConversations);
         database.execSQL(createTableResources);
+        database.execSQL(createTableGames);
     }
  
     /**
@@ -124,6 +135,11 @@ public class Database extends SQLiteOpenHelper {
     			break;
     		case 12:			//Version 12 adds a text field to the resources table
     			updateOperation = "ALTER TABLE "+TABLE_RESOURCES+" ADD COLUMN "+KEY_TEXT+" TEXT";
+    			break;
+    		case 13:			//Version 13 doesn't exist (I screwed up the versions somehow)
+    			break;
+    		case 14:			//Versaion 14 adds the games table
+    			updateOperation = createTableGames;
     			break;
     		default:
     			updateOperation = null;
@@ -706,5 +722,144 @@ public class Database extends SQLiteOpenHelper {
         database.close(); 										//Close the database connection
         //Return the list of resources, or null if none were found
         return resourceList;
+    }
+
+    /**
+     * Adds a game to the database
+     * @param game		A Game object containing the game's details
+     */
+    public void addGame(Game game){    	
+    	SQLiteDatabase database = this.getWritableDatabase();	//Connect to the database
+    	
+    	String gameId = game.getId();			//Cache this here to reduce method calls as we use it multiple times
+    	
+    	//First check if this game is already added
+    	Game existingGame = getGame(gameId);
+    	database = this.getWritableDatabase();					//Reconnect to the database as we already connected to it when we called getGame() on the previous line
+    	if(existingGame==null){		//True if the contact does not already exist    	
+	    	//We will store this contact in a row in the database, which is represented by a set of values contained in a ContentValues object
+	    	ContentValues row = new ContentValues();
+	        row.put(KEY_ID, gameId); 							//Game ID
+	        row.put(KEY_GENRE, game.getGenre());				//Genre
+	        row.put(KEY_SHORT_NAME, game.getShortName()); 		//Short name
+	        row.put(KEY_LONG_NAME, game.getLongName()); 		//Long name
+	        row.put(KEY_DESCRIPTION, game.getDescription()); 	//Description
+	        row.put(KEY_RATING, game.getRating()); 				//Rating
+	        row.put(KEY_RELEASE_DATE, game.getReleaseDate()); 	//Release date
+	        row.put(KEY_IMAGE_PATH, game.getImagePath()); 		//Image path (optional)
+	  
+	        //Insert the row
+	        if(database.insert(TABLE_GAMES, null, row)!=-1){
+	        	Log.d(TAG, "Game added, ID: "+gameId);
+	        }
+	        else{
+	        	Log.e(TAG, "Failed to add game, ID: "+gameId);
+	        }
+    	}
+    	else{							//Game is already int the database, output a log message
+    		Log.d(TAG, "Game with ID: "+gameId+" already exists");
+    	}
+        database.close(); 											//Close the database connection
+    }
+    
+    /**
+     * Deletes a game from the database
+     * @param gameId	The ID of the game to delete
+     */
+    public void deleteGame(Game game){
+    	SQLiteDatabase database = this.getReadableDatabase();		//Connect to the database
+    	database.execSQL("DELETE FROM "+TABLE_GAMES+" WHERE "+KEY_ID+"=\""+game.getId()+"\"");	//Delete the game from the table that matches the provided game id
+        database.close();
+    }
+    
+    /**
+     * Retrieves a single game from the database
+     * @param gameId		The ID of the game to retrieve details for
+     * @return				A Game object containing all the game's information, or null if no game was found with the specified ID
+     */
+    public Game getGame(String gameId){
+    	Game game = null;    	
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	SQLiteDatabase database = this.getReadableDatabase();	//Connect to the database
+ 
+        Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, KEY_ID + "=?", new String[] { gameId },  null, null, null, null);
+        if (cursor.moveToFirst()){		//True if we got a result from the database
+            game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+        }
+        database.close(); 										//Close the database connection
+    	return game;
+    }
+    
+    /**
+     * Retrieves all available Games from the database
+     * @return		An ArrayList containing a Game object for each game found in the database, or null if no games were found
+     */
+    public ArrayList<Game> getAllGames(Integer startFrom, Integer limit){
+    	ArrayList<Game> gamesList = new ArrayList<Game>();
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	
+    	//If a start point or limit was provided, set it in a string, ready for passing to the query
+    	
+    	//Handle null values
+    	if(startFrom==null){
+    		startFrom = 0;
+    	}    	
+    	if(limit==null){
+    		limit = Integer.MAX_VALUE;
+    	}
+    	
+    	String limitText = startFrom+", "+limit;
+      	
+    	SQLiteDatabase database = this.getReadableDatabase();	//Connect to the database
+    	
+    	//Simply get all messages in the table
+        Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, null, null,  null, null, null, limitText);
+        if (cursor.moveToFirst()){		//True if there is at least one result to process
+        	do {						//Loop through        		
+	            Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+	            gamesList.add(game);
+        		
+            } while (cursor.moveToNext());
+        }
+        database.close(); 										//Close the database connection
+        //Return the list of games, or null if none were found    	
+    	return gamesList;
+    }
+    
+    /**
+   	 * Returns an ArrayList containing all Games belonging to the specified genre. Games are sorted by release date, with the latest first in the list
+   	 * @param genre				The genre of games to return
+   	 * @param startFrom			The first result to return. If 0 or null then the first result returned is the first overall result
+   	 * @param limit				How many games to return. May be null, in which case all games starting from the start point are returned
+   	 * @return					An ArrayList of Game objects
+   	 */
+    public ArrayList<Game> getGamesByGenre(Integer genre, Integer startFrom, Integer limit){
+    	SQLiteDatabase database = this.getReadableDatabase();		//Connect to the database
+    	
+    	ArrayList<Game> gamesList = new ArrayList<Game>();
+    	
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	
+    	//If a start point or limit was provided, set it in a string, ready for passing to the query
+    	
+    	//Handle null values
+    	if(startFrom==null){
+    		startFrom = 0;
+    	}    	
+    	if(limit==null){
+    		limit = Integer.MAX_VALUE;
+    	}
+    	
+    	String limitText = startFrom+", "+limit;
+   	 	Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, KEY_GENRE + "=?", new String[] { genre+"" },  null, null, KEY_RELEASE_DATE+" ASC", limitText);
+        if (cursor.moveToFirst()){		//True if there is at least one result to process
+        	do {						//Loop through
+        		Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+        		gamesList.add(game);
+            } while (cursor.moveToNext());
+        }
+        database.close(); 										//Close the database connection
+        //Return the list of games, or an empty list if none were found
+        return gamesList;
     }
 }

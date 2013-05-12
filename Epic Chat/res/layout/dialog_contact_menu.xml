@@ -14,7 +14,7 @@
         android:id="@+id/dialog_contact_menu_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#277590"
+        android:background="#0099CC"
         android:gravity="center"
         android:padding="5dp"
         android:text="Contact Name"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/dialog_contact_menu_image"
-        android:background="#000000"
+        android:background="#CCCCCC"
         android:orientation="horizontal"
         android:weightSum="3" >
 
@@ -39,7 +39,7 @@
             android:layout_weight="1"
             android:drawableLeft="@android:drawable/ic_menu_edit"
             android:text="Chat"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="16sp" />
 
         <Button
@@ -50,7 +50,7 @@
             android:layout_weight="1"
             android:drawableLeft="@android:drawable/ic_menu_info_details"
             android:text="Profile"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="16sp" />
 
         <Button
@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:drawableLeft="@android:drawable/ic_menu_close_clear_cancel"
             android:text="Remove"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="16sp" />
     </LinearLayout>
 

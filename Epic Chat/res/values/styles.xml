@@ -8,7 +8,7 @@
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
-        <item name="android:background">#277590</item>
+        <item name="android:background">#0099CC</item>
         <item name="android:titleTextStyle">@style/MyActionBar.TitleTextStyle</item>
     </style>
 

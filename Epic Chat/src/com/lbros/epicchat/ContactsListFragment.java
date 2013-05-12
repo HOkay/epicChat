@@ -85,7 +85,7 @@ public class ContactsListFragment extends Fragment {
 		contactsListAdapter = new ContactsListAdapter(parentActivity);					//Create an instance of our custom adapter
 		listViewContacts.setAdapter(contactsListAdapter);												//And link it to the list view
 		listViewContacts.setOnItemClickListener(contactsListItemClickListener);							//And add a listener to it
-		
+
 		buttonSyncContacts = (ImageButton) fragmentLayout.findViewById(R.id.fragment_conversations_button_sync);
 		progressBarSyncStatusProgress = (ProgressBar) fragmentLayout.findViewById(R.id.fragment_conversations_sync_status_progress);
 		textViewSyncStatusText = (TextView) fragmentLayout.findViewById(R.id.fragment_conversations_sync_status_text);
