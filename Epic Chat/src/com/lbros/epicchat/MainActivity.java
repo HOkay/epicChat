@@ -100,7 +100,7 @@ public class MainActivity extends FragmentActivity {
 		addFragmentAsTab(TAB_CONVERSATIONS);
 		addFragmentAsTab(TAB_CONTACTS);
 		addFragmentAsTab(TAB_GAMES);
-
+		
 		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragments);
 
 		// Set up the ViewPager with the sections adapter.

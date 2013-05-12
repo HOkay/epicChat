@@ -774,8 +774,9 @@ public class ViewConversationFragment extends Fragment {
 			messageTime.setTimeInMillis((long) message.getTimestamp() * 1000);
 
 			//If this message is from a different day as the previous one, or there is no previous message, then we should show a thin line with the date
+			TextView dateStrip = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_date_strip);
+			
 			if(position==0){		//First message, so show the date strip
-				TextView dateStrip = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_date_strip);
 				dateStrip.setVisibility(View.VISIBLE);
 				dateStrip.setText(getFormattedDate(messageTime));
 			}
@@ -784,11 +785,11 @@ public class ViewConversationFragment extends Fragment {
 				Calendar previousMessageTime = Calendar.getInstance(Locale.getDefault());
 				previousMessageTime.setTimeInMillis((long) previousMessage.getTimestamp() * 1000);
 				if(messageTime.get(Calendar.DAY_OF_YEAR)!=previousMessageTime.get(Calendar.DAY_OF_YEAR)){		//True if the previous message is from a different day of the year (0-365)
-					TextView dateStrip = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_date_strip);
 					dateStrip.setVisibility(View.VISIBLE);
 					dateStrip.setText(getFormattedDate(messageTime));
 				}
 				else{
+					dateStrip.setVisibility(View.GONE);
 				}
 			}
 			

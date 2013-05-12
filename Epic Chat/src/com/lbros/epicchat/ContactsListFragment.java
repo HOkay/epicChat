@@ -25,6 +25,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
@@ -215,10 +216,15 @@ public class ContactsListFragment extends Fragment {
 		//Create the dialog
 		final Dialog imagePreviewDialog = new Dialog(parentActivity);
 		imagePreviewDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		imagePreviewDialog.setContentView(R.layout.dialog_contact_menu);
 		imagePreviewDialog.setOnShowListener(new OnShowListener() {
 			@Override
 			public void onShow(final DialogInterface dialog) {
+				//Increase the amount of background dimming
+				WindowManager.LayoutParams params = imagePreviewDialog.getWindow().getAttributes();
+				params.dimAmount = 0.8f;
+				imagePreviewDialog.getWindow().setAttributes(params);
 				ImageView userImage = (ImageView) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_image);
 				userImage.setImageBitmap(contact.getImageBitmap(600, 600, null));
 				TextView userName = (TextView) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_name);
