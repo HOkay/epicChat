@@ -1,0 +1,90 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewContactProfileActivity" >
+
+    <RelativeLayout
+        android:id="@+id/activity_view_contact_information_info_panel"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/activity_view_contact_information_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="10dp"
+            android:text=""
+            android:textSize="24sp" />
+
+        <ImageView
+            android:id="@+id/activity_view_contact_information_contact_image"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_alignLeft="@+id/activity_view_contact_information_contact_name"
+            android:layout_below="@+id/activity_view_contact_information_contact_name"
+            android:layout_marginTop="10dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitStart"
+            android:src="@null" />
+
+        <TextView
+            android:id="@+id/activity_view_contact_information_contact_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/activity_view_contact_information_contact_image"
+            android:layout_below="@+id/activity_view_contact_information_contact_image"
+            android:layout_marginTop="10dp"
+            android:text="" />
+
+        <TextView
+            android:id="@+id/activity_view_contact_information_contact_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/activity_view_contact_information_contact_email"
+            android:layout_below="@+id/activity_view_contact_information_contact_email"
+            android:layout_marginTop="10dp"
+            android:text="" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/activity_view_contact_information_confirm_contact_panel"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/activity_view_contact_information_info_panel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"
+        android:visibility="invisible" >
+
+        <TextView
+            android:id="@+id/activity_view_contact_information_confirm_contact_panel_info"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
+            android:gravity="center"
+            android:text="Would you like to add or block this contact?" />
+
+        <Button
+            android:id="@+id/activity_view_contact_information_button_block_contact"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/activity_view_contact_information_confirm_contact_panel_info"
+            android:text="Block"
+            android:textSize="20sp" />
+
+        <Button
+            android:id="@+id/activity_view_contact_information_button_add_contact"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/activity_view_contact_information_confirm_contact_panel_info"
+            android:text="Add"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -813,8 +813,7 @@ public class ViewConversationFragment extends Fragment {
 			});
 
 			messageHeading = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_heading);
-			
-			
+
 			if(position>0 && senderId.equals(messageList.get(position-1).getSenderId())){		//True if this is not the first message AND the sender id matches that of the previous message
 				userImage.setVisibility(View.GONE);				//Hide both the sender's name and their image
 				messageHeading.setVisibility(View.GONE);
