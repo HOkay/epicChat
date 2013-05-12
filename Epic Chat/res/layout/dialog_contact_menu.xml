@@ -14,7 +14,7 @@
         android:id="@+id/dialog_contact_menu_name"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#6633B5E5"
+        android:background="#33B5E5"
         android:gravity="center"
         android:padding="5dp"
         android:text="Contact Name"
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/dialog_contact_menu_image"
-        android:background="#66FFFFFF"
+        android:background="#000000"
         android:orientation="horizontal"
         android:weightSum="3" >
 
