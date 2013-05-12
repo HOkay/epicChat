@@ -107,7 +107,7 @@ public class Message implements Serializable {
 	
 	/**
 	 * Returns the timestamp of the message
-	 * @return		Message timestamp
+	 * @return		Message timestamp, in seconds since Jan 1st 1970
 	 */
 	public int getTimestamp(){
 		return timestamp;

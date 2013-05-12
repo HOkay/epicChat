@@ -4,8 +4,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -649,6 +651,16 @@ public class ViewConversationFragment extends Fragment {
 		public int getViewTypeCount() {
 		    return 2;		//There are three different layouts that may be used for rows
 		}
+		
+		private String getFormattedDate(Calendar time){
+			String formattedDate = "";
+			DecimalFormat formatter = new DecimalFormat("00");
+			int year = time.get(Calendar.YEAR);		//Year doesn't need formatting, it is always 4 digits (ever since the year 1000 AD)
+			String month = formatter.format(time.get(Calendar.MONTH));
+			String day = formatter.format(time.get(Calendar.DAY_OF_MONTH));
+			formattedDate = day+"/"+month+"/"+year;
+			return formattedDate;
+		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			//long startTime = System.currentTimeMillis();
@@ -673,6 +685,8 @@ public class ViewConversationFragment extends Fragment {
 			
 			ImageView userImage, messageImage;
 			TextView messageHeading, messageBody;
+			
+			//Some elements are message-type dependent, so use a switch to run specific code
 			switch(messageType){
 			case Message.MESSAGE_TYPE_TEXT:				//Standard text message
 				if(convertViewValid){
@@ -756,6 +770,28 @@ public class ViewConversationFragment extends Fragment {
 			}
 			
 			//Some layout items are present in all layouts. Typically these are the user's image, the message status indicator and the message time
+			Calendar messageTime = Calendar.getInstance(Locale.getDefault());
+			messageTime.setTimeInMillis((long) message.getTimestamp() * 1000);
+
+			//If this message is from a different day as the previous one, or there is no previous message, then we should show a thin line with the date
+			if(position==0){		//First message, so show the date strip
+				TextView dateStrip = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_date_strip);
+				dateStrip.setVisibility(View.VISIBLE);
+				dateStrip.setText(getFormattedDate(messageTime));
+			}
+			else{					//Otherwise check this message to the previous
+				Message previousMessage = (Message) getItem(position - 1);		//Get the previous message
+				Calendar previousMessageTime = Calendar.getInstance(Locale.getDefault());
+				previousMessageTime.setTimeInMillis((long) previousMessage.getTimestamp() * 1000);
+				if(messageTime.get(Calendar.DAY_OF_YEAR)!=previousMessageTime.get(Calendar.DAY_OF_YEAR)){		//True if the previous message is from a different day of the year (0-365)
+					TextView dateStrip = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_date_strip);
+					dateStrip.setVisibility(View.VISIBLE);
+					dateStrip.setText(getFormattedDate(messageTime));
+				}
+				else{
+				}
+			}
+			
 			RelativeLayout itemLayout = (RelativeLayout) view.findViewById(R.id.activity_view_conversation_message_list_item_wrapper);
 			//If the message is from the local user, give it a subtle grey background
 			if(localUserId.equals(message.getSenderId())){

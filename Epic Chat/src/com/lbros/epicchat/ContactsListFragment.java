@@ -3,26 +3,34 @@ package com.lbros.epicchat;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -37,7 +45,7 @@ import android.widget.Toast;
  *
  */
 public class ContactsListFragment extends Fragment {
-	//private final String TAG = "ContactsListFragment";
+	private final String TAG = "ContactsListFragment";
 
 	private Database database;
 	
@@ -53,7 +61,7 @@ public class ContactsListFragment extends Fragment {
 	IntentFilter contactsSyncCompleteFilter;
 	
 	//UI stuff
-	ListView listViewContacts;
+	GridView listViewContacts;
 	ImageButton buttonSyncContacts;
 	ProgressBar progressBarSyncStatusProgress;
 	TextView textViewSyncStatusText;
@@ -71,12 +79,8 @@ public class ContactsListFragment extends Fragment {
 		preferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
 		userId = preferences.getString("userId", null);
 	
-		//database.deleteContact("elizaleja@gmail.com");
-		
-		
-
 		//Setup the UI
-		listViewContacts = (ListView) fragmentLayout.findViewById(R.id.fragment_contacts_listview);
+		listViewContacts = (GridView) fragmentLayout.findViewById(R.id.fragment_contacts_gridview);
 		contactsListAdapter = new ContactsListAdapter(parentActivity);					//Create an instance of our custom adapter
 		listViewContacts.setAdapter(contactsListAdapter);												//And link it to the list view
 		listViewContacts.setOnItemClickListener(contactsListItemClickListener);							//And add a listener to it
@@ -159,7 +163,7 @@ public class ContactsListFragment extends Fragment {
 			Contact contact = contactsList.get(position);
 
 			if(contact!=null){
-				Bitmap bitmap = contact.getImageBitmap(120, 120, 6);
+				Bitmap bitmap = contact.getImageBitmap(320, 320, null);
 				if(bitmap!=null){
 					contactImage.setImageBitmap(bitmap);
 				}
@@ -174,7 +178,7 @@ public class ContactsListFragment extends Fragment {
      * Launches the conversation activity using an Intent, with the provided ID sent as an extra
      * @param conversationId		Conversation ID that will be sent with the new Intent to the Conversation activity
      */
-    private void openChatWithUser(String conversationId){
+    private void openChat(String conversationId){
     	Intent openChatIntent = new Intent(parentActivity, ViewConversationsActivity.class);
     	openChatIntent.putExtra("conversationId", conversationId);
     	startActivity(openChatIntent);
@@ -195,65 +199,64 @@ public class ContactsListFragment extends Fragment {
 		progressBarSyncStatusProgress.setVisibility(visibility);
 		textViewSyncStatusText.setVisibility(visibility);
 	}
-    
 	
 	/**
 	 * Listens for clicks on the contacts list
 	 */
 	private OnItemClickListener contactsListItemClickListener = new OnItemClickListener() {
-		private final int MENU_ITEM_OPEN_CHAT = 0;
-		private final int MENU_ITEM_VIEW_PROFILE = 1;
-		private final int MENU_ITEM_REMOVE_CONTACT = 2;
-		@Override
 		public void onItemClick(AdapterView<?> adapterView, View itemView, int index, long arg3) {
-			final Contact contact = (Contact) contactsListAdapter.getItem(index);
-			
-			final String contactId = contact.getId();
-			final String contactFullName = contact.getFullName();
-			AlertDialog.Builder contextDialogBuilder = new AlertDialog.Builder(getActivity());
-			contextDialogBuilder.setTitle(contactFullName);
-			//Set the icon
-			Bitmap contactImage = contact.getImageBitmap(100, 100, null);
-	    	Drawable imageDrawable = new BitmapDrawable(getResources(), contactImage);
-	    	contextDialogBuilder.setIcon(imageDrawable);
-			String[] menuOptions = new String[]{"Chat", "View profile", "Remove"};
-			contextDialogBuilder.setItems(menuOptions, new OnClickListener() {				
-				@Override
-				public void onClick(DialogInterface arg0, int index) {
-					switch(index){
-					case MENU_ITEM_OPEN_CHAT:		//First item is the "Chat" button
-						String conversationId = contactId+","+userId;
-						openChatWithUser(conversationId);
-						break;
-					case MENU_ITEM_VIEW_PROFILE:		//First item is the "Chat" button
+			Contact contact = (Contact) contactsListAdapter.getItem(index);
+			showUserMenuDialog(contact);
+		}
+	};
+	
+	//Displays a dialog box that shows the selected image to the user, along with a text box for adding a caption to the message 
+	private void showUserMenuDialog(final Contact contact) {
+		//Create the dialog
+		final Dialog imagePreviewDialog = new Dialog(parentActivity);
+		imagePreviewDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		imagePreviewDialog.setContentView(R.layout.dialog_contact_menu);
+		imagePreviewDialog.setOnShowListener(new OnShowListener() {
+			@Override
+			public void onShow(final DialogInterface dialog) {
+				ImageView userImage = (ImageView) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_image);
+				userImage.setImageBitmap(contact.getImageBitmap(600, 600, null));
+				TextView userName = (TextView) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_name);
+				userName.setText(contact.getFullName());
+				Button buttonChat = (Button) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_button_chat);
+				buttonChat.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
+						String conversationId = contact.getId()+","+userId;
+						openChat(conversationId);
+						dialog.dismiss();
+					}
+				});
+				Button buttonViewProfile = (Button) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_button_profile);
+				buttonViewProfile.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
 						Intent viewProfileIntent = new Intent(parentActivity, ViewContactProfileActivity.class);
 						viewProfileIntent.putExtra("contact", contact);
 						startActivity(viewProfileIntent);
-						break;
-					case MENU_ITEM_REMOVE_CONTACT:		//First item is the "Chat" button
+						dialog.dismiss();
+					}
+				});
+				Button buttonRemove = (Button) imagePreviewDialog.findViewById(R.id.dialog_contact_menu_button_remove);
+				buttonRemove.setOnClickListener(new View.OnClickListener() {
+					public void onClick(View v) {
 						database.deleteContact(contact, true);
 						contactsListAdapter.refresh();
 						//Send a Broadcast to alert the ConversationsListFragment that a conversation may have been deleted
 						//Send a broadcast to indicate a contact sync event has occured
 						Intent newMessageIntent = new Intent(MainActivity.intentSignatureConversationsModified);
 						parentActivity.sendBroadcast(newMessageIntent, null);
-						Toast.makeText(parentActivity, "Contact \""+contactFullName+"\" removed", Toast.LENGTH_SHORT).show();
-						break;
-					default:
-						break;
+						dialog.dismiss();
+						Toast.makeText(parentActivity, "Contact \""+contact.getFullName()+"\" removed", Toast.LENGTH_SHORT).show();
 					}
-				}
-			});
-			contextDialogBuilder.setNegativeButton("Back", new OnClickListener() {				
-				@Override
-				public void onClick(DialogInterface dialog, int arg1) {
-					dialog.cancel();
-				}
-			});
-			AlertDialog contextDialog = contextDialogBuilder.create();
-			contextDialog.show();
-		}
-	};
+				});
+			}
+		});
+		imagePreviewDialog.show();
+	}
 	
 	/**
 	 * Listens for events that cause the list of contacts to change
@@ -277,4 +280,6 @@ public class ContactsListFragment extends Fragment {
 	    	}
 	    }
 	};
+	
+	
 }

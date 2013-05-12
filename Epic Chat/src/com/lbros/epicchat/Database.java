@@ -150,7 +150,7 @@ public class Database extends SQLiteOpenHelper {
         row.put(KEY_TIMESTAMP, message.getTimestamp()); 		//Message timestamp. Always in GMT, because we bloody invented time
         row.put(KEY_MESSAGE_TYPE, message.getType()); 			//Message type
         row.put(KEY_STATUS, message.getStatus()); 				//Message status
-        row.put(KEY_USER_LIST, message.getConversationId()); 			//Set of users in the conversation
+        row.put(KEY_USER_LIST, message.getConversationId()); 	//Set of users in the conversation
         row.put(KEY_FROM_USER, message.getSenderId()); 			//The user who sent the message
         row.put(KEY_CONTENTS, message.getContents(null));		//The actual text
   
@@ -491,7 +491,7 @@ public class Database extends SQLiteOpenHelper {
     	}
     	
     	//Simply get all messages in the table
-        Cursor cursor = database.query(TABLE_CONTACTS, columnsToRetrieve, null, null,  null, null, null, null);
+        Cursor cursor = database.query(TABLE_CONTACTS, columnsToRetrieve, null, null,  null, null, KEY_LAST_NAME+" ASC", null);
         if (cursor.moveToFirst()){		//True if there is at least one result to process
         	do {						//Loop through
         		if(!cursor.getString(0).equals(localUserId) || includeLocalUser){		//Add the contact if it is not the local user's ID, OR if the user's ID is to be included in the contacts list returned
