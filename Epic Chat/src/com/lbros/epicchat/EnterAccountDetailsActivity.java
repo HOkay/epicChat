@@ -403,7 +403,7 @@ public class EnterAccountDetailsActivity extends Activity {
     
     protected void uploadProfileImage() {
     	String serverAddress = preferences.getString("serverAddress", null);
-		final UploadFileTask uploadUserImage = new UploadFileTask(serverAddress+"setUserImage.php?userId="+userId, localImagePath);			
+		final UploadFileTask uploadUserImage = new UploadFileTask(serverAddress+"setUserImage.php?userId="+userId, localImagePath);
     	uploadImageHandler = new Handler(){
 			public void handleMessage(Message message){
 				//Switch based on the code of the message
