@@ -402,7 +402,8 @@ public class EnterAccountDetailsActivity extends Activity {
 	}
     
     protected void uploadProfileImage() {
-		final UploadFileTask uploadUserImage = new UploadFileTask("http://tomhomewood.dyndns.org/epicChat/setUserImage.php?userId="+userId, localImagePath);			
+    	String serverAddress = preferences.getString("serverAddress", null);
+		final UploadFileTask uploadUserImage = new UploadFileTask(serverAddress+"setUserImage.php?userId="+userId, localImagePath);			
     	uploadImageHandler = new Handler(){
 			public void handleMessage(Message message){
 				//Switch based on the code of the message
@@ -493,7 +494,8 @@ public class EnterAccountDetailsActivity extends Activity {
 		setButtonText("Next");
 		if(!newAccount){				//If the user account already exists on the server, download the user's profile image from the server
 			userImagePath = MainActivity.DIRECTORY_USER_IMAGES+userId+".jpg";
-	    	final DownloadFileTask downloadUserImage = new DownloadFileTask("http://tomhomewood.dyndns.org/epicChat/getUserImage.php?userId="+userId+"&size=500", userImagePath);			
+			String serverAddress = preferences.getString("serverAddress", null);
+	    	final DownloadFileTask downloadUserImage = new DownloadFileTask(serverAddress+"getUserImage.php?userId="+userId+"&size=500", userImagePath);			
 	    	downloadImageHandler = new Handler(){
 				public void handleMessage(Message message){
 					//Switch based on the code of the message

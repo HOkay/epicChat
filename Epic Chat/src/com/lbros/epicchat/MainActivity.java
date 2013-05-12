@@ -87,7 +87,7 @@ public class MainActivity extends FragmentActivity {
         String UUID = wifiManager.getConnectionInfo().getMacAddress();
         //Save the UUID
         SharedPreferences.Editor editor = preferences.edit();
-        //editor.putString("serverAddress", "http://tomhomewood.dyndns.org/epicChat/");
+
         editor.putString("serverAddress", "http://epicchat.cufflinksdesign.co.uk/");
         editor.putString("UUID", UUID);
         editor.commit();
