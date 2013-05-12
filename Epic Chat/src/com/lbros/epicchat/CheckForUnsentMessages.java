@@ -57,7 +57,7 @@ public class CheckForUnsentMessages extends BroadcastReceiver {
 				int messageType = message.getType();
 				String fromUser = message.getSenderId();
 				String toUsers = message.getConversationId();
-				String messageContents = message.getContents(null);
+				String messageContents = message.getContents(null).toString();
 				String messageTextEncoded;
 				try {
 					messageTextEncoded = URLEncoder.encode(messageContents, "utf-8");

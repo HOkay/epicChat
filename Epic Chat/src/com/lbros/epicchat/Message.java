@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import android.text.Html;
+import android.text.Spanned;
+
 /**
  * Class that is used to represent messages. Each message object contains a unique ID, the id of the conversation it belongs to, the user who sent it, the time it was sent, and its contents
  * This class is serialisable as this allows us to send Message objects between activities in Intents
@@ -162,13 +165,18 @@ public class Message implements Serializable {
 	 * @param maxLength		The maximum number of characters to return, starting from the first character. If null, all characters are returned. If clipping does occur, three dots are appended to the end of the string
 	 * @return				A string containing the message contents, optionally clipped to the length specified
 	 */
-	public String getContents(Integer maxLength){
+	public CharSequence getContents(Integer maxLength){
 		String contentsConcise;
 		if(maxLength!=null && contents.length()>maxLength){		//True if a length was specified the contents need clipping to length
 			contentsConcise = contents.substring(0,  maxLength)+"...";
 		}
 		else{									//No clipping required, so just return the full string
 			contentsConcise = contents;
+		}
+		//The contents of the message could be a hyperlink, so style it accordingly if it is
+		if(contentsConcise.startsWith("http://")){
+			Spanned hyperlink = Html.fromHtml("<a href=\""+contentsConcise+"\">"+contentsConcise+"</a>");
+			return hyperlink;
 		}
 		return contentsConcise;
 	}

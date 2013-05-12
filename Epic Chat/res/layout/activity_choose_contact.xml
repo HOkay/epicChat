@@ -3,15 +3,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <ListView
-        android:id="@+id/activity_choose_contact_listview"
+    <GridView
+        android:id="@+id/activity_choose_contact_gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
-        android:divider="#cccccc"
-        android:dividerHeight="1px" >
-    </ListView>
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="20dp"
+        android:columnWidth="160dp"
+        android:gravity="center"
+        android:horizontalSpacing="10dp"
+        android:numColumns="auto_fit"
+        android:stretchMode="spacingWidth"
+        android:verticalSpacing="20dp" >
+    </GridView>
 
 </RelativeLayout>

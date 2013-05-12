@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 /**
@@ -33,7 +33,7 @@ public class ChooseContactActivity extends Activity {
 	IntentFilter contactsSyncCompleteFilter;
 	
 	//UI stuff
-	ListView listViewContacts;
+	GridView listViewContacts;
 
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,7 +47,7 @@ public class ChooseContactActivity extends Activity {
 		contactsList = database.getAllContacts(false);
 
 		//Setup the UI
-		listViewContacts = (ListView) findViewById(R.id.activity_choose_contact_listview);
+		listViewContacts = (GridView) findViewById(R.id.activity_choose_contact_gridview);
 		contactsListAdapter = new ContactsListAdapter(contactsList, this);					//Create an instance of our custom adapter
 		listViewContacts.setAdapter(contactsListAdapter);									//And link it to the list view
 		listViewContacts.setOnItemClickListener(contactsListItemClickListener);				//And add a listener to it
@@ -95,8 +95,7 @@ public class ChooseContactActivity extends Activity {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
-			if (view == null)
-			{
+			if (view == null){
 				LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				view = vi.inflate(R.layout.fragment_contacts_list_list_item, null);
 			}
@@ -107,7 +106,7 @@ public class ChooseContactActivity extends Activity {
 			//Get the Contact object from the list
 			Contact contact = contactsList.get(position);
 
-			contactImage.setImageBitmap(contact.getImageBitmap(120, 120, 6));
+			contactImage.setImageBitmap(contact.getImageBitmap(320, 320, null));
 			contactName.setText(contact.getFullName());                 //Get the contact's full name
 
 			return view;

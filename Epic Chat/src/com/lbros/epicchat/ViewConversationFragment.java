@@ -153,37 +153,13 @@ public class ViewConversationFragment extends Fragment {
 		//Initialise the Hashmap, which will contain mappings of message IDs to Progress Bar objects
         messageProgressBars = new HashMap<String, ProgressBar>();
 
-/*        
-        boolean stateRestored = false;
-        //Check the saved state, if it exists
-        if(savedInstanceState!=null){
-        	Parcelable previousListState = savedInstanceState.getParcelable("listViewState");
-        	if(previousListState!=null){
-        		Log.d(TAG, "RETRIEVING STATE");
-        		chatList.onRestoreInstanceState(previousListState);
-        		stateRestored = true;
-        	}
-        }
-*/
-		//Listeners
+        //Listeners
 		buttonSend.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				String textToSend = textEntry.getText().toString().trim();		//Get the text. trim() removes leading and trailing whitespace
 				if(!TextUtils.isEmpty(textToSend)){		//True if there is something to send
-					//Add the message to the chat list. Build a message object and pass it to the function that will add it to the list
-					
-					//First, we need a timestamp for the message
-					int messageTimestamp = (int) (System.currentTimeMillis() / 1000);
-					//Also need a unique ID for the message
-					String messageId = messageTimestamp+""+UUID.randomUUID();
-					
-					Message message = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_TEXT, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, textToSend);
-
-					storeMessage(message);
-					
-					chatListAdapter.refresh();
-					
-					sendMessageUsingGCM(message);
+					//This function will add the message to the chat list, store it in the database, and send it to the remote user(s)
+					sendTextAsMessage(textToSend);
 					
 					//Clear the box
 					textEntry.setText("");
@@ -207,25 +183,41 @@ public class ViewConversationFragment extends Fragment {
         else if(action.equals(Intent.ACTION_SEND)){		//Something was sent to this activity, we should handle it
         	String conversationId = intentData.getString("conversationId");
         	if(conversationId!=null && conversationId.equals(conversation.getId())){
-	        	//Check what kind of data we are being sent
+        		//Check what kind of data we are being sent
 	            String dataType = intent.getType();
-	        	if(dataType.equals("image/*")){						//Data is a reference to an image
+	            if(dataType.startsWith("image/")){							//Data is a reference to an image. Use startsWith because matching "image/*" using string functions will fail for specific types (e.g. "image/jpg")
 	        		Uri imageUri = intent.getData();
-	            	if(imageUri!=null){
+	        		if(imageUri!=null){
 	            		String imagePath = getRealPathFromURI(imageUri);	//Convert the URI to a string and show the image preview dialog
 	            		if(imagePath!=null){
 	            			showImagePreviewDialog(imagePath);
 	            		}
 	            	}
 	        	}
+	            else if(dataType.startsWith("text/plain")){
+	            	String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+	            	if(text!=null && text.trim().length()>0){
+	            		sendTextAsMessage(text.trim());
+	            	}
+	            }
         	}
         }
         registerMessageReceiver();
         return fragmentLayout;
     }
     
-    
-    @Override
+    private void sendTextAsMessage(String text) {
+    	//First, we need a timestamp for the message
+		int messageTimestamp = (int) (System.currentTimeMillis() / 1000);
+		//Also need a unique ID for the message
+		String messageId = messageTimestamp+""+UUID.randomUUID();
+		Message message = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_TEXT, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, text);
+		storeMessage(message);
+		chatListAdapter.refresh();
+		sendMessageUsingGCM(message);
+	}
+
+	@Override
     public void onSaveInstanceState(Bundle state) {
     	super.onSaveInstanceState(state);
     	Parcelable listViewState = chatList.onSaveInstanceState();
@@ -356,7 +348,7 @@ public class ViewConversationFragment extends Fragment {
 				int messageType = message.getType();
 				String fromUser = message.getSenderId();
 				String toUsers = message.getConversationId();
-				String messageContents = message.getContents(null);
+				String messageContents = message.getContents(null).toString();
 				String messageTextEncoded;
 				try {
 					messageTextEncoded = URLEncoder.encode(messageContents, "utf-8");
@@ -408,7 +400,7 @@ public class ViewConversationFragment extends Fragment {
 	 */
 	protected void messageReceivedAck(Message message) {
 		//Update the status of the message in the database 
-		database.updateMessageStatus(message.getContents(null), Message.MESSAGE_STATUS_ACK_RECIPIENT);
+		database.updateMessageStatus(message.getContents(null).toString(), Message.MESSAGE_STATUS_ACK_RECIPIENT);
 		//Refresh the list view
 		chatListAdapter.refresh();
 	}
@@ -522,7 +514,6 @@ public class ViewConversationFragment extends Fragment {
 				}
 			}
 			int scalingFactor = Utils.calculateSubSamplingFactor(options, newWidth, newHeight, true);
-			Log.d(TAG, "SF: "+scalingFactor);
 			options.inSampleSize = scalingFactor;
 			options.inJustDecodeBounds = false;		//We want the Bitmap's pixels this time
 			Bitmap outputImage = BitmapFactory.decodeFile(imagePath, options);				//This will load the bitmap and subsample with the value we provided, to minimise memory usage
@@ -540,7 +531,7 @@ public class ViewConversationFragment extends Fragment {
 		    JSONObject messageContents = new JSONObject();
 		    try {
 				messageContents.put("fileName", fileName);
-				if(imageCaption!=null){
+				if(imageCaption!=null && imageCaption.length()>0){
 					messageContents.put("caption", imageCaption);
 				}
 				messageContents.put("width", outputImage.getWidth());
@@ -710,7 +701,7 @@ public class ViewConversationFragment extends Fragment {
 				String imageResourceId = null;
 				//The message is a JSON object containing several fields, one of which is the file name which we will use to get the image
 				try {
-					JSONObject messageJSON = new JSONObject(message.getContents(null));
+					JSONObject messageJSON = new JSONObject(message.getContents(null).toString());
 					String imagePath = MainActivity.DIRECTORY_RESOURCES+messageJSON.getString("fileName");
 					int imageWidth = messageJSON.getInt("width");		//We want the dimensions in order to calculate the aspect ratio of the image
 					int imageHeight = messageJSON.getInt("height");
@@ -968,7 +959,7 @@ public class ViewConversationFragment extends Fragment {
 				if(resourceId!=null){					//Only continue if there is a valid response
 					//At this point, the contents of the message contains a JSON object with the filename, width, and height. We will now add the resource ID and send the message
 					try {
-				    	JSONObject messageJSON = new JSONObject(pendingImageMessage.getContents(null));
+				    	JSONObject messageJSON = new JSONObject(pendingImageMessage.getContents(null).toString());
 				    	messageJSON.put("resourceId", resourceId);
 					    //TODO Smarter update, maybe update using a Message object?
 					    pendingImageMessage.updateContents(messageJSON.toString());		//Update the contents of the message and send it

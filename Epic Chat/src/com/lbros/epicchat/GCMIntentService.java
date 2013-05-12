@@ -365,7 +365,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 	private void createNewContactChoiceNotification(Contact newContact, Message newMessage) {
 		Context context = getApplicationContext();
 		
-		String action = "com.lbros.newContact."+newContact.getId();
+		String action = ViewContactProfileActivity.ACTION_PREFIX+newContact.getId();
 		
 		//Get the notification manager
 		NotificationManager	notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

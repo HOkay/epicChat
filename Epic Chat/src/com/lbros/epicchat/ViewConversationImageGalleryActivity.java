@@ -172,8 +172,11 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 		if (actionBarShareWidget!=null) {
 			Intent shareIntent = new Intent(Intent.ACTION_SEND);
 			Uri imagePath = Uri.parse("file://"+imageResource.getPath());
-			shareIntent.putExtra(Intent.EXTRA_STREAM, imagePath);
+			//shareIntent.setDataAndType(imagePath, "image/jpg");
+			//Log.d(TAG, "DATA: "+shareIntent.getData());
+			//shareIntent.putExtra(Intent.EXTRA_STREAM, imagePath);
 			shareIntent.setType("image/jpg");
+			shareIntent.putExtra(Intent.EXTRA_STREAM, imagePath);
 			//shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
 			//shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION); 
 			actionBarShareWidget.setShareIntent(shareIntent);
@@ -204,7 +207,7 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        case android.R.id.home:		//App icon in action bar clicked, so go to the main activity	            
+	        case android.R.id.home:		//App icon in action bar clicked, so go to the main activity
 	        	finish();
 	            return true;
 	        default:

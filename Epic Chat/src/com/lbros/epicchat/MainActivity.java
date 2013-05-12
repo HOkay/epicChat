@@ -205,16 +205,25 @@ public class MainActivity extends FragmentActivity {
 		    		String contactId = chosenContact.getId();
 		    		String conversationId = Conversation.sortConversationId(contactId+','+localUserId);		//Create the conversation ID we need using the local user's ID and the ID of the selected contact. Sort to avoid ID problems
 			    	String dataType = receivedDataIntent.getType();		//The data we want was stored earlier in this variable
-		        	Uri dataPath = null;
-		        	//Check what kind of data we are being sent
-		        	if(dataType.equals("image/*")){						//Data is a reference to an image
-		        		dataPath = (Uri) receivedDataIntent.getParcelableExtra(Intent.EXTRA_STREAM);
-		        	}
-		        	//Open the required conversation using an Intent
+			    	Uri dataPath = null;
+		        	
+			    	//Open the required conversation using an Intent
 		        	Intent openChatIntent = new Intent(this, ViewConversationsActivity.class);
 		        	openChatIntent.putExtra("conversationId", conversationId);
 		        	openChatIntent.setAction(Intent.ACTION_SEND);	//Set the action so the activity knows what is happening
-		        	openChatIntent.setDataAndType(dataPath, dataType);				//Add the path of the resource (e.g. image) as the Intent's data. Copy the type from the intent we received
+			    	
+			    	//Check what kind of data we are being sent
+		        	if(dataType.startsWith("image/")){							//Data is a reference to an image. Use startsWith because matching "image/*" using string functions will fail for specific types (e.g. "image/jpg")
+		        		dataPath = (Uri) receivedDataIntent.getParcelableExtra(Intent.EXTRA_STREAM);
+		        		if(dataPath==null){		//Most of the time the Uri will come from the parcelable extra, as above, but sometimes it will come as the intent data itself, so check this if the former fails
+		        			dataPath = receivedDataIntent.getData();
+		        		}
+		        		openChatIntent.setDataAndType(dataPath, dataType);				//Add the path of the resource (e.g. image) as the Intent's data. Copy the type from the intent we received
+			        }
+		        	else if(dataType.startsWith("text/plain")){
+		        		openChatIntent.putExtra(Intent.EXTRA_TEXT, receivedDataIntent.getStringExtra(Intent.EXTRA_TEXT));
+		        		openChatIntent.setType(dataType);
+		        	}
 		        	startActivity(openChatIntent);
 		    	}
 	    	}

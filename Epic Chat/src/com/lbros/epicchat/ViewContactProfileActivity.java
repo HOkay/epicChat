@@ -1,11 +1,11 @@
 package com.lbros.epicchat;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import android.os.Bundle;
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,11 +19,14 @@ import android.widget.TextView;
 public class ViewContactProfileActivity extends Activity {
 	//private final String TAG = "ViewContactInformationActivity";
 	
+	public static final String ACTION_PREFIX = "com.lbros.newContact.";
 	public static final String ACTION_SUFFIX_NEW_CONTACT_CONFIRM = ".confirm";
 	public static final String ACTION_SUFFIX_NEW_CONTACT_ADD = ".add";
 	public static final String ACTION_SUFFIX_NEW_CONTACT_BLOCK = ".block";
 	
 	private Database database;
+	
+	private NotificationManager notificationManager;
 	
 	private Contact contact;
 	private Message message;
@@ -43,6 +46,8 @@ public class ViewContactProfileActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		
 		database = new Database(this);
+		
+		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		
 		//Load the UI elements
 		setContentView(R.layout.activity_view_contact_information);
@@ -92,9 +97,11 @@ public class ViewContactProfileActivity extends Activity {
 				else if(action.endsWith(ACTION_SUFFIX_NEW_CONTACT_ADD)){		//User touched 'Add' in the new contact notification
 					showNewContactPanel();
 					addNewContact();
+					notificationManager.cancel(ACTION_PREFIX+contact.getId(), MainActivity.NOTIFICATION_NEW_CONTACT);	//Clear the notification
 				}
-				else if(action.endsWith(ACTION_SUFFIX_NEW_CONTACT_BLOCK)){		//User touched 'Add' in the new contact notification
+				else if(action.endsWith(ACTION_SUFFIX_NEW_CONTACT_BLOCK)){		//User touched 'Block' in the new contact notification
 					blockNewContact();
+					notificationManager.cancel(ACTION_PREFIX+contact.getId(), MainActivity.NOTIFICATION_NEW_CONTACT);	//Clear the notification
 				}
 			}
 		}

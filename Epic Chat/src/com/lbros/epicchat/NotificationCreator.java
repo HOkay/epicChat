@@ -16,8 +16,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
-import android.text.Html;
-import android.text.Spanned;
 import android.util.Log;
 
 public class NotificationCreator extends BroadcastReceiver{
@@ -45,7 +43,7 @@ public class NotificationCreator extends BroadcastReceiver{
 		database = new Database(context);
 		
 		if(message.getType()==Message.MESSAGE_TYPE_ACK){	//If the message is an ACK, update the status of the specified message and exit
-			database.updateMessageStatus(message.getContents(null), Message.MESSAGE_STATUS_ACK_RECIPIENT);
+			database.updateMessageStatus(message.getContents(null).toString(), Message.MESSAGE_STATUS_ACK_RECIPIENT);
 			return;											//Don't want to do any more processing as this is just an ACK
 		}
 		
@@ -67,9 +65,8 @@ public class NotificationCreator extends BroadcastReceiver{
 		//Get the notification manager
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		String textLine;
+		CharSequence textLine;
 		String senderName;
-		Spanned messageLine;
 		Message tempMessage;
 		String fromUser;
 		String conversationId;
@@ -105,7 +102,7 @@ public class NotificationCreator extends BroadcastReceiver{
 			notificationBuilder = new NotificationCompat.Builder(context);
 			notificationBuilder.setLights(notificationLightColour, notificationLightOnDuration, notificationLightOffDuration);
 			notificationBuilder.setSmallIcon(R.drawable.note_icon);		//Small icon, goes in the notification bar
-			notificationBuilder.setWhen(0);								//Don't want to show the time
+			//notificationBuilder.setWhen(0);								//Don't want to show the time
 			
 			messageGroup = messageList.get(i);
 			int nMessagesInGroup = messageGroup.size();
@@ -132,7 +129,7 @@ public class NotificationCreator extends BroadcastReceiver{
 				if(nMessagesInGroup!=1){
 					nMessagesString+= 's';
 				}			
-				
+
 				notificationBuilder.setContentTitle(senderName);				//Title
 				
 				//Check how many messages there are on the group. This affects whether we show a standard, big text or inbox style notification
@@ -147,8 +144,8 @@ public class NotificationCreator extends BroadcastReceiver{
 					switch(messageType){
 					case Message.MESSAGE_TYPE_TEXT:
 						textLine = messageInGroup.getContents(null);
-						notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(textLine));		//In this case we should also allow the notification to be expanded to view the entire text
-						notificationBuilder.setSubText(messageSentString);
+						notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(textLine).setSummaryText(messageSentString));		//In this case we should also allow the notification to be expanded to view the entire text
+						//notificationBuilder.setSubText(messageSentString);
 						notificationBuilder.setContentText(textLine);		//Short one line text
 						break;
 					case Message.MESSAGE_TYPE_IMAGE:
@@ -157,9 +154,10 @@ public class NotificationCreator extends BroadcastReceiver{
 						String caption = "Image";
 						String resourceId = null;
 						try {
-							JSONObject messageJSON = new JSONObject(messageInGroup.getContents(null));
+							JSONObject messageJSON = new JSONObject(messageInGroup.getContents(null).toString());
 							//Get the image from the path
-							String imagePath = MainActivity.DIRECTORY_RESOURCES+messageJSON.getString("fileName");
+							String fileName = messageJSON.getString("fileName");
+							String imagePath = MainActivity.DIRECTORY_RESOURCES+fileName;
 							Bitmap originalImage = BitmapFactory.decodeFile(imagePath);
 							//Scale the image to an appropriate size
 							//The area the picture will be displayed in will be up to 256dp, which for xhdpi screens is 512px
@@ -175,15 +173,22 @@ public class NotificationCreator extends BroadcastReceiver{
 							else{
 								scaledImage = originalImage;
 							}
-							notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(scaledImage));
-							caption = messageJSON.getString("caption");
+							if(messageJSON.has("caption")){			//If there is a caption, grab it
+								Log.d(TAG, "USING CAPTION");
+								caption = messageJSON.getString("caption");
+							}
+							else{									//If not, use the file name instead
+								Log.d(TAG, "USING FILENAME");
+								caption = fileName;
+							}
+							notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle().bigPicture(scaledImage).setSummaryText(caption));
 							resourceId = messageJSON.getString("resourceId");
 						}
 						catch (JSONException e) {
 							Log.e(TAG, "Error reading image JSON: "+e.toString());
 						}
 						notificationBuilder.setContentText(caption);		//Short one line text for when the notification is not expanded
-						notificationBuilder.setSubText(messageSentString);
+						//notificationBuilder.setSubText(caption);
 						
 						//Add a button that allows the user to view the image directly in the gallery instead of navigating
 						Intent showChatInGalleryIntent = new Intent(context, ViewConversationImageGalleryActivity.class);
@@ -225,8 +230,7 @@ public class NotificationCreator extends BroadcastReceiver{
 							textLine = "";
 							break;
 						}
-						messageLine = Html.fromHtml("<font color='#ffffff'>"+messageSentString+"</font>  "+textLine);
-						inboxStyle.addLine(messageLine);
+						inboxStyle.addLine(textLine);
 						inboxStyle.setSummaryText(nMessagesString);
 					}
 					notificationBuilder.setStyle(inboxStyle);
@@ -267,7 +271,7 @@ public class NotificationCreator extends BroadcastReceiver{
 				notificationBuilder.addAction(android.R.drawable.ic_menu_edit, "Reply", replyChatIntentPending);
 				
 				//Add a button that allows the user to ignore the notification (clearing the list of pending messages for this conversation)
-				notificationBuilder.addAction(android.R.drawable.ic_menu_view, "Clear", deletePendingMessagesIntentPending);
+				notificationBuilder.addAction(android.R.drawable.ic_menu_close_clear_cancel, "Clear", deletePendingMessagesIntentPending);
 	
 				notificationBuilder.setOnlyAlertOnce(true);
 	

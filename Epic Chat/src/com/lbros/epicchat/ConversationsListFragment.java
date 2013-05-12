@@ -189,7 +189,7 @@ public class ConversationsListFragment extends Fragment {
 			if(latestMessagesInConversation.size()>0){		//True if there is a recent message to display
 				Message latestMessage = latestMessagesInConversation.get(0);
 				//The recent message may be plain text, or it may be an image, so the text we display should reflect this
-				String messageDescription;
+				CharSequence messageDescription;
 				switch(latestMessage.getType()){
 				case Message.MESSAGE_TYPE_TEXT:
 					messageDescription = latestMessage.getContents(null);

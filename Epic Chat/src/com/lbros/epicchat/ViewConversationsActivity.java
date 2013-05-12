@@ -23,10 +23,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.util.Log;
 
 public class ViewConversationsActivity extends FragmentActivity {
-	private final String TAG = "ViewConversationsActivity";
+	//private final String TAG = "ViewConversationsActivity";
 
 	private ActionBar actionBar;
 	
@@ -64,7 +63,6 @@ public class ViewConversationsActivity extends FragmentActivity {
 	    	Conversation conversation = database.getConversation(requestedConversationId);
 	    	if(conversation==null){				//Create a new conversation in this case
 	    		String[] conversationUsers = requestedConversationId.split(",");
-	    		Log.d(TAG, "USER 0: "+conversationUsers[0]);
 	    		String conversationImagePath = database.getContact(conversationUsers[0]).getImagePath();
 	    		Conversation newConversation = new Conversation(requestedConversationId, conversationImagePath);
 	    		database.addConversation(newConversation);
@@ -93,7 +91,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 			conversationIds.add(conversationsList.get(i).getId());
 			conversationFragments.add(ViewConversationFragment.newInstance(conversationsList.get(i)));
 		}
-		
+
 		conversationPager = (ViewPager) findViewById(R.id.activity_view_conversations_viewpager);
 		conversationPagerAdapter = new ConversationPagerAdapter(getSupportFragmentManager());
 		conversationPager.setAdapter(conversationPagerAdapter);

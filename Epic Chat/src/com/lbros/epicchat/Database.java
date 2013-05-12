@@ -168,7 +168,7 @@ public class Database extends SQLiteOpenHelper {
         row.put(KEY_STATUS, message.getStatus()); 				//Message status
         row.put(KEY_USER_LIST, message.getConversationId()); 	//Set of users in the conversation
         row.put(KEY_FROM_USER, message.getSenderId()); 			//The user who sent the message
-        row.put(KEY_CONTENTS, message.getContents(null));		//The actual text
+        row.put(KEY_CONTENTS, message.getContents(null).toString());		//The actual text
   
         //Insert the row
         database.insert(TABLE_MESSAGES, null, row);
@@ -349,7 +349,7 @@ public class Database extends SQLiteOpenHelper {
         row.put(KEY_MESSAGE_TYPE, pendingMessage.getType()); 			//Message type
         row.put(KEY_USER_LIST, pendingMessage.getConversationId()); 	//Set of users in the conversation
         row.put(KEY_FROM_USER, pendingMessage.getSenderId()); 			//The user who sent the message
-        row.put(KEY_CONTENTS, pendingMessage.getContents(null));			//The actual text
+        row.put(KEY_CONTENTS, pendingMessage.getContents(null).toString());			//The actual text
   
         //Insert the row
         database.insert(TABLE_PENDING_MESSAGES, null, row);
