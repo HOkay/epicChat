@@ -15,7 +15,7 @@
         android:id="@+id/fragment_contacts_list_list_item_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#33B5E5"
+        android:background="#277590"
         android:gravity="center"
         android:padding="5dp"
         android:text="Contact Name"
