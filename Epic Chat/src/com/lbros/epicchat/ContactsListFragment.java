@@ -120,7 +120,10 @@ public class ContactsListFragment extends Fragment {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
-	        
+	    case R.id.menu_contacts_list_fragment_sync_contacts:
+	        SyncContactsTask syncContactsTask = new SyncContactsTask(getActivity());
+			syncContactsTask.execute();
+			return true;
 	        default:
 	            return super.onOptionsItemSelected(item);
 	    }

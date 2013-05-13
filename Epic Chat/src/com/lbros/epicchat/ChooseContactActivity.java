@@ -185,11 +185,9 @@ public class ChooseContactActivity extends Activity {
 			
 			//If the contact is selected, give the heading text a green background
 			if(mode==MODE_MULTIPLE_CONTACTS && contactsSelectedList.contains(contact.getId())){
-				Log.d("AA", "Selected");				
 				contactName.setBackgroundColor(COLOUR_GREEN_SELECTED);
 			}
 			else{		//Othrwise the normal background colour is applied
-				Log.d("AA", "Not selected");				
 				contactName.setBackgroundColor(COLOUR_BLUE_NOT_SELECTED);
 			}
 			

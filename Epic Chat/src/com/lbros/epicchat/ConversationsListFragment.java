@@ -3,9 +3,6 @@ package com.lbros.epicchat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import com.lbros.epicchat.R;
-
-import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
