@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:adjustViewBounds="true"
+        android:maxHeight="500dp"
         android:src="@null" />
 
     <EditText

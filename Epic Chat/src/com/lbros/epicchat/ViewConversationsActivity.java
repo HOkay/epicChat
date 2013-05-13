@@ -11,6 +11,7 @@ import java.util.Vector;
 import android.app.ActionBar;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -56,7 +57,8 @@ public class ViewConversationsActivity extends FragmentActivity {
 		database = new Database(this);
 		
 		//Get the conversation ID and the resource ID of the image to show first form the Intent extras
-		Bundle intentData = getIntent().getExtras();
+		Intent intent = getIntent();
+		Bundle intentData = intent.getExtras();
 		if(intentData!=null){
 			requestedConversationId = intentData.getString("conversationId", null);
 			//Check if the conversation exists. If not, the user has most likely requested a new conversation, so add one to the database
@@ -84,12 +86,30 @@ public class ViewConversationsActivity extends FragmentActivity {
 		conversationFragments = new Vector<ViewConversationFragment>();
 		
 		conversationsList = database.getAllConversations(null);
+		
+		//Check the intent action
+		boolean actionSend = false;
+		String action = intent.getAction();
+		if(action==null){
+			//Do nothing
+		}
+		else if(action.equals(Intent.ACTION_SEND)){
+			actionSend = true;
+		}
+		
 		//Build a list of conversation IDs, this will be used for searching later on
 		conversationIds = new ArrayList<String>();
 		int nImages = conversationsList.size();
+		String tempId = null;
 		for(int i=0; i<nImages; i++){
-			conversationIds.add(conversationsList.get(i).getId());
-			conversationFragments.add(ViewConversationFragment.newInstance(conversationsList.get(i)));
+			tempId = conversationsList.get(i).getId();
+			conversationIds.add(tempId);
+			//Check the intent action. If it is ACTION_SEND and the conversation ID matches the one that we are creating a fragment for, we should pass the intent through to the fragment
+			Intent fragmentIntent = null;
+			if(actionSend && requestedConversationId!=null && requestedConversationId.equals(tempId)){
+				fragmentIntent = intent;
+			}
+			conversationFragments.add(ViewConversationFragment.newInstance(conversationsList.get(i), fragmentIntent));
 		}
 
 		conversationPager = (ViewPager) findViewById(R.id.activity_view_conversations_viewpager);

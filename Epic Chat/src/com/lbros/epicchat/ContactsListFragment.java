@@ -16,6 +16,9 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -67,6 +70,8 @@ public class ContactsListFragment extends Fragment {
 		
 		parentActivity.registerReceiver(contactsUpdatedReceiver, contactsSyncCompleteFilter);
 
+		setHasOptionsMenu(true);						//We want the action bar
+		
 		database = new Database(parentActivity);		//Connect to the SQLite database
 		
 		preferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
@@ -102,6 +107,23 @@ public class ContactsListFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
 		parentActivity.unregisterReceiver(contactsUpdatedReceiver);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    inflater.inflate(R.menu.menu_contacts_list_fragment, menu);
+	}
+	
+	/**
+	 * Called when the options menu or action bar icon is touched 
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        
+	        default:
+	            return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	/**

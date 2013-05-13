@@ -1,10 +1,14 @@
 package com.lbros.epicchat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import com.lbros.epicchat.R;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +17,9 @@ import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -26,6 +33,8 @@ import android.widget.TextView;
 public class ConversationsListFragment extends Fragment {
 	//private final String TAG = "ConversationsListFragment";
 	
+	private final int ACTION_CREATE_GROUP = 1;
+	
 	boolean userIdSet = false;
 	
 	private Database database;
@@ -36,13 +45,13 @@ public class ConversationsListFragment extends Fragment {
 	private RelativeLayout fragmentLayout;
 	private FragmentActivity fragmentActivity;
 
-	ArrayList<Conversation> conversationsList;
-	ConversationsListAdapter conversationsListAdapter;
+	private ArrayList<Conversation> conversationsList;
+	private ConversationsListAdapter conversationsListAdapter;
 	
-	IntentFilter messageReceivedFilter, pendingMessagesClearedFilter, conversationsModifiedFilter;
+	private IntentFilter messageReceivedFilter, pendingMessagesClearedFilter, conversationsModifiedFilter;
 	
 	//UI stuff
-	ListView listViewConversations;
+	private ListView listViewConversations;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		fragmentActivity = (FragmentActivity) super.getActivity();
@@ -53,6 +62,8 @@ public class ConversationsListFragment extends Fragment {
 		conversationsModifiedFilter = new IntentFilter(MainActivity.intentSignatureConversationsModified);
 		messageReceivedFilter.setPriority(-5);			//This reciever should have a lower priority than the notification receiver, so that the pending message database's contents are correct before this receiver is woken up
 		pendingMessagesClearedFilter.setPriority(-5);	//Ditto
+		
+		setHasOptionsMenu(true);						//We want the action bar
 		
 		database = new Database(fragmentActivity);		//Connect to the SQLite database
 		
@@ -94,6 +105,56 @@ public class ConversationsListFragment extends Fragment {
 	public void onDestroy(){
 		super.onDestroy();
 		fragmentActivity.unregisterReceiver(conversationsUpdatedReceiver);
+	}
+	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+	    inflater.inflate(R.menu.menu_conversations_list_fragment, menu);
+	}
+	
+	/**
+	 * Called when the options menu or action bar icon is touched 
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.menu_conversations_list_fragment_create_group:
+	    	Intent createGroupIntent = new Intent(fragmentActivity, ChooseContactActivity.class);
+	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_MODE, ChooseContactActivity.MODE_MULTIPLE_CONTACTS);		//We want to pick multiple contacts
+	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Create group");									//Set the page title
+	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Select contacts to add");						//Set the page subtitle
+	    	startActivityForResult(createGroupIntent, ACTION_CREATE_GROUP);
+	    	return true;
+	    	default:
+	            return super.onOptionsItemSelected(item);
+	    }
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
+		super.onActivityResult(requestCode, resultCode, returnedIntent);
+	    switch(requestCode) { 
+	    case ACTION_CREATE_GROUP:			//We have returned from the user creating a group
+	    	if(resultCode==Activity.RESULT_OK){
+	    		//Create the new conversation
+	    		@SuppressWarnings("unchecked")
+				ArrayList<String> contacts = (ArrayList<String>) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT_LIST);
+	    		if(contacts!=null){
+	    			Iterator<String> iterator = contacts.iterator();
+	    			String contactId = null;
+	    			String conversationId = preferences.getString("userId", null);
+	    			while(iterator.hasNext()){
+	    				contactId = (String) iterator.next();
+	    				conversationId+= ','+contactId;
+	    				Conversation newConversation = new Conversation(conversationId, null);
+	    				database.addConversation(newConversation);
+	    				openChatWithUser(conversationId);
+	    			}
+		    		//Launch the conversation
+	    		}
+	    	}
+	    	break;
+	    }
 	}
 
     /**
