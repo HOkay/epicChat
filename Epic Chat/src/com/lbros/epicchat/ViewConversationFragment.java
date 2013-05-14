@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -70,6 +71,7 @@ public class ViewConversationFragment extends Fragment{
 	//Activity intent codes
 	private final int ACTION_SELECT_IMAGE_FROM_GALLERY = 1;
 	private final int ACTION_TAKE_PHOTO_WITH_CAMERA = 2;
+	private final int ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE = 3;
 	private final int ACTION_SHOW_CONVERSATION_IMAGE_GALLERY = 10;
 	
 	//These tags are used when placing values in the data Bundle which we return to the calling activity, and when retrieving these values
@@ -109,6 +111,7 @@ public class ViewConversationFragment extends Fragment{
     private String intentAction = null;
     
     private boolean intentHandled = false;
+	protected Message messageToBeForwarded = null;
     
     private int listViewScrollIndex = -1;
     private int listViewScrollOffset = 0;
@@ -123,6 +126,7 @@ public class ViewConversationFragment extends Fragment{
 	private final int POPUP_MENU_ACTION_DELETE = 3;
 	
 	private final String TAG_CLIPBOARD_MESSAGE_TEXT = "messageText";
+
 
     public static ViewConversationFragment newInstance(Conversation conversation, Intent intent) {
     	final ViewConversationFragment fragmentToReturn = new ViewConversationFragment();
@@ -245,14 +249,22 @@ public class ViewConversationFragment extends Fragment{
     
     private void sendTextAsMessage(String text) {
     	//First, we need a timestamp for the message
-		int messageTimestamp = (int) (System.currentTimeMillis() / 1000);
+		int messageTimestamp = createTimestampForMessage();
 		//Also need a unique ID for the message
-		String messageId = messageTimestamp+""+UUID.randomUUID();
+		String messageId = createMessageId(messageTimestamp);
 		Message message = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_TEXT, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, text);
 		storeMessage(message);
 		chatListAdapter.refresh();
 		scrollListToBottom();
 		sendMessageUsingGCM(message);
+	}
+
+    private int createTimestampForMessage() {
+		return (int) (System.currentTimeMillis() / 1000);
+	}
+
+	private String createMessageId(int messageTimestamp) {
+		return messageTimestamp+""+UUID.randomUUID();
 	}
 
 	@Override
@@ -284,12 +296,14 @@ public class ViewConversationFragment extends Fragment{
     public void onResume(){
     	super.onResume();
     	isVisible = true;
-    	clearNotificationAndPendingMessages();
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
     	if(listViewScrollIndex!=-1){
     		chatList.setSelectionFromTop(listViewScrollIndex, listViewScrollOffset);
     	}
+    	if(isVisible){
+			clearNotificationAndPendingMessages();
+		}
     }
 	
 	/**
@@ -342,12 +356,12 @@ public class ViewConversationFragment extends Fragment{
 	}
 	
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-		super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+	public void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
+		super.onActivityResult(requestCode, resultCode, returnedIntent);
 	    switch(requestCode) {
 	    case ACTION_SELECT_IMAGE_FROM_GALLERY:			//An image has been chosen from the gallery
 	    	if(resultCode == Activity.RESULT_OK){
-	        	String imagePath = getRealPathFromURI(imageReturnedIntent.getData());
+	        	String imagePath = getRealPathFromURI(returnedIntent.getData());
 	        	if(imagePath!=null){
 	        		showImagePreviewDialog(imagePath);
 	        	}
@@ -360,6 +374,27 @@ public class ViewConversationFragment extends Fragment{
 	        	}
 	        }
 	    	break;
+	    case ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE:				//A photo has been taken with the camera
+	    	if(resultCode == Activity.RESULT_OK){
+	        	Contact chosenContact= (Contact) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT);
+	        	if(chosenContact!=null && messageToBeForwarded!=null){
+	        		//First, we need a timestamp for the message
+	        		int messageTimestamp = createTimestampForMessage();
+	        		//Also need a unique ID for the message
+	        		String messageId = createMessageId(messageTimestamp);
+	        		String newConversationId = chosenContact.getId()+','+localUserId;
+	        		Message newMessage = new Message(messageId, messageTimestamp, messageToBeForwarded.getType(), Message.MESSAGE_STATUS_PENDING, newConversationId, localUserId, messageToBeForwarded.getContents(null).toString());
+	        		sendMessageUsingGCM(newMessage);			//Send the message
+	        		storeMessage(newMessage);					//And store it in the database
+	        		messageToBeForwarded = null;
+	        		//Last thing to do is to switch page so the destination conversation is displayed
+	        		Intent switchConversationIntent = new Intent(fragmentActivity, ViewConversationsActivity.class);
+	        		switchConversationIntent.putExtra(ViewConversationsActivity.EXTRA_CONVERSATION_ID, newConversationId);
+	        		switchConversationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+	        		startActivity(switchConversationIntent);
+	        	}
+	        }
+	    	break;
 	    default:
 	    	break;
 	    }
@@ -367,6 +402,9 @@ public class ViewConversationFragment extends Fragment{
 	
 	public void setVisibility(boolean visible){
 		isVisible = visible;
+		if(isVisible){
+			clearNotificationAndPendingMessages();
+		}
 	}
 	
 	/**
@@ -941,8 +979,12 @@ public class ViewConversationFragment extends Fragment{
 					clipboardManager.setPrimaryClip(messageTextClip);
 					toastText = "Text copied";
 					break;
-				case POPUP_MENU_ACTION_FORWARD:
-					//TODO Forward message
+				case POPUP_MENU_ACTION_FORWARD:			//Start the message forwarding process. The first step is to choose a recipient
+					messageToBeForwarded = message;
+					Intent forwardMessageIntent = new Intent(fragmentActivity, ChooseContactActivity.class);
+					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Choose contact");
+					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Choose a contact to forward this message to");
+					startActivityForResult(forwardMessageIntent, ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE);
 					break;
 				case POPUP_MENU_ACTION_DELETE:
 					database.deleteMessage(message, false);
@@ -1098,7 +1140,11 @@ public class ViewConversationFragment extends Fragment{
 	};
 
 	public void clearNotificationAndPendingMessages() {
-		notificationManager.cancel("com.lbros.newMessage."+conversation.getId(), 0x01);
-		database.deletePendingMessagesFromConversation(conversation);				//Also remove any pending messages sent from this conversation from the database
+		if(notificationManager!=null){
+			notificationManager.cancel("com.lbros.newMessage."+conversation.getId(), 0x01);
+		}
+		if(database!=null){
+			database.deletePendingMessagesFromConversation(conversation);				//Also remove any pending messages sent from this conversation from the database
+		}
 	}
 }

@@ -28,6 +28,8 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 public class ViewConversationsActivity extends FragmentActivity {
 	//private final String TAG = "ViewConversationsActivity";
 
+	public final static String EXTRA_CONVERSATION_ID = "conversationId";
+	
 	private ActionBar actionBar;
 	
 	private ViewPager conversationPager;
@@ -60,7 +62,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 		Intent intent = getIntent();
 		Bundle intentData = intent.getExtras();
 		if(intentData!=null){
-			requestedConversationId = intentData.getString("conversationId", null);
+			requestedConversationId = intentData.getString(EXTRA_CONVERSATION_ID, null);
 			//Check if the conversation exists. If not, the user has most likely requested a new conversation, so add one to the database
 	    	Conversation conversation = database.getConversation(requestedConversationId);
 	    	if(conversation==null){				//Create a new conversation in this case
