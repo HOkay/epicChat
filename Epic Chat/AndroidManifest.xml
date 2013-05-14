@@ -76,7 +76,8 @@
         </activity>
         <activity
             android:name="com.lbros.epicchat.ViewConversationsActivity"
-            android:launchMode="standard" >
+            android:launchMode="standard"
+            android:windowSoftInputMode="adjustPan" >
         </activity>
 
         <service android:name="com.lbros.epicchat.GCMIntentService" />

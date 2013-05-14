@@ -20,6 +20,8 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -46,6 +48,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -55,11 +58,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class ViewConversationFragment extends Fragment {
+public class ViewConversationFragment extends Fragment{
 	private final String TAG = "ViewConversationFragment";
 	
 	//Activity intent codes
@@ -82,6 +87,7 @@ public class ViewConversationFragment extends Fragment {
 	private Database database;
 	private SharedPreferences preferences;
 	private NotificationManager notificationManager;
+	private ClipboardManager clipboardManager;
 	
 	private RelativeLayout fragmentLayout;
 	private FragmentActivity fragmentActivity = null;
@@ -104,9 +110,19 @@ public class ViewConversationFragment extends Fragment {
     
     private boolean intentHandled = false;
     
+    private int listViewScrollIndex = -1;
+    private int listViewScrollOffset = 0;
+    
     private String localUserId = null;
 	
 	boolean showKeyboard = false;
+
+	//Actions used in the message popup menu
+	private final int POPUP_MENU_ACTION_COPY_TEXT = 1;
+	private final int POPUP_MENU_ACTION_FORWARD = 2;
+	private final int POPUP_MENU_ACTION_DELETE = 3;
+	
+	private final String TAG_CLIPBOARD_MESSAGE_TEXT = "messageText";
 
     public static ViewConversationFragment newInstance(Conversation conversation, Intent intent) {
     	final ViewConversationFragment fragmentToReturn = new ViewConversationFragment();
@@ -143,6 +159,8 @@ public class ViewConversationFragment extends Fragment {
 		
 		//Get the notification manager
 		notificationManager = (NotificationManager) fragmentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
+		//Get the clipboard manager. Used for copy and paste
+		clipboardManager = (ClipboardManager) fragmentActivity.getSystemService(Context.CLIPBOARD_SERVICE);
 		
 		fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_view_conversation, container, false);
         
@@ -154,11 +172,18 @@ public class ViewConversationFragment extends Fragment {
 		
 		//Set up the list and its custom adapter
 		chatList = (ListView) fragmentLayout.findViewById(R.id.fragment_view_conversation_message_list);
-		chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		//chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
 		
 		chatListAdapter = new MessageListAdapter(fragmentActivity);
 		chatList.setAdapter(chatListAdapter);
-		
+
+		//Check if there is any previous state to restore
+		if(savedInstanceState!=null){
+			Parcelable previousState = savedInstanceState.getParcelable("listViewState");		//Attempt to restore the state of the list view. This ensures the scroll position is remembered
+			if(previousState!=null){
+				chatList.onRestoreInstanceState(previousState);
+			}
+		}
 		//Initialise the Hashmap, which will contain mappings of message IDs to Progress Bar objects
         messageProgressBars = new HashMap<String, ProgressBar>();
 
@@ -226,6 +251,7 @@ public class ViewConversationFragment extends Fragment {
 		Message message = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_TEXT, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, text);
 		storeMessage(message);
 		chatListAdapter.refresh();
+		scrollListToBottom();
 		sendMessageUsingGCM(message);
 	}
 
@@ -261,6 +287,9 @@ public class ViewConversationFragment extends Fragment {
     	clearNotificationAndPendingMessages();
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
+    	if(listViewScrollIndex!=-1){
+    		chatList.setSelectionFromTop(listViewScrollIndex, listViewScrollOffset);
+    	}
     }
 	
 	/**
@@ -270,6 +299,10 @@ public class ViewConversationFragment extends Fragment {
 	public void onPause(){
 		super.onPause();
 		isVisible = false;
+		//The combination of the index of the first visible row, and the same row's offset from its parent will give us the exact scroll position. We can restore this in onResume() to preserve page scroll
+		//We can't use the saved state of the list as we have to-add the adapter to the list every time the view is regenerated, which resets the list's state 
+    	listViewScrollIndex = chatList.getFirstVisiblePosition();
+    	listViewScrollOffset = chatList.getChildAt(0).getTop();
 	}
 	
 	/**
@@ -397,7 +430,7 @@ public class ViewConversationFragment extends Fragment {
     
     /**
 	 * Called when a the epicChat server has sent the message using GCM. This does not mean the GCM message has been received 
-	 * @param message		A Message object contining the ACK
+	 * @param message		A Message object containing the ACK
 	 */
 	protected void messageSentAck(String messageId) {
 		//Update the status of the message in the database 
@@ -408,7 +441,7 @@ public class ViewConversationFragment extends Fragment {
 
 	/**
 	 * Called when a message ACK is received
-	 * @param message		A Message object contining the ACK
+	 * @param message		A Message object containing the ACK
 	 */
 	protected void messageReceivedAck(Message message) {
 		//Update the status of the message in the database 
@@ -558,7 +591,8 @@ public class ViewConversationFragment extends Fragment {
 		    
 		    storeMessage(pendingImageMessage);
 		    chatListAdapter.refresh();
-		    
+		    scrollListToBottom();
+
 		    //Send this file to the server
 		    String serverAddress = preferences.getString("serverAddress", null);
 			String remoteAddress = serverAddress+"uploadResource.php?userId="+localUserId+"&fileName="+fileName;
@@ -592,6 +626,11 @@ public class ViewConversationFragment extends Fragment {
 		Intent imagePickerIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 		imagePickerIntent.putExtra(MediaStore.EXTRA_OUTPUT, capturePhotoImageUri);
 		startActivityForResult(imagePickerIntent, ACTION_TAKE_PHOTO_WITH_CAMERA);
+	}
+	
+	private void scrollListToBottom(){
+		chatList.smoothScrollToPosition(chatListAdapter.getCount() - 1);
+		//chatList.setSelection(chatListAdapter.getCount() - 1);
 	}
     
     /**
@@ -628,8 +667,12 @@ public class ViewConversationFragment extends Fragment {
 		}
 		
 		public void refresh(){
+			//int topIndex = chatList.getFirstVisiblePosition();		//Save this index, so we can restore the list to a similar place after
+			//Parcelable state = chatList.onSaveInstanceState();
 			messageList = database.getMessagesByConversation(conversation.getId(), 0, nMessagesToShow, true);
 			notifyDataSetChanged();
+			//chatList.setSelectionFromTop(topIndex, 0);
+			//chatList.onRestoreInstanceState(state);
 		}
 		
 		@Override
@@ -744,26 +787,26 @@ public class ViewConversationFragment extends Fragment {
 					Log.e(TAG, "Error reading image JSON: "+e.toString());
 				}
 				if(imageResourceId!=null){		//Only attach the listener if we got a valid resource ID
-					final String recourceIdFinal = imageResourceId;
+					final String resourceIdFinal = imageResourceId;
 					final String conversationIdFinal =  message.getConversationId();
 				    messageImage.setOnClickListener(new OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							Intent showConversationImageGalleryIntent = new Intent(context, ViewConversationImageGalleryActivity.class);
 							showConversationImageGalleryIntent.putExtra("conversationId", conversationIdFinal);
-							showConversationImageGalleryIntent.putExtra("resourceId", recourceIdFinal);
+							showConversationImageGalleryIntent.putExtra("resourceId", resourceIdFinal);
 							startActivityForResult(showConversationImageGalleryIntent, ACTION_SHOW_CONVERSATION_IMAGE_GALLERY);
 						}
 					});
 				}
 				//If the message is uploading, get a reference to the progress bar in the layout and put it in the HashMap
 				if(messageStatus==Message.MESSAGE_STATUS_PENDING){
-					//Get the progresss bar
+					//Get the progress bar
 					ProgressBar messageProgressBar = (ProgressBar) view.findViewById(R.id.activity_view_conversation_message_list_item_progress_indicator);
 					messageProgressBar.setMax(100);			//100% is the max
 					messageProgressBar.setProgress(0);		//0% Initially
 					messageProgressBar.setVisibility(View.VISIBLE);
-					//Store a reference to it in the Hashmap, where it can be looked up using the message's ID
+					//Store a reference to it in the HashMap, where it can be looked up using the message's ID
 					messageProgressBars.put(messageID, messageProgressBar);
 				}
 				break;
@@ -796,7 +839,9 @@ public class ViewConversationFragment extends Fragment {
 				}
 			}
 			
+			//Get a reference to the item's layout
 			RelativeLayout itemLayout = (RelativeLayout) view.findViewById(R.id.activity_view_conversation_message_list_item_wrapper);
+			
 			//If the message is from the local user, give it a subtle grey background
 			if(localUserId.equals(message.getSenderId())){
 				itemLayout.setBackgroundColor(colourEEEEEE);
@@ -859,6 +904,9 @@ public class ViewConversationFragment extends Fragment {
 			}
 			//long endTime = System.currentTimeMillis();
 			//Log.d(TAG, "GETVIEW TIME: "+(endTime - startTime)+", TYPE: "+viewType);
+			
+			//This final thing to do is to attach a popup menu to this row. This will be shown when a row is long-pressed, and will display some common options
+			createPopupMenu(itemLayout, message);
 			return view;
 		}
     }
@@ -867,6 +915,56 @@ public class ViewConversationFragment extends Fragment {
 		Intent showContactDetailsIntent = new Intent(fragmentActivity, ViewContactProfileActivity.class);
 		showContactDetailsIntent.putExtra("contact", contact);
 		startActivity(showContactDetailsIntent);
+	}
+
+	private void createPopupMenu(RelativeLayout itemLayout, final Message message) {
+		final PopupMenu popupMenu = new PopupMenu(fragmentActivity, itemLayout);
+		Menu menu = popupMenu.getMenu();
+		//Add various items to the menu. Some items are not always shown 
+		if(message.getType()==Message.MESSAGE_TYPE_TEXT){				//If the message contains text, then it can be copied to the clipboard
+			menu.add(Menu.NONE, POPUP_MENU_ACTION_COPY_TEXT, Menu.NONE, "Copy text");
+		}
+		if(message.getStatus()>=Message.MESSAGE_STATUS_ACK_SERVER){		//If the message status is at least ACK_SERVER, that means the server has sent it to a recipient.
+																		//This means  it can be forwarded to any other recipient. Messages from other users automatically have the status ACK_RECIPIENT
+			menu.add(Menu.NONE, POPUP_MENU_ACTION_FORWARD, Menu.NONE, "Forward");
+		}
+		
+		menu.add(Menu.NONE, POPUP_MENU_ACTION_DELETE, Menu.NONE, "Delete");
+		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			//Called when a popup menu item is touched
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				String toastText = null;
+				switch(menuItem.getItemId()){
+				case POPUP_MENU_ACTION_COPY_TEXT:
+					ClipData messageTextClip = ClipData.newPlainText(TAG_CLIPBOARD_MESSAGE_TEXT, message.getContents(null));
+					clipboardManager.setPrimaryClip(messageTextClip);
+					toastText = "Text copied";
+					break;
+				case POPUP_MENU_ACTION_FORWARD:
+					//TODO Forward message
+					break;
+				case POPUP_MENU_ACTION_DELETE:
+					database.deleteMessage(message, false);
+					chatListAdapter.refresh();
+					toastText = "Message deleted";
+					break;
+				default:
+					break;
+				}
+				if(toastText!=null){
+					Toast.makeText(fragmentActivity, toastText, Toast.LENGTH_SHORT).show();
+				}
+				return false;
+			}
+		});
+		itemLayout.setOnLongClickListener(new OnLongClickListener() {
+			//Called when list row is long-pressed
+			public boolean onLongClick(View arg0) {
+				popupMenu.show();
+				return false;
+			}
+		});
 	}
 	/**
 	 * Listens for new GCM messages
@@ -890,7 +988,8 @@ public class ViewConversationFragment extends Fragment {
 			    		//Refresh the list view
 			    		nMessagesToShow++;
 			    		chatListAdapter.refresh();
-				    	if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
+			    		scrollListToBottom();
+			    		if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
 				    		abortBroadcast();
 				    	}
 				    	//Get the local user's ID from the preferences. We can't use the static USER_ID field in EpicChatActivity.java as that class may not exist when this activity is invoked from a notification

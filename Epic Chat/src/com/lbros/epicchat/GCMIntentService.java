@@ -186,7 +186,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 				break;
 			}
 			
-			Message message = new Message(messageId, timestamp, messageType, Message.MESSAGE_STATUS_NOT_SET, conversation, sender, messageContents);
+			Message message = new Message(messageId, timestamp, messageType, Message.MESSAGE_STATUS_ACK_RECIPIENT, conversation, sender, messageContents);
 			
 			if(messageReadyForBroadcast){		//True if this message requires no more processing (i.e. downloading of high-res images, videos, etc etc)
 				//Some actions are only taken if the message is not an ACK, such as storing the message in the database or sending an ACK

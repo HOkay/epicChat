@@ -5,7 +5,13 @@
 
     <style name="AppTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
+        <!-- <item name="android:popupMenuStyle">@style/CustomPopupMenu</item>-->
     </style>
+    
+    <style name="CustomPopupMenu" parent="@android:style/Widget">
+    	<item name="android:popupBackground">#0099CC</item>
+    	<item name="android:textStyle">@color/White</item>
+	</style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
         <item name="android:background">#0099CC</item>

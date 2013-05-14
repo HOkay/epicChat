@@ -145,9 +145,9 @@ public class ConversationsListFragment extends Fragment {
 	    				conversationId+= ','+contactId;
 	    				Conversation newConversation = new Conversation(conversationId, null);
 	    				database.addConversation(newConversation);
+			    		//Launch the conversation
 	    				openChatWithUser(conversationId);
 	    			}
-		    		//Launch the conversation
 	    		}
 	    	}
 	    	break;
@@ -242,7 +242,7 @@ public class ConversationsListFragment extends Fragment {
 			conversationImage.setImageBitmap(conversation.getImageBitmap(120, 120, null));		//Get the image bitmap
 			conversationName.setText(userFirstNames);               				//Get the conversation's full name
 			
-			//Get the contents of the latest message in this particalar conversation
+			//Get the contents of the latest message in this particular conversation
 			ArrayList<Message> latestMessagesInConversation = database.getMessagesByConversation(conversationId, 0, 1, false);
 			if(latestMessagesInConversation.size()>0){		//True if there is a recent message to display
 				Message latestMessage = latestMessagesInConversation.get(0);
