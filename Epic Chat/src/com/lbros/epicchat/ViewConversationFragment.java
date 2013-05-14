@@ -69,6 +69,7 @@ public class ViewConversationFragment extends Fragment {
 	
 	//These tags are used when placing values in the data Bundle which we return to the calling activity, and when retrieving these values
     private static final String EXTRA_CONVERSATION_ID = "conversationId";
+    private static final String EXTRA_INTENT = "intent";
     
     //Flag that indicates if the activity is visible
   	private boolean isVisible = false;
@@ -97,14 +98,21 @@ public class ViewConversationFragment extends Fragment {
 	private HashMap<String, ProgressBar> messageProgressBars;
     
     private Conversation conversation = null;
+    private Intent intent = null;
+    private Bundle intentData = null;
+    private String intentAction = null;
+    
+    private boolean intentHandled = false;
+    
     private String localUserId = null;
 	
 	boolean showKeyboard = false;
 
-    public static ViewConversationFragment newInstance(Conversation conversation) {
+    public static ViewConversationFragment newInstance(Conversation conversation, Intent intent) {
     	final ViewConversationFragment fragmentToReturn = new ViewConversationFragment();
         final Bundle data = new Bundle();
         data.putSerializable(EXTRA_CONVERSATION_ID, conversation);
+        data.putParcelable(EXTRA_INTENT, intent);
         fragmentToReturn.setArguments(data);
         return fragmentToReturn;
     }
@@ -115,6 +123,7 @@ public class ViewConversationFragment extends Fragment {
         //Retrieve the data we need
         Bundle data = getArguments();
         conversation = (Conversation) data.getSerializable(EXTRA_CONVERSATION_ID);
+        intent = data.getParcelable(EXTRA_INTENT);
         colourEEEEEE = Color.parseColor("#EEEEEE");
 		colourFFFFFF = Color.parseColor("#FFFFFF");
 		setHasOptionsMenu(true);
@@ -160,48 +169,51 @@ public class ViewConversationFragment extends Fragment {
 				if(!TextUtils.isEmpty(textToSend)){		//True if there is something to send
 					//This function will add the message to the chat list, store it in the database, and send it to the remote user(s)
 					sendTextAsMessage(textToSend);
-					
 					//Clear the box
 					textEntry.setText("");
 				}
 			}
 		});
 		
-		Intent intent = fragmentActivity.getIntent();
-		
-		Bundle intentData = intent.getExtras();
-		if(intentData!=null){
-			showKeyboard = intentData.getBoolean("showKeyboard", false);
-	    	if(showKeyboard){		//Show the keyboard
-	    	}
-		}
-		//Check if this activity was launched normally, or in response to the user sending an object to it (e.g. an image or other shareable item)
-        String action = intent.getAction();
-        if(action==null){
-        	//Do nothing if there is no action
-        }
-        else if(action.equals(Intent.ACTION_SEND)){		//Something was sent to this activity, we should handle it
-        	String conversationId = intentData.getString("conversationId");
-        	if(conversationId!=null && conversationId.equals(conversation.getId())){
-        		//Check what kind of data we are being sent
-	            String dataType = intent.getType();
-	            if(dataType.startsWith("image/")){							//Data is a reference to an image. Use startsWith because matching "image/*" using string functions will fail for specific types (e.g. "image/jpg")
-	        		Uri imageUri = intent.getData();
-	        		if(imageUri!=null){
-	            		String imagePath = getRealPathFromURI(imageUri);	//Convert the URI to a string and show the image preview dialog
-	            		if(imagePath!=null){
-	            			showImagePreviewDialog(imagePath);
-	            		}
-	            	}
+		if(!intentHandled){			//Check the intent if we have not already done so
+			//Check if this activity was launched normally, or in response to the user sending an object to it (e.g. an image or other shareable item)
+			if(intent!=null){
+				intentData = intent.getExtras();
+				intentAction = intent.getAction();
+			}
+			if(intentData!=null){
+				showKeyboard = intentData.getBoolean("showKeyboard", false);
+		    	if(showKeyboard){		//Show the keyboard
+		    	}
+			}
+	        if(intentAction==null){
+	        	//Do nothing if there is no action
+	        }
+	        else if(intentAction.equals(Intent.ACTION_SEND)){		//Something was sent to this activity, we should handle it
+	        	String conversationId = intentData.getString("conversationId");
+	        	if(conversationId!=null && conversationId.equals(conversation.getId())){
+	        		//Check what kind of data we are being sent
+		            String dataType = intent.getType();
+		            if(dataType.startsWith("image/")){							//Data is a reference to an image. Use startsWith because matching "image/*" using string functions will fail for specific types (e.g. "image/jpg")
+		        		Uri imageUri = intent.getData();
+		        		if(imageUri!=null){
+		            		String imagePath = getRealPathFromURI(imageUri);	//Convert the URI to a string and show the image preview dialog
+		            		if(imagePath!=null){
+		            			showImagePreviewDialog(imagePath);
+		            		}
+		            	}
+		        	}
+		            else if(dataType.startsWith("text/plain")){
+		            	String text = intent.getStringExtra(Intent.EXTRA_TEXT);
+		            	if(text!=null && text.trim().length()>0){
+		            		sendTextAsMessage(text.trim());
+		            	}
+		            }
 	        	}
-	            else if(dataType.startsWith("text/plain")){
-	            	String text = intent.getStringExtra(Intent.EXTRA_TEXT);
-	            	if(text!=null && text.trim().length()>0){
-	            		sendTextAsMessage(text.trim());
-	            	}
-	            }
-        	}
-        }
+	        	intentHandled = true;		//This prevents the Intent being checked again during the lifetime of this instance of the fragment. This is important as if the fragment is 
+	        								//swiped away from, and swiped back to, we don't want to handle the Intent again
+	        }
+		}
         registerMessageReceiver();
         return fragmentLayout;
     }

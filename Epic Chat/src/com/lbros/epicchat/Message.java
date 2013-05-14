@@ -174,7 +174,7 @@ public class Message implements Serializable {
 			contentsConcise = contents;
 		}
 		//The contents of the message could be a hyperlink, so style it accordingly if it is
-		if(contentsConcise.startsWith("http://")){
+		if(contentsConcise.startsWith("http://") || contentsConcise.startsWith("https://")){
 			Spanned hyperlink = Html.fromHtml("<a href=\""+contentsConcise+"\">"+contentsConcise+"</a>");
 			return hyperlink;
 		}

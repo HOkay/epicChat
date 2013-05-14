@@ -3,6 +3,8 @@ package com.lbros.epicchat;
 import java.io.File;
 import java.util.List;
 import java.util.Vector;
+
+import android.app.ActionBar;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -21,6 +23,9 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 public class MainActivity extends FragmentActivity {
 	//private final String TAG = "MainActivity";
@@ -38,8 +43,8 @@ public class MainActivity extends FragmentActivity {
 	private PendingIntent sendFailedMessagesIntentPending;
 	
 	//Activity intent signatures
-	private final int ACTION_ENTER_ACCOUNT_DETAILS = 0x01;
-	private final int ACTION_CHOOSE_CONTACT = 0x02;
+	private final int ACTION_ENTER_ACCOUNT_DETAILS = 1;
+	private final int ACTION_CHOOSE_CONTACT = 2;
 	
 	private Intent receivedDataIntent;
 	
@@ -71,6 +76,8 @@ public class MainActivity extends FragmentActivity {
 	public static LruCache<String, Bitmap> bitmapCache;
 	public static final int cacheSize = 4096;		//Size of the cache in KB
 
+	private ActionBar actionBar;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,13 +100,15 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
 
 		setContentView(R.layout.activity_main);
+		
+		actionBar = getActionBar();
 
 		// Create the adapter that will return a fragment for each of the three primary sections of the app's main view.
 
 		fragments = new Vector<Fragment>();
 		addFragmentAsTab(TAB_CONVERSATIONS);
 		addFragmentAsTab(TAB_CONTACTS);
-		addFragmentAsTab(TAB_GAMES);
+		//addFragmentAsTab(TAB_GAMES);
 		
 		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragments);
 
@@ -109,6 +118,9 @@ public class MainActivity extends FragmentActivity {
 		fragmentsPagerTabStrip = (PagerTabStrip) findViewById(R.id.activity_main_viewpager_tab_strip);
 		fragmentsPagerTabStrip.setDrawFullUnderline(false);					//Makes the tab indicator fill the whole width
 		fragmentsPagerTabStrip.setTabIndicatorColor(0xFFFF8800);
+		
+		viewPager.setOnPageChangeListener(tabChangedListener);			//This will update the Action Bar when the tab is changed
+		actionBar.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));		//Set the title of the action bar
 		//viewPager.setPageTransformer(false, new ZoomOutPageTransformer());
 		
 		//Initialise the alarm manager, which will be used to run periodic background tasks
@@ -189,17 +201,24 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+	    MenuInflater inflater = getMenuInflater();
+	    inflater.inflate(R.menu.menu_main_activity, menu);
+	    return true;
+	}
+
+	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
 		super.onActivityResult(requestCode, resultCode, returnedIntent);
 	    switch(requestCode) { 
 	    case ACTION_ENTER_ACCOUNT_DETAILS:		//After getting the user's account details, trigger a refresh of the user's contacts
 	        if(resultCode==RESULT_OK){
-	        	viewPager.setCurrentItem(1, true);
+	        	viewPager.setCurrentItem(1, true);		//Jump to the contacts list tab
 	        }
 	        break;
 	    case ACTION_CHOOSE_CONTACT:				//A contact was successfully chosen by the user
 	    	if(resultCode==RESULT_OK){
-		    	Contact chosenContact = (Contact) returnedIntent.getSerializableExtra("contact");
+		    	Contact chosenContact = (Contact) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT);
 		    	String localUserId = preferences.getString("userId", null);
 		    	if(localUserId!=null && chosenContact!=null){
 		    		String contactId = chosenContact.getId();
@@ -288,6 +307,19 @@ public class MainActivity extends FragmentActivity {
 			return null;
 		}
 	}
+	
+	private ViewPager.OnPageChangeListener tabChangedListener = new OnPageChangeListener() {
+		@Override
+		public void onPageSelected(int position) {
+			actionBar.setTitle(sectionsPagerAdapter.getPageTitle(position));		//Update the Action Bar's title
+		}
+
+		@Override
+		public void onPageScrollStateChanged(int arg0) {}
+
+		@Override
+		public void onPageScrolled(int arg0, float arg1, int arg2) {}
+	};
 	
 	//Returns a boolean indicating if the user ID has been set
     private boolean userIdSet(){
