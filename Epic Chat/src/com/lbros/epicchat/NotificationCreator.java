@@ -100,6 +100,7 @@ public class NotificationCreator extends BroadcastReceiver{
 		for(int i=0; i<nUniqueUserIds; i++){
 			//Build the notification, step by step
 			notificationBuilder = new NotificationCompat.Builder(context);
+			notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
 			notificationBuilder.setLights(notificationLightColour, notificationLightOnDuration, notificationLightOffDuration);
 			notificationBuilder.setSmallIcon(R.drawable.note_icon);		//Small icon, goes in the notification bar
 			//notificationBuilder.setWhen(0);								//Don't want to show the time

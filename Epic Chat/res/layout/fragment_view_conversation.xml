@@ -14,7 +14,8 @@
         android:divider="@null"
         android:dividerHeight="0px"
         android:scrollingCache="true"
-        android:stackFromBottom="true" >
+        android:stackFromBottom="true"
+        android:isScrollContainer="true" >
     </ListView>
 
     <EditText

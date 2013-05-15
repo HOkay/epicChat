@@ -176,10 +176,11 @@ public class ViewConversationFragment extends Fragment{
 		
 		//Set up the list and its custom adapter
 		chatList = (ListView) fragmentLayout.findViewById(R.id.fragment_view_conversation_message_list);
-		//chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_ALWAYS_SCROLL);
+		chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		
 		chatListAdapter = new MessageListAdapter(fragmentActivity);
 		chatList.setAdapter(chatListAdapter);
+		//chatList.setS
 
 		//Check if there is any previous state to restore
 		if(savedInstanceState!=null){
@@ -188,7 +189,7 @@ public class ViewConversationFragment extends Fragment{
 				chatList.onRestoreInstanceState(previousState);
 			}
 		}
-		//Initialise the Hashmap, which will contain mappings of message IDs to Progress Bar objects
+		//Initialise the HashMap, which will contain mappings of message IDs to Progress Bar objects
         messageProgressBars = new HashMap<String, ProgressBar>();
 
         //Listeners

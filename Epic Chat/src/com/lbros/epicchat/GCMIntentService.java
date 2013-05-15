@@ -391,8 +391,8 @@ public class GCMIntentService extends GCMBaseIntentService{
 		Spanned messageTitle = Html.fromHtml("<font color='#cccccc'>New contact: </font>"+newContact.getFullName());
 		
 		notificationBuilder.setContentTitle(messageTitle);
-		
-		notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newMessage.getContents(null)));		//In this case we should also allow the notification to be expanded to view the entire text
+		notificationBuilder.setPriority(Notification.PRIORITY_HIGH);
+		notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(newMessage.getContents(null)));		//Allow the notification to be expanded to view the entire text
 		
 		notificationBuilder.setSubText(newContact.getId());
 		
