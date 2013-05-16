@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -349,10 +350,12 @@ public class GCMIntentService extends GCMBaseIntentService{
 					newMessageIntent.putExtra("message", messageWaiting);
 					sendOrderedBroadcast(newMessageIntent, null);
 					database.addResource(resourceWaiting);
+					requestMediaScan(resourceWaiting.getPath());
 				}
 				else if(taskId==ID_DOWNLOAD_USER_IMAGE){	//Download of the new contact's image has completed, we are now ready to create a notification to alert the user
 					if(contactWaiting!=null){
 						createNewContactChoiceNotification(contactWaiting, contactWaitingMessage);
+						requestMediaScan(contactWaiting.getImagePath());
 					}
 				}
 				break;
@@ -432,7 +435,15 @@ public class GCMIntentService extends GCMBaseIntentService{
 		notification.defaults |= Notification.DEFAULT_SOUND;
 		notification.defaults |= Notification.DEFAULT_VIBRATE;
 		
-		//Send the notification to the OS. The first parameter is a unique tag that we can use to cancel this notification programmatically if required
+		//Send the notification to the OS. The first parameter is a unique tag that we can use to cancel this notification programma	tically if required
 		notificationManager.notify(action, MainActivity.NOTIFICATION_NEW_CONTACT, notification);
+	}
+
+	/**
+	 * Requests the OS to rescan the provided path and add any media found to the system media database
+	 * @param filePath			The path of the directory or file to scan
+	 */
+	protected void requestMediaScan(String path) {
+		sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"+path)));		
 	}
 }

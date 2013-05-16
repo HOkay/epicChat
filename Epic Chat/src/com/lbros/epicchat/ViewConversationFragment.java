@@ -922,24 +922,26 @@ public class ViewConversationFragment extends Fragment{
 			messageTimeText.setText(message.getFormattedTime());
 			
 			ImageView messageStatusImage = (ImageView) view.findViewById(R.id.activity_view_conversation_message_list_item_ack);
-			//Set the status image according to the status of the message
+			//Set the status image according to the status of the message. This only applies to messages sent by the local user
+			if(message.getSenderId().equals(localUserId)){			//True if the local user sent this message
 			switch(messageStatus){
-			case Message.MESSAGE_STATUS_PENDING:		//Pending messages should have a red dot
-				messageStatusImage.setImageResource(R.drawable.red_dot_8dp);
-				messageStatusImage.setVisibility(View.VISIBLE);
-				break;
-			case Message.MESSAGE_STATUS_ACK_SERVER:		//Messages that reached the server should have an orange dot
-				messageStatusImage.setImageResource(R.drawable.orange_dot_8dp);
-				messageStatusImage.setVisibility(View.VISIBLE);
-				break;
-			case Message.MESSAGE_STATUS_ACK_RECIPIENT:	//Messages that reached the recipient should have an green dot
-				messageStatusImage.setImageResource(R.drawable.green_dot_8dp);
-				messageStatusImage.setVisibility(View.VISIBLE);
-				break;
-			case Message.MESSAGE_STATUS_NOT_SET:		//Not set typically means the message came from another user, in which case the status image should be hidden
-			default:									//Also default here
-				messageStatusImage.setVisibility(View.INVISIBLE);
-				break;
+				case Message.MESSAGE_STATUS_PENDING:		//Pending messages should have a red dot
+					messageStatusImage.setImageResource(R.drawable.red_dot_8dp);
+					messageStatusImage.setVisibility(View.VISIBLE);
+					break;
+				case Message.MESSAGE_STATUS_ACK_SERVER:		//Messages that reached the server should have an orange dot
+					messageStatusImage.setImageResource(R.drawable.orange_dot_8dp);
+					messageStatusImage.setVisibility(View.VISIBLE);
+					break;
+				case Message.MESSAGE_STATUS_ACK_RECIPIENT:	//Messages that reached the recipient should have an green dot
+					messageStatusImage.setImageResource(R.drawable.green_dot_8dp);
+					messageStatusImage.setVisibility(View.VISIBLE);
+					break;
+				case Message.MESSAGE_STATUS_NOT_SET:		//Not set typically means the message came from another user, in which case the status image should be hidden
+				default:									//Also default here
+					messageStatusImage.setVisibility(View.INVISIBLE);
+					break;
+				}
 			}
 			//long endTime = System.currentTimeMillis();
 			//Log.d(TAG, "GETVIEW TIME: "+(endTime - startTime)+", TYPE: "+viewType);

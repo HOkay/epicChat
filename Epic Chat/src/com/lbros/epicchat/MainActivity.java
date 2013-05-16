@@ -1,6 +1,7 @@
 package com.lbros.epicchat;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Vector;
 
@@ -24,11 +25,13 @@ import android.support.v4.util.LruCache;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 public class MainActivity extends FragmentActivity {
-	//private final String TAG = "MainActivity";
+	private final String TAG = "MainActivity";
+
 	private SharedPreferences preferences;
 	private AlarmManager alarmManager;
 
@@ -36,6 +39,7 @@ public class MainActivity extends FragmentActivity {
 	
 	public static final String DIRECTORY_RESOURCES = DIRECTORY_BASE+"Epic Chat Images/";
 	public static final String DIRECTORY_USER_IMAGES = DIRECTORY_BASE+"userImages/";
+	public static final String DIRECTORY_GAME_IMAGES = DIRECTORY_BASE+"gameImages/";
 
 	//private final long INTERVAL_ONE_MINUTE = 60 * 1000;	//One minute in milliseconds
 	
@@ -160,18 +164,57 @@ public class MainActivity extends FragmentActivity {
 	}
 	
 	/**
-	 * Checks to see if the neccessary folders exist in the device's filesystem
+	 * Checks to see if the necessary folders exist in the device's filesystem. They are created if they do not exist
 	 */
 	private void checkFilesystem() {
-		String basePath = MainActivity.DIRECTORY_BASE;
-		File baseFolder = new File(basePath);
-		if(!baseFolder.exists()){	//Main folder does not exist, so create it, and all required subdirectories
-			baseFolder.mkdir();
-			File userImageFolder = new File(MainActivity.DIRECTORY_USER_IMAGES);
-			userImageFolder.mkdir();
-			File resourcesFolder = new File(MainActivity.DIRECTORY_RESOURCES);
-			resourcesFolder.mkdir();
+		checkDirectoryExists(MainActivity.DIRECTORY_BASE, true);
+		checkDirectoryExists(MainActivity.DIRECTORY_USER_IMAGES, true);
+		checkDirectoryExists(MainActivity.DIRECTORY_RESOURCES, true);
+		checkDirectoryExists(MainActivity.DIRECTORY_GAME_IMAGES, true);
+		checkFileExists(DIRECTORY_USER_IMAGES+".nomedia", true);
+	}
+	
+	/**
+	 * Checks if the directory specified by the provided path exists. If not, and the parameter createIfNotPresent is true, it is created
+	 * @param path					The path to check
+	 * @param createIfNotPresent	Whether or not the directory should be created if it does not exist
+	 * @return						Whether or not this directory exists. If a directory was successfully created, this will be true to reflect this
+	 */
+	private boolean checkDirectoryExists(String path, boolean createIfNotPresent){
+		boolean directoryExists = true;
+		File directory = new File(path);
+		if(!directory.exists()){	//True if the directory does not exist
+			directoryExists = false;
+			if(createIfNotPresent){
+				directory.mkdir();
+				directoryExists = true;
+			}
 		}
+		return directoryExists;
+	}
+	
+	/**
+	 * Checks if the file specified by the provided path exists. If not, and the parameter createIfNotPresent is true, an empty file is created
+	 * @param path					The path to check
+	 * @param createIfNotPresent	Whether or not the file should be created if it does not exist
+	 * @return						Whether or not this file exists. If an empty file was successfully created, this will be true to reflect this
+	 */
+	private boolean checkFileExists(String path, boolean createIfNotPresent){
+		boolean fileExists = true;
+		File file = new File(path);
+		if(!file.exists()){	//True if the directory does not exist
+			fileExists = false;
+			if(createIfNotPresent){
+				try {
+					file.createNewFile();
+					fileExists = true;
+				}
+				catch (IOException e) {
+					Log.e(TAG, "Error creating file: "+e.toString());
+				}
+			}
+		}
+		return fileExists;
 	}
 
 	/**
