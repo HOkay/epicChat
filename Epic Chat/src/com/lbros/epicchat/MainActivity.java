@@ -172,6 +172,7 @@ public class MainActivity extends FragmentActivity {
 		checkDirectoryExists(MainActivity.DIRECTORY_RESOURCES, true);
 		checkDirectoryExists(MainActivity.DIRECTORY_GAME_IMAGES, true);
 		checkFileExists(DIRECTORY_USER_IMAGES+".nomedia", true);
+		checkFileExists(DIRECTORY_GAME_IMAGES+".nomedia", true);
 	}
 	
 	/**
@@ -208,6 +209,7 @@ public class MainActivity extends FragmentActivity {
 				try {
 					file.createNewFile();
 					fileExists = true;
+					Log.d(TAG, "CREATING FILE");
 				}
 				catch (IOException e) {
 					Log.e(TAG, "Error creating file: "+e.toString());

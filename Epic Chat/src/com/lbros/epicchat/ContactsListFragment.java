@@ -58,7 +58,6 @@ public class ContactsListFragment extends Fragment {
 	
 	//UI stuff
 	GridView listViewContacts;
-	ImageButton buttonSyncContacts;
 	ProgressBar progressBarSyncStatusProgress;
 	TextView textViewSyncStatusText;
 
@@ -83,18 +82,8 @@ public class ContactsListFragment extends Fragment {
 		listViewContacts.setAdapter(contactsListAdapter);												//And link it to the list view
 		listViewContacts.setOnItemClickListener(contactsListItemClickListener);							//And add a listener to it
 
-		buttonSyncContacts = (ImageButton) fragmentLayout.findViewById(R.id.fragment_conversations_button_sync);
 		progressBarSyncStatusProgress = (ProgressBar) fragmentLayout.findViewById(R.id.fragment_conversations_sync_status_progress);
 		textViewSyncStatusText = (TextView) fragmentLayout.findViewById(R.id.fragment_conversations_sync_status_text);
-		
-		buttonSyncContacts.setOnClickListener(new View.OnClickListener() {			
-			@Override
-			public void onClick(View v) {		//When this button is touched, start a new contacts sync task
-				SyncContactsTask syncContactsTask = new SyncContactsTask(getActivity());
-				syncContactsTask.execute();
-			}
-		});
-
 		return fragmentLayout;
 	}
 	
@@ -287,16 +276,18 @@ public class ContactsListFragment extends Fragment {
 	BroadcastReceiver contactsUpdatedReceiver = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context context, Intent intent){
-	    	contactsListAdapter.refresh();
 	    	//Also check the intent for the presence of the syncStatus flag
 	    	int syncStatus = intent.getIntExtra("syncStatus", -1);
 	    	switch(syncStatus){
 	    	case SyncContactsTask.STATUS_SYNC_STARTED:
 	    		setSyncProgressIndicatorVisibility(true);
-	    		break;	    		
+	    		break;
+	    	case SyncContactsTask.STATUS_SYNC_NEW_CONTACT:
+	    		contactsListAdapter.refresh();
+	    		break;
 	    	case SyncContactsTask.STATUS_SYNC_COMPLETE:
 	    		setSyncProgressIndicatorVisibility(false);
-	    		break;	
+	    		break;
 	    	case -1:
 	    	default:
 	    		break;

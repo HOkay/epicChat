@@ -80,6 +80,8 @@ public class ViewConversationFragment extends Fragment{
     
     //Flag that indicates if the activity is visible
   	private boolean isVisible = false;
+  	
+  	private float pixelDensity;
     
   	private Message pendingImageMessage;
 	private String capturePhotoImagePath = null;
@@ -160,6 +162,9 @@ public class ViewConversationFragment extends Fragment{
 		//Get the shared preferences
 		preferences = PreferenceManager.getDefaultSharedPreferences(fragmentActivity);
 		localUserId = preferences.getString("userId", null);
+
+		//Get the pixel density of the screen. We need this as we have to set the height of some ImageView objects in pixels
+		pixelDensity = fragmentActivity.getResources().getDisplayMetrics().density;
 		
 		//Get the notification manager
 		notificationManager = (NotificationManager) fragmentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -296,14 +301,14 @@ public class ViewConversationFragment extends Fragment{
     @Override
     public void onResume(){
     	super.onResume();
-    	isVisible = true;
+    	//isVisible = true;
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
     	if(listViewScrollIndex!=-1){
     		chatList.setSelectionFromTop(listViewScrollIndex, listViewScrollOffset);
     	}
     	if(isVisible){
-			clearNotificationAndPendingMessages();
+			//clearNotificationAndPendingMessages();
 		}
     }
 	
@@ -313,7 +318,7 @@ public class ViewConversationFragment extends Fragment{
 	@Override
 	public void onPause(){
 		super.onPause();
-		isVisible = false;
+		//isVisible = false;
 		//The combination of the index of the first visible row, and the same row's offset from its parent will give us the exact scroll position. We can restore this in onResume() to preserve page scroll
 		//We can't use the saved state of the list as we have to-add the adapter to the list every time the view is regenerated, which resets the list's state 
     	listViewScrollIndex = chatList.getFirstVisiblePosition();
@@ -436,7 +441,8 @@ public class ViewConversationFragment extends Fragment{
 				String messageTextEncoded;
 				try {
 					messageTextEncoded = URLEncoder.encode(messageContents, "utf-8");
-				} catch (UnsupportedEncodingException e) {
+				}
+				catch (UnsupportedEncodingException e) {
 					messageTextEncoded = "URLEncoder failed: "+e.toString();
 				}
 				String serverAddress = preferences.getString("serverAddress", null);
@@ -802,9 +808,14 @@ public class ViewConversationFragment extends Fragment{
 					if(messageJSON.has("resourceId")){
 						imageResourceId = messageJSON.getString("resourceId");	//This is used when opening the image gallery
 					}
-					int displayWidth = 300;
-					int displayHeight = (int) ((float) imageHeight / (float) imageWidth * (float) displayWidth);
-					String imagePathFull = imagePath+displayWidth+displayHeight;			//For the caching
+					//The width of the image in DP is already defined in the XML
+					int imageWidthDp = 150;
+					float imageAspectRatio = (float) imageHeight / (float) imageWidth;		//The aspect ratio of the image
+					int imageHeightDp = (int) (imageAspectRatio * imageWidthDp);
+					//Now convert the dimensions in DP into dimensions in pixels
+					int imageWidthPixels = (int) (imageWidthDp * pixelDensity + 0.5f);		//Image width in pixels
+					int imageHeightPixels = (int) (imageHeightDp * pixelDensity + 0.5f);	//Image width in pixels
+					String imagePathFull = imagePath+imageWidthPixels+imageHeightPixels;	//For the caching
 					Bitmap originalImage = null;
 					//Check the bitmap cache exists. If not, reinstantiate it
 					if(MainActivity.bitmapCache==null){					//Cache is null
@@ -813,10 +824,10 @@ public class ViewConversationFragment extends Fragment{
 					else{												//Cache is not null, so check it to see if this image is in it
 						originalImage = MainActivity.bitmapCache.get(imagePathFull);
 					}
-					messageImage.getLayoutParams().height = displayHeight;
+					messageImage.getLayoutParams().height = imageHeightPixels;
 					if(originalImage==null){		//True if the bitmap was not in the cache. So we must load from disk instead
 						//Run the AsyncTask on the THREAD_POOL_EXECUTOR, this allows multiple concurrent instances to run in parallel, which is good on multi-core devices
-						new Utils.LoadBitmapAsync(imagePath, messageImage, displayWidth, displayHeight, true, MainActivity.bitmapCache).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+						new Utils.LoadBitmapAsync(imagePath, messageImage, imageWidthPixels, imageHeightPixels, true, MainActivity.bitmapCache).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
 					}
 					else{
 						messageImage.setImageBitmap(originalImage);
@@ -880,7 +891,6 @@ public class ViewConversationFragment extends Fragment{
 			
 			//Get a reference to the item's layout
 			RelativeLayout itemLayout = (RelativeLayout) view.findViewById(R.id.activity_view_conversation_message_list_item_wrapper);
-			
 			//If the message is from the local user, give it a subtle grey background
 			if(localUserId.equals(message.getSenderId())){
 				itemLayout.setBackgroundColor(colourEEEEEE);
@@ -924,7 +934,7 @@ public class ViewConversationFragment extends Fragment{
 			ImageView messageStatusImage = (ImageView) view.findViewById(R.id.activity_view_conversation_message_list_item_ack);
 			//Set the status image according to the status of the message. This only applies to messages sent by the local user
 			if(message.getSenderId().equals(localUserId)){			//True if the local user sent this message
-			switch(messageStatus){
+				switch(messageStatus){
 				case Message.MESSAGE_STATUS_PENDING:		//Pending messages should have a red dot
 					messageStatusImage.setImageResource(R.drawable.red_dot_8dp);
 					messageStatusImage.setVisibility(View.VISIBLE);
@@ -942,6 +952,9 @@ public class ViewConversationFragment extends Fragment{
 					messageStatusImage.setVisibility(View.INVISIBLE);
 					break;
 				}
+			}
+			else{
+				messageStatusImage.setVisibility(View.INVISIBLE);
 			}
 			//long endTime = System.currentTimeMillis();
 			//Log.d(TAG, "GETVIEW TIME: "+(endTime - startTime)+", TYPE: "+viewType);
@@ -1017,38 +1030,42 @@ public class ViewConversationFragment extends Fragment{
 	BroadcastReceiver gcmMessageReceiver = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context context, Intent intent){
-	    	Message message = (Message) intent.getSerializableExtra("message");
-	    	if(message!=null){									//True if a message object was sent with this Intent
-	    		int messageType = message.getType();
-	    		switch(messageType){							//Do different things depending on the type of the message
-	    		case Message.MESSAGE_TYPE_ACK:					//ACK from another device
-	    			messageReceivedAck(message);
-	    			abortBroadcast();							//We don't want to do anything else with this ACK
-	    			break;
-	    		case Message.MESSAGE_TYPE_TEXT:					//Standard text message from another user
-	    		case Message.MESSAGE_TYPE_IMAGE:				//Image message from another user
-	    			//Check if the message is intended for this particular conversation
-			    	String newConversationId = message.getConversationId();
-			    	if(newConversationId.equals(conversation.getId())){			//True if the message belongs to this conversation
-			    		//Refresh the list view
-			    		nMessagesToShow++;
-			    		chatListAdapter.refresh();
-			    		scrollListToBottom();
-			    		if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
-				    		abortBroadcast();
+	    	if(isVisible){							//Only continue if this fragment is actually visible on screen and is the active fragment
+	    		Log.d(TAG, "MESSAGE: "+conversation.getId());
+		    	Message message = (Message) intent.getSerializableExtra("message");
+		    	if(message!=null){									//True if a message object was sent with this Intent
+		    		int messageType = message.getType();
+		    		switch(messageType){							//Do different things depending on the type of the message
+		    		case Message.MESSAGE_TYPE_ACK:					//ACK from another device
+		    			messageReceivedAck(message);
+		    			abortBroadcast();							//We don't want to do anything else with this ACK
+		    			Log.d(TAG, "GOT ACK, CONVERSATION: "+conversation.getId());
+		    			break;
+		    		case Message.MESSAGE_TYPE_TEXT:					//Standard text message from another user
+		    		case Message.MESSAGE_TYPE_IMAGE:				//Image message from another user
+		    			//Check if the message is intended for this particular conversation
+				    	String newConversationId = message.getConversationId();
+				    	if(newConversationId.equals(conversation.getId())){			//True if the message belongs to this conversation
+				    		//Refresh the list view
+				    		nMessagesToShow++;
+				    		chatListAdapter.refresh();
+				    		scrollListToBottom();
+				    		if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
+					    		abortBroadcast();
+					    	}
+					    	//Get the local user's ID from the preferences. We can't use the static USER_ID field in EpicChatActivity.java as that class may not exist when this activity is invoked from a notification
+							preferences = PreferenceManager.getDefaultSharedPreferences(context);
+							String localUserId = preferences.getString("userId", null);
+							
+							//Check if the message was sent from another device by the same user as is logged in on this device. If this is the case, we don't want a notification either
+					    	if(message.getSenderId().equals(localUserId)){	//True if the user ids match
+					    		abortBroadcast();
+					    	}
 				    	}
-				    	//Get the local user's ID from the preferences. We can't use the static USER_ID field in EpicChatActivity.java as that class may not exist when this activity is invoked from a notification
-						preferences = PreferenceManager.getDefaultSharedPreferences(context);
-						String localUserId = preferences.getString("userId", null);
-						
-						//Check if the message was sent from another device by the same user as is logged in on this device. If this is the case, we don't want a notification either
-				    	if(message.getSenderId().equals(localUserId)){	//True if the user ids match
-				    		abortBroadcast();
-				    	}
-			    	}
-			    	else Log.d(TAG, "Conversation does not match");
-	    			break;
-	    		}		    	
+				    	else Log.d(TAG, "Conversation does not match");
+		    			break;
+		    		}		    	
+		    	}
 	    	}
 	    }
 	};

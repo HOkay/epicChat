@@ -35,7 +35,14 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	/**
 	 * Signals that a full contacts sync was just completed
 	 */
-	public static final int STATUS_SYNC_COMPLETE = 2;
+	public static final int STATUS_SYNC_NEW_CONTACT = 2;
+	/**
+	 * Signals that a full contacts sync was just completed
+	 */
+	public static final int STATUS_SYNC_COMPLETE = 3;
+	
+	private int nContactsToDownload;
+	private int nContactsDownloaded = 0;
 	
 	private Context context;
 	
@@ -59,7 +66,18 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 				if(index!=-1){
 					Contact contact = newContactsList.get(index);
 					database.addContact(contact);
-					sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);
+					sendSyncStatusBroadcast(STATUS_SYNC_NEW_CONTACT);
+					nContactsDownloaded++;
+					if(nContactsDownloaded>=nContactsToDownload){		//True if all contacts have been downloaded
+						sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);	//Notify the system that the sync is complete
+					}
+				}
+				break;
+			case DownloadFileTask.EVENT_DOWNLOAD_FAILED:			//Received when the download of the user image failed
+				//We should still increment the downloaded counter, or else the SYNC_COMPLETE broadcast will not be sent
+				nContactsDownloaded++;
+				if(nContactsDownloaded>=nContactsToDownload){		//True if all contacts have been downloaded
+					sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);	//Notify the system that the sync is complete
 				}
 				break;
 			default:
@@ -121,7 +139,7 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	 */
 	@Override
 	protected void onPostExecute(Boolean success){
-		sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);
+		//sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);
 	}
 	
 	/**
@@ -218,6 +236,8 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 		try{
 			JSONArray contactsJSON = new JSONArray(serverResponse);
 			nContacts = contactsJSON.length();
+			nContactsToDownload = nContacts;
+			
 			JSONObject contactJSON;
 			String contactId;
 			String contactFirstName;
@@ -265,10 +285,10 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	 * Sends a broadcast intent with the attached status code
 	 * @param statusSyncStarted		The status code associated with the broadcast. Must be one of the STATUS fields defined in this class
 	 */
-	private void sendSyncStatusBroadcast(int statusSyncStarted) {
+	private void sendSyncStatusBroadcast(int syncStatus) {
 		//Send a broadcast to indicate a contact sync event has occured
 		Intent newMessageIntent = new Intent(MainActivity.intentSignatureContactSyncComplete);
-		newMessageIntent.putExtra("syncStatus", statusSyncStarted);
+		newMessageIntent.putExtra("syncStatus", syncStatus);
 		context.sendBroadcast(newMessageIntent, null);
 	}
 }

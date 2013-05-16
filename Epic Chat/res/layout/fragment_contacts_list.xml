@@ -8,7 +8,7 @@
         android:id="@+id/fragment_contacts_gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/fragment_conversations_button_sync"
+        android:layout_above="@+id/fragment_conversations_sync_status_text"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="20dp"
@@ -42,15 +42,5 @@
         android:text="Syncing contacts..."
         android:textSize="12sp"
         android:visibility="invisible" />
-
-    <ImageButton
-        android:id="@+id/fragment_conversations_button_sync"
-        android:layout_width="78dp"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginBottom="2dp"
-        android:layout_marginRight="2dp"
-        android:src="@android:drawable/stat_notify_sync" />
 
 </RelativeLayout>
