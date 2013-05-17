@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:background="#EEEEEE" >
 
     <ListView
@@ -13,7 +13,6 @@
         android:cacheColorHint="#00000000"
         android:divider="@null"
         android:dividerHeight="0px"
-        android:isScrollContainer="true"
         android:scrollingCache="true"
         android:stackFromBottom="true" >
     </ListView>
@@ -25,8 +24,8 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_toLeftOf="@+id/fragment_view_conversation_send_message"
+        android:imeOptions="actionSend"
         android:inputType="textCapSentences|textMultiLine"
-        android:isScrollContainer="true"
         android:maxHeight="200dp"
         android:minHeight="60dp" >
     </EditText>

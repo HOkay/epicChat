@@ -16,8 +16,11 @@ import com.google.android.gcm.GCMRegistrar;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
+import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -48,7 +51,7 @@ import android.widget.ViewFlipper;
  * 2:	If there is only one Gmail account, use this as the account ID
  * 3:	If there is more than one, offer the user a choice
  * 4:	Check on the server if an account with this ID exists
- * 5:	If it does, download the account details (first & last name and profile image) and show them to the user
+ * 5:	If it does, download the account details (first & last name, phone number, and profile image) and show them to the user
  * 6:	If not, provide an interface which the user can use to enter these details and choose a picture
  * @author Tom
  *
@@ -76,6 +79,7 @@ public class EnterAccountDetailsActivity extends Activity {
 	private int paneState = STATE_INITIAL;
 	
 	//UI stuff
+	private ActionBar actionBar;
 	private TextView topText;
 	private ViewFlipper viewFlipper;
 	private Button buttonNext;
@@ -87,9 +91,10 @@ public class EnterAccountDetailsActivity extends Activity {
 	private ArrayAdapter<String> accountsListAdapter;
 	
 	//Details pane
-	private EditText editTextFirstName, editTextLastName;
+	private EditText editTextFirstName, editTextLastName, editTextPhoneNumber;
 	private String firstName = null;
 	private String lastName = null;
+	private String phoneNumber = null;
 	
 	//Profile image pane
 	private ImageView imageViewProfileImage;
@@ -110,6 +115,10 @@ public class EnterAccountDetailsActivity extends Activity {
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);	//Load the preferences
 
 		serverAddress = preferences.getString("serverAddress", null);
+		
+		actionBar = getActionBar();
+		actionBar.setTitle("Account details");
+		
 		//Set up all the UI elements
 		setContentView(R.layout.activity_enter_account_details);
 		
@@ -168,6 +177,7 @@ public class EnterAccountDetailsActivity extends Activity {
 		//Details pane
 		editTextFirstName = (EditText) findViewById(R.id.activity_enter_account_details_viewflipper_name_details_first_name);
 		editTextLastName = (EditText) findViewById(R.id.activity_enter_account_details_viewflipper_name_details_last_name);
+		editTextPhoneNumber= (EditText) findViewById(R.id.activity_enter_account_details_viewflipper_name_details_phone_number);
 		
 		//Profile image pane
 		imageViewProfileImage = (ImageView) findViewById(R.id.activity_enter_account_details_viewflipper_profile_image_image);
@@ -183,7 +193,6 @@ public class EnterAccountDetailsActivity extends Activity {
 				imagePickerIntent.putExtra("aspectX", 1);
 				imagePickerIntent.putExtra("aspectY", 1);
 				imagePickerIntent.putExtra("return-data", true);
-				//imagePickerIntent.putExtra("outputFormat", Bitmap.CompressFormat.PNG.toString());
 				startActivityForResult(imagePickerIntent, ACTION_SELECT_IMAGE_FROM_GALLERY); 
 			}
 		});
@@ -194,6 +203,28 @@ public class EnterAccountDetailsActivity extends Activity {
 
 		//Start the process
 		goToState(STATE_INITIAL);
+	}
+	
+	@Override
+	public void onBackPressed() {
+	  	//Check if the user really wants to cancel this process
+		AlertDialog.Builder confirmCancelBuilder = new AlertDialog.Builder(this);
+		confirmCancelBuilder.setTitle("Quit setup");
+		confirmCancelBuilder.setMessage("Are you sure you want to quit? You will not be able to use Epic Chat until you have completed the setup.");
+		confirmCancelBuilder.setNegativeButton("Continue", new DialogInterface.OnClickListener() {			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		confirmCancelBuilder.setPositiveButton("Quit", new DialogInterface.OnClickListener() {			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				finish();
+			}
+		});
+		AlertDialog confirmCancel = confirmCancelBuilder.create();
+		confirmCancel.show();
 	}
 
 	@Override
@@ -317,9 +348,15 @@ public class EnterAccountDetailsActivity extends Activity {
 							goToState(STATE_ENTER_DETAILS);
 							newAccount = true;
 						}
-						else if(responseJSON.has("firstName")){		//True if the user id was found on the server
+						else {		//True if the user id was found on the server
 							firstName = responseJSON.getString("firstName");
 							lastName = responseJSON.getString("lastName");
+							if(responseJSON.has("devicePhoneNumber")){
+								String tempPhoneNumber = responseJSON.getString("devicePhoneNumber");
+								if(!tempPhoneNumber.equals("null")){
+									phoneNumber = tempPhoneNumber;
+								}
+							}
 							newAccount = false;
 							goToState(STATE_ENTER_DETAILS);
 						}
@@ -340,8 +377,12 @@ public class EnterAccountDetailsActivity extends Activity {
     	//Get the details from the boxes
     	final String tempFirstName = editTextFirstName.getText().toString();
     	final String tempLastName = editTextLastName.getText().toString();
+    	final String tempPhoneNumber = editTextPhoneNumber.getText().toString();
     	
-    	final String devicePhoneNumber = getDevicePhoneNumber();
+    	if(tempPhoneNumber.length()>0){
+    		
+    	}
+    	//final String devicePhoneNumber = getDevicePhoneNumber();
     	//AsyncTask that will create an account
     	class CreateAccountOnServer extends AsyncTask<Void, Void, String>{
     		protected void onPreExecute(){
@@ -365,8 +406,8 @@ public class EnterAccountDetailsActivity extends Activity {
     			}
     			
 				//Add the phone number if available
-				if(devicePhoneNumber!=null){
-					request+= "&devicePhoneNumber="+devicePhoneNumber;
+				if(tempPhoneNumber.length()>0){
+					request+= "&devicePhoneNumber="+tempPhoneNumber;
 				}				
 				String response = HTTP.doHttpGet(request, 5);
 				return response;
@@ -481,6 +522,9 @@ public class EnterAccountDetailsActivity extends Activity {
 	  		setTopText("You already have an Epic Chat account. If you want to edit your details you can do it now");
 			editTextFirstName.setText(firstName);
 	  		editTextLastName.setText(lastName);
+	  		if(phoneNumber!=null){
+	  			editTextPhoneNumber.setText(phoneNumber);
+	  		}
 	  	}
 	  	else{
 	  		setTopText("Enter your details");

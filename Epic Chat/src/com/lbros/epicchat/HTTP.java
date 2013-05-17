@@ -17,7 +17,7 @@ public class HTTP {
 	private final static String TAG = "HTTP";
 	
 	public static String doHttpGet(String address, int maximumRetries) {
-		Log.d(TAG, "REQUEST: "+address);
+		//Log.d(TAG, "REQUEST: "+address);
 		String responseString = null;
 
 		URL url = null;
@@ -56,7 +56,7 @@ public class HTTP {
 		finally {
 			urlConnection.disconnect();
 		}
-		Log.d(TAG, "RESPONSE: "+responseString);
+		//Log.d(TAG, "RESPONSE: "+responseString);
 		return responseString;
 	}
 	
@@ -68,7 +68,7 @@ public class HTTP {
 	 * @return					A string containing the server's response, or null if there was no response
 	 */
 	public static String doHttpPost(String address, String parameters, int maximumRetries) {
-		Log.d(TAG, "REQUEST: "+address);
+		//Log.d(TAG, "REQUEST: "+address);
 		String responseString = null;
 
 		URL url = null;
@@ -112,7 +112,7 @@ public class HTTP {
 		finally {
 			urlConnection.disconnect();
 		}
-		Log.d(TAG, "RESPONSE: "+responseString);
+		//Log.d(TAG, "RESPONSE: "+responseString);
 		return responseString;
 	}
 

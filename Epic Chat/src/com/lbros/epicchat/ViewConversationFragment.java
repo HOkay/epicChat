@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.UUID;
 
@@ -49,10 +48,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Adapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
@@ -177,15 +179,43 @@ public class ViewConversationFragment extends Fragment{
 		messageReceivedFilter.setPriority(5);		//This receiver should have a higher priority than the notification receiver
 		
 		textEntry = (EditText) fragmentLayout.findViewById(R.id.fragment_view_conversation_text_entry);
+		textEntry.setOnFocusChangeListener(new OnFocusChangeListener(){
+		    public void onFocusChange(View v, boolean hasFocus){
+		    	if(hasFocus){
+		    		//chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+		    	}
+		    }
+		});
+		
 		buttonSend = (Button) fragmentLayout.findViewById(R.id.fragment_view_conversation_send_message);
 		
 		//Set up the list and its custom adapter
 		chatList = (ListView) fragmentLayout.findViewById(R.id.fragment_view_conversation_message_list);
 		chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
 		
+		chatList.setOnScrollListener(new OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				switch(scrollState){
+				case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:			//List has finished scroll, re-enable transcript mode
+					chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_NORMAL);
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:	//List just about to scroll from a user touch, so don't do anything
+					break;
+				case AbsListView.OnScrollListener.SCROLL_STATE_FLING:			//List just about to scroll, we should enable smooth scrolling by disabling the transcript mode
+					chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
+					break;
+				default:
+					break;
+				}
+			}
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+			}
+		});
+		
 		chatListAdapter = new MessageListAdapter(fragmentActivity);
 		chatList.setAdapter(chatListAdapter);
-		//chatList.setS
 
 		//Check if there is any previous state to restore
 		if(savedInstanceState!=null){
@@ -261,6 +291,7 @@ public class ViewConversationFragment extends Fragment{
 		Message message = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_TEXT, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, text);
 		storeMessage(message);
 		chatListAdapter.refresh();
+		chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
 		scrollListToBottom();
 		sendMessageUsingGCM(message);
 	}
@@ -272,20 +303,8 @@ public class ViewConversationFragment extends Fragment{
 	private String createMessageId(int messageTimestamp) {
 		return messageTimestamp+""+UUID.randomUUID();
 	}
-
-	@Override
-    public void onSaveInstanceState(Bundle state) {
-    	super.onSaveInstanceState(state);
-    	Parcelable listViewState = chatList.onSaveInstanceState();
-    	state.putParcelable("listViewState", listViewState);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-    }
-    
-    private void registerMessageReceiver(){
+	
+	private void registerMessageReceiver(){
     	fragmentActivity.registerReceiver(gcmMessageReceiver, messageReceivedFilter);
     	messageReceiverRegistered = true;
     }
@@ -301,15 +320,22 @@ public class ViewConversationFragment extends Fragment{
     @Override
     public void onResume(){
     	super.onResume();
-    	//isVisible = true;
+		//isVisible = true;
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
     	if(listViewScrollIndex!=-1){
     		chatList.setSelectionFromTop(listViewScrollIndex, listViewScrollOffset);
     	}
     	if(isVisible){
-			//clearNotificationAndPendingMessages();
+    		registerMessageReceiver();
+    		clearNotificationAndPendingMessages();
 		}
+    	//Check if there is text to load into the box
+    	String previousText = preferences.getString("entryBoxText"+conversation.getId(), null);
+    	if(previousText!=null){
+    		textEntry.setText(previousText);
+    		textEntry.requestFocus();
+    	}
     }
 	
 	/**
@@ -319,10 +345,18 @@ public class ViewConversationFragment extends Fragment{
 	public void onPause(){
 		super.onPause();
 		//isVisible = false;
+		if(isVisible){
+			unregisterMessageReceiver();
+		}
 		//The combination of the index of the first visible row, and the same row's offset from its parent will give us the exact scroll position. We can restore this in onResume() to preserve page scroll
 		//We can't use the saved state of the list as we have to-add the adapter to the list every time the view is regenerated, which resets the list's state 
     	listViewScrollIndex = chatList.getFirstVisiblePosition();
     	listViewScrollOffset = chatList.getChildAt(0).getTop();
+    	//Save the text currently in the text entry box so that it can be resumed
+    	String entryBoxText = textEntry.getText().toString().trim();    	
+		SharedPreferences.Editor editor = preferences.edit();
+		editor.putString("entryBoxText"+conversation.getId(), entryBoxText);
+		editor.commit();
 	}
 	
 	/**

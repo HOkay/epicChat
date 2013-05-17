@@ -118,7 +118,6 @@ public class GCMIntentService extends GCMBaseIntentService{
 			//Extract the message data and build the message in a switch, where each case adds different information to the message
 			switch(messageType){
 			case Message.MESSAGE_TYPE_ACK:		//For an ACK, most of the data will be null or 0
-				Log.d(TAG, "GOT ACK");
 				messageContents = intent.getStringExtra("messageId");
 				messageReadyForBroadcast = true;		//Set this flag, which is used at the end of this method
 				break;
@@ -316,10 +315,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 			public void run() {
 				String serverAddress = preferences.getString("serverAddress", null);
 				String request = serverAddress+"sendACK.php?destinationDevice="+senderDeviceId+"&messageId="+messageId;
-				String response = HTTP.doHttpGet(request, 5);
-				if(response!=null){
-					Log.d(TAG, "Response: "+response);
-				}
+				HTTP.doHttpGet(request, 5);				
 			}
 		});
 		sendACKThread.start();

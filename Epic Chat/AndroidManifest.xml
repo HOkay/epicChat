@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lbros.epicchat"
     android:versionCode="1"
-    android:versionName="0.49l" >
+    android:versionName="0.49m" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -76,8 +76,7 @@
         </activity>
         <activity
             android:name="com.lbros.epicchat.ViewConversationsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="stateHidden" >
+            android:configChanges="keyboardHidden|orientation|screenSize" >
         </activity>
 
         <service android:name="com.lbros.epicchat.GCMIntentService" />

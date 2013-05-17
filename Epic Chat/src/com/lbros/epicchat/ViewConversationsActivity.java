@@ -119,7 +119,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 		conversationPager.setAdapter(conversationPagerAdapter);
 		conversationPager.setPageMargin(20);
 		conversationPager.setOnPageChangeListener(imageChangedListener);		//This listener listens for when the contents of this pager change
-		//conversationPager.setPageTransformer(false, new ZoomOutPageTransformer(0.95f, 1.0f));
+		//conversationPager.setPageTransformer(false, new ZoomOutPageTransformer(0.5f, 1.0f));
 		conversationPagerTabStrip = (PagerTabStrip) findViewById(R.id.activity_view_conversations_viewpager_tab_strip);
 		conversationPagerTabStrip.setDrawFullUnderline(false);					//Makes the tab indicator fill the whole width
 		conversationPagerTabStrip.setTabIndicatorColor(0xFFFF8800);

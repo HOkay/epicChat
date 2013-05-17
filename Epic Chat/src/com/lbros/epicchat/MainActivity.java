@@ -28,6 +28,7 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class MainActivity extends FragmentActivity {
 	private final String TAG = "MainActivity";
@@ -81,6 +82,7 @@ public class MainActivity extends FragmentActivity {
 	public static final int cacheSize = 4096;		//Size of the cache in KB
 
 	private ActionBar actionBar;
+	private boolean userIdSet;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +127,7 @@ public class MainActivity extends FragmentActivity {
 		
 		viewPager.setOnPageChangeListener(tabChangedListener);			//This will update the Action Bar when the tab is changed
 		actionBar.setTitle(sectionsPagerAdapter.getPageTitle(viewPager.getCurrentItem()));		//Set the title of the action bar
-		//viewPager.setPageTransformer(false, new ZoomOutPageTransformer());
+		//viewPager.setPageTransformer(false, new ZoomOutPageTransformer(0.9f, 0.9f));
 		
 		//Initialise the alarm manager, which will be used to run periodic background tasks
 		alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
@@ -143,11 +145,10 @@ public class MainActivity extends FragmentActivity {
 		checkFilesystem();
 		
 		//Check if a user ID is set
-		boolean userIdSet = userIdSet();
+		userIdSet = userIdSet();
 		//userIdSet = false;
         if(!userIdSet){		//True if the user ID has not been set, so launch an activity to handle account creation / synchronisation
-        	Intent enterAccountDetailsIntent = new Intent(this, EnterAccountDetailsActivity.class);
-        	startActivityForResult(enterAccountDetailsIntent, ACTION_ENTER_ACCOUNT_DETAILS);
+        	showEnterAccountDetailsActivity();
         }
         
         //Check if this activity was launched normally, or in response to the user sending an object to it (e.g. an image or other shareable item)
@@ -163,6 +164,11 @@ public class MainActivity extends FragmentActivity {
         }
 	}
 	
+	private void showEnterAccountDetailsActivity() {
+    	Intent enterAccountDetailsIntent = new Intent(this, EnterAccountDetailsActivity.class);
+    	startActivityForResult(enterAccountDetailsIntent, ACTION_ENTER_ACCOUNT_DETAILS);
+	}
+
 	/**
 	 * Checks to see if the necessary folders exist in the device's filesystem. They are created if they do not exist
 	 */
@@ -209,7 +215,6 @@ public class MainActivity extends FragmentActivity {
 				try {
 					file.createNewFile();
 					fileExists = true;
-					Log.d(TAG, "CREATING FILE");
 				}
 				catch (IOException e) {
 					Log.e(TAG, "Error creating file: "+e.toString());
@@ -247,19 +252,40 @@ public class MainActivity extends FragmentActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-	    MenuInflater inflater = getMenuInflater();
+		Log.d(TAG, "CREATING MENU");
+		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.menu_main_activity, menu);
-	    return true;
+	    //If the user is signed in to Epic Chat, remove the sign in option from the menu
+  		if(userIdSet){
+  			Log.d(TAG, "REMOVING");
+  			menu.removeItem(R.id.menu_main_activity_setup_account);
+  		}
+  		return true;
+	}
+	
+	/**
+	 * Called when the options menu or action bar icon is touched 
+	 */
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	    case R.id.menu_main_activity_setup_account:
+	    	showEnterAccountDetailsActivity();
+	    	return true;
+	    default:
+	    	return super.onOptionsItemSelected(item);
+	    }
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent returnedIntent) {
 		super.onActivityResult(requestCode, resultCode, returnedIntent);
-	    switch(requestCode) { 
+	    switch(requestCode) {
 	    case ACTION_ENTER_ACCOUNT_DETAILS:		//After getting the user's account details, trigger a refresh of the user's contacts
 	        if(resultCode==RESULT_OK){
 	        	viewPager.setCurrentItem(1, true);		//Jump to the contacts list tab
 	        }
+	        userIdSet = userIdSet();
 	        break;
 	    case ACTION_CHOOSE_CONTACT:				//A contact was successfully chosen by the user
 	    	if(resultCode==RESULT_OK){
