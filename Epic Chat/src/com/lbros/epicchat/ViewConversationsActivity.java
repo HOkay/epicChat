@@ -48,7 +48,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 	
 	private SharedPreferences preferences;
 	private String localUserId = null;
-
+	
 	/**
 	 * Called when the activity is created. Handles all UI setup
 	 */
@@ -118,7 +118,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 		conversationPagerAdapter = new ConversationPagerAdapter(getSupportFragmentManager());
 		conversationPager.setAdapter(conversationPagerAdapter);
 		conversationPager.setPageMargin(20);
-		conversationPager.setOnPageChangeListener(imageChangedListener);		//This listener listens for when the contents of this pager change
+		conversationPager.setOnPageChangeListener(conversationChangedListener);		//This listener listens for when the contents of this pager change
 		//conversationPager.setPageTransformer(false, new ZoomOutPageTransformer(0.5f, 1.0f));
 		conversationPagerTabStrip = (PagerTabStrip) findViewById(R.id.activity_view_conversations_viewpager_tab_strip);
 		conversationPagerTabStrip.setDrawFullUnderline(false);					//Makes the tab indicator fill the whole width
@@ -198,9 +198,10 @@ public class ViewConversationsActivity extends FragmentActivity {
         }
     }
 	
-	private ViewPager.OnPageChangeListener imageChangedListener = new OnPageChangeListener() {
+	private ViewPager.OnPageChangeListener conversationChangedListener = new OnPageChangeListener() {
 		@Override
 		public void onPageSelected(int position) {
+			//currentTabIndex = position;
 			Conversation conversation = conversationsList.get(position);
 			updateActionBar(conversation);
 			clearNotificationAndPendingMessages(conversation);
@@ -213,6 +214,7 @@ public class ViewConversationsActivity extends FragmentActivity {
     				conversationPagerAdapter.getItem(i).setVisibility(false);
     			}
     		}
+    		//previousTabIndex = currentTabIndex;			//This is saved for next time
 		}
 
 		@Override

@@ -90,11 +90,9 @@ public class MainActivity extends FragmentActivity {
 		
 		//Initialise the cache that we will use for Bitmap images
 		loadBitmapCache();
-		
+
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);	//Load the preferences
 
-		//gcmId = GCMRegistrar.getRegistrationId(this);
-		
 		//This is for getting the WiFi MAC from the device, which we use as a UUID for the device
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         String UUID = wifiManager.getConnectionInfo().getMacAddress();
@@ -106,9 +104,8 @@ public class MainActivity extends FragmentActivity {
         editor.commit();
 
 		setContentView(R.layout.activity_main);
-		
-		actionBar = getActionBar();
 
+		actionBar = getActionBar();
 		// Create the adapter that will return a fragment for each of the three primary sections of the app's main view.
 
 		fragments = new Vector<Fragment>();

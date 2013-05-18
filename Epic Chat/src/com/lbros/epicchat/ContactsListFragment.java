@@ -10,7 +10,6 @@ import android.content.DialogInterface.OnShowListener;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -44,16 +43,18 @@ public class ContactsListFragment extends Fragment {
 
 	private Database database;
 	
+	private float pixelDensity;
+	private int contactThumbnailSize;
+	
 	private SharedPreferences preferences;
 	private String userId;
 
 	private RelativeLayout fragmentLayout;
 	private FragmentActivity parentActivity;
 	
-	ArrayList<Contact> contactsList;
-	ContactsListAdapter contactsListAdapter;
+	private ContactsListAdapter contactsListAdapter;
 	
-	IntentFilter contactsSyncCompleteFilter;
+	private IntentFilter contactsSyncCompleteFilter;
 	
 	//UI stuff
 	GridView listViewContacts;
@@ -76,6 +77,9 @@ public class ContactsListFragment extends Fragment {
 		userId = preferences.getString("userId", null);
 	
 		//Setup the UI
+		pixelDensity = parentActivity.getResources().getDisplayMetrics().density;
+		contactThumbnailSize = (int) (160 * pixelDensity + 0.5f);
+		
 		listViewContacts = (GridView) fragmentLayout.findViewById(R.id.fragment_contacts_gridview);
 		contactsListAdapter = new ContactsListAdapter(parentActivity);					//Create an instance of our custom adapter
 		listViewContacts.setAdapter(contactsListAdapter);												//And link it to the list view
@@ -169,13 +173,9 @@ public class ContactsListFragment extends Fragment {
 			Contact contact = contactsList.get(position);
 
 			if(contact!=null){
-				Bitmap bitmap = contact.getImageBitmap(320, 320, null);
-				if(bitmap!=null){
-					contactImage.setImageBitmap(bitmap);
-				}
+				contact.loadImage(contactImage, contactThumbnailSize, contactThumbnailSize);
 				contactName.setText(contact.getFullName());                 //Get the contact's full name
 			}
-
 			return view;
 		}
 	}

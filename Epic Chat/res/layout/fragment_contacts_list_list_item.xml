@@ -9,7 +9,7 @@
         android:layout_height="fill_parent"
         android:adjustViewBounds="true"
         android:scaleType="fitStart"
-        android:src="@drawable/default_user_image" />
+        android:src="@null" />
 
     <TextView
         android:id="@+id/fragment_contacts_list_list_item_text"

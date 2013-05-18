@@ -20,6 +20,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
 public class Utils {
+	//private final static String TAG = "Utils";
+	
 	public static Bitmap getBitmapWithRoundedCorners(Bitmap bitmap, int radius) {
 		Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap.getHeight(), Config.ARGB_8888);
 		Canvas canvas = new Canvas(output);
@@ -54,7 +56,6 @@ public class Utils {
 	    int inSampleSize = 1;
 	
 	    if (height > reqHeight || width > reqWidth) {
-	
 	        // Calculate ratios of height and width to requested height and width
 	        final float heightRatio = ((float) height / (float) reqHeight);
 	        final float widthRatio = ((float) width / (float) reqWidth);
@@ -133,12 +134,8 @@ public class Utils {
 	            		fadeInAnimation.setAnimationListener(new AnimationListener() {
 	            	        @Override
 	            	        public void onAnimationEnd(Animation arg0) {
-
 	            	        	imageView.setVisibility(View.VISIBLE);
-
-
 	            	        }
-
 	            	        @Override
 	            	        public void onAnimationRepeat(Animation animation) {}
 	            	        @Override

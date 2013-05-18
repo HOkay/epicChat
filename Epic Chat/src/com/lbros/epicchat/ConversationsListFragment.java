@@ -36,11 +36,14 @@ public class ConversationsListFragment extends Fragment {
 	
 	private Database database;
 	
+	private float pixelDensity;
+	private int conversationThumbnailSize;
+	
 	private SharedPreferences preferences;
 	private String userId;
 	
 	private RelativeLayout fragmentLayout;
-	private FragmentActivity fragmentActivity;
+	private FragmentActivity parentActivity;
 
 	private ArrayList<Conversation> conversationsList;
 	private ConversationsListAdapter conversationsListAdapter;
@@ -51,7 +54,7 @@ public class ConversationsListFragment extends Fragment {
 	private ListView listViewConversations;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		fragmentActivity = (FragmentActivity) super.getActivity();
+		parentActivity = (FragmentActivity) super.getActivity();
 		fragmentLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_conversations_list, container, false);
 
 		messageReceivedFilter = new IntentFilter(MainActivity.intentSignatureNewMessageReceived);
@@ -62,17 +65,20 @@ public class ConversationsListFragment extends Fragment {
 		
 		setHasOptionsMenu(true);						//We want the action bar
 		
-		database = new Database(fragmentActivity);		//Connect to the SQLite database
+		database = new Database(parentActivity);		//Connect to the SQLite database
 		
-		preferences = PreferenceManager.getDefaultSharedPreferences(fragmentActivity);
+		preferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
 		userId = preferences.getString("userId", null);
 		
 		//Get the list of contacts from the database
 		conversationsList = database.getAllConversations(null);
 		
 		//Setup the UI
+		pixelDensity = parentActivity.getResources().getDisplayMetrics().density;
+      	conversationThumbnailSize = (int) (60 * pixelDensity + 0.5f);
+		
 		listViewConversations = (ListView) fragmentLayout.findViewById(R.id.fragment_conversations_listview);
-		conversationsListAdapter = new ConversationsListAdapter(conversationsList, fragmentActivity);		//Create an instance of our custom adapter
+		conversationsListAdapter = new ConversationsListAdapter(conversationsList, parentActivity);		//Create an instance of our custom adapter
 		listViewConversations.setAdapter(conversationsListAdapter);											//And link it to the list view
 		listViewConversations.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				//Add a listener to the list view
@@ -81,16 +87,16 @@ public class ConversationsListFragment extends Fragment {
 			}
 		});
 
-		fragmentActivity.registerReceiver(conversationsUpdatedReceiver, messageReceivedFilter);
-		fragmentActivity.registerReceiver(conversationsUpdatedReceiver, pendingMessagesClearedFilter);
-		fragmentActivity.registerReceiver(conversationsUpdatedReceiver, conversationsModifiedFilter);
+		parentActivity.registerReceiver(conversationsUpdatedReceiver, messageReceivedFilter);
+		parentActivity.registerReceiver(conversationsUpdatedReceiver, pendingMessagesClearedFilter);
+		parentActivity.registerReceiver(conversationsUpdatedReceiver, conversationsModifiedFilter);
 		
 		return fragmentLayout;
 	}
 	
 	public void onResume(){
 		super.onResume();
-		conversationsListAdapter = new ConversationsListAdapter(conversationsList, fragmentActivity);
+		conversationsListAdapter = new ConversationsListAdapter(conversationsList, parentActivity);
     	listViewConversations.setAdapter(conversationsListAdapter);
 	}
 	
@@ -101,7 +107,7 @@ public class ConversationsListFragment extends Fragment {
 	
 	public void onDestroy(){
 		super.onDestroy();
-		fragmentActivity.unregisterReceiver(conversationsUpdatedReceiver);
+		parentActivity.unregisterReceiver(conversationsUpdatedReceiver);
 	}
 	
 	@Override
@@ -116,7 +122,7 @@ public class ConversationsListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case R.id.menu_conversations_list_fragment_create_group:
-	    	Intent createGroupIntent = new Intent(fragmentActivity, ChooseContactActivity.class);
+	    	Intent createGroupIntent = new Intent(parentActivity, ChooseContactActivity.class);
 	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_MODE, ChooseContactActivity.MODE_MULTIPLE_CONTACTS);		//We want to pick multiple contacts
 	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Create group");									//Set the page title
 	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Select contacts to add");						//Set the page subtitle
@@ -159,7 +165,7 @@ public class ConversationsListFragment extends Fragment {
      * @param conversationId		Conversation ID that will be sent with the new Intent to the Conversation activity
      */
     private void openChatWithUser(String conversationId){
-    	Intent openChatIntent = new Intent(fragmentActivity, ViewConversationsActivity.class);
+    	Intent openChatIntent = new Intent(parentActivity, ViewConversationsActivity.class);
     	openChatIntent.putExtra("conversationId", conversationId);
     	startActivity(openChatIntent);
     }
@@ -197,8 +203,7 @@ public class ConversationsListFragment extends Fragment {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
-			if (view == null)
-			{
+			if (view == null){
 				LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				view = vi.inflate(R.layout.fragment_conversations_list_list_item, null);
 			}
@@ -238,8 +243,7 @@ public class ConversationsListFragment extends Fragment {
 					}
 				}
 			}
-			
-			conversationImage.setImageBitmap(conversation.getImageBitmap(120, 120, null));		//Get the image bitmap
+			conversation.loadImage(conversationImage, conversationThumbnailSize, conversationThumbnailSize);
 			conversationName.setText(userFirstNames);               				//Get the conversation's full name
 			
 			//Get the contents of the latest message in this particular conversation

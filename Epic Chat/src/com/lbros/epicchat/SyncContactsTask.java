@@ -15,6 +15,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.ContactsContract;
+import android.telephony.PhoneNumberUtils;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 
 /**
@@ -47,6 +49,9 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	private Context context;
 	
 	private Database database;
+	
+	private TelephonyManager telephonyManager;
+	private String countryCode;
 	
 	private SharedPreferences preferences;
 	
@@ -93,6 +98,8 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	public SyncContactsTask(Context newContext){
 		context = newContext;
 		preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		telephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		countryCode = telephonyManager.getNetworkCountryIso();
 	}
 	
 	/**
@@ -139,7 +146,14 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	 */
 	@Override
 	protected void onPostExecute(Boolean success){
-		//sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);
+		if(!success){			//If there were no new contacts to fetch information for, send the sync complete event
+			sendSyncStatusBroadcast(STATUS_SYNC_COMPLETE);
+		}
+	}
+	
+
+	private String convertPhoneNumberToInternationalFormat(String phoneNumber){
+		return null;
 	}
 	
 	/**
@@ -149,29 +163,35 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 	private ArrayList<String> getMissingContactEmailAddresses(){
 		ArrayList<String> emailAddresses = new ArrayList<String>();
 		long start = System.currentTimeMillis();
-        String[] PROJECTION = new String[] {
-            ContactsContract.CommonDataKinds.Email.DATA
+        String[] projection = new String[] {
+            ContactsContract.CommonDataKinds.Email.DATA, ContactsContract.CommonDataKinds.Phone.NUMBER
         };
 
+		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		Log.d(TAG, "CODE "+manager.getNetworkCountryIso());
         //Query the system for a list of contacts, returning only their email address
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, PROJECTION, null, null, null);
+        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, null);
         int n = 0;
         if (cursor != null) {
             try {
             	//Work out which column the email address lies in
                 final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-                String emailAddress; 
+                final int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                Log.d(TAG, "INDEX: "+emailIndex);
+                Log.d(TAG, "INDEX: "+phoneIndex);
+                String emailAddress, phoneNumber;
                 while (cursor.moveToNext()) {
                 	//Retrieve the email address
                 	emailAddress = cursor.getString(emailIndex);
-                	//Check if the email address is a Google one
-                	if(emailAddress.endsWith("gmail.com")){				//Found a gmail address
-                		if(!contactExistsInDatabase(emailAddress)){
-                			emailAddresses.add(emailAddress);
-                		}
+                	phoneNumber = cursor.getString(phoneIndex);
+                	Log.d(TAG, "Phone: "+phoneNumber);
+                	boolean international = PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber);
+                	if(international){
+                		Log.d(TAG, "INTERNATIONAL");
                 	}
-                	else if(emailAddress.endsWith("googlemail.com")){	//Found a googlemail address
+                	//Check if the email address is a Google one
+                	if(emailAddress.endsWith("gmail.com") || emailAddress.endsWith("googlemail.com")){				//Found a gmail or googlemail address
                 		if(!contactExistsInDatabase(emailAddress)){
                 			emailAddresses.add(emailAddress);
                 		}

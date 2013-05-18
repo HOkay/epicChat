@@ -7,6 +7,7 @@ import java.io.Serializable;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+import android.widget.ImageView;
 
 /**
  * Class used to represent contacts in the system. Each Contact has a user ID, a first name, a second name and an optional phone number.
@@ -138,5 +139,30 @@ public class Contact implements Serializable{
 			return Utils.getBitmapWithRoundedCorners(imageBitmap, cornerRadius);
 		}
 		else return imageBitmap;	//Otherwise return the bitmap as is
+	}
+	
+	/**
+	 * Loads the conversation's image into the provided ImageView. If the image is not found in the cache, it is loaded in the background to keep the UI snappy
+	 * @param imageView			The ImageView into which the image should be loaded
+	 * @param width				The width of the image
+	 * @param height			The height of the image
+	 */
+	public void loadImage(ImageView imageView, Integer width, Integer height){
+		Bitmap imageBitmap = null;
+		String imagePathFull = imagePath+width+height;		//The path to reference the bitmap to in the cache contains the dimensions, so that multiple copies of the same image (but at different resolutions) may be cached simultaneously
+		//First, attempt to retreive the bitmap from the cache
+		//Check the cache exists. If not, reinstantiate it
+		if(MainActivity.bitmapCache==null){					//Cache is null
+			MainActivity.loadBitmapCache();
+		}
+		else{												//Cache is not null, so check it to see if this image is in it
+			imageBitmap = MainActivity.bitmapCache.get(imagePathFull);
+		}
+		if(imageBitmap==null){		//True if the bitmap was not in the cache. So we must load it in the background
+			new Utils.LoadBitmapAsync(imagePath, imageView, width, height, true, MainActivity.bitmapCache).execute();
+		}
+		else{
+			imageView.setImageBitmap(imageBitmap);
+		}
 	}
 }

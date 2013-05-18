@@ -18,7 +18,7 @@
     <ImageView
         android:id="@+id/activity_view_conversation_message_list_item_user_image"
         android:layout_width="50dp"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignTop="@+id/activity_view_conversation_message_list_item_heading"
         android:layout_marginLeft="5dp"

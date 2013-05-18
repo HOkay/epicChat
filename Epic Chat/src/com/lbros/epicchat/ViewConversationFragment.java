@@ -48,7 +48,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -82,8 +81,10 @@ public class ViewConversationFragment extends Fragment{
     
     //Flag that indicates if the activity is visible
   	private boolean isVisible = false;
+  	private Boolean wasVisibleWhenPaused = null;
   	
   	private float pixelDensity;
+	private int contactThumbnailSize;
     
   	private Message pendingImageMessage;
 	private String capturePhotoImagePath = null;
@@ -122,13 +123,13 @@ public class ViewConversationFragment extends Fragment{
     
     private String localUserId = null;
 	
-	boolean showKeyboard = false;
+	private boolean showKeyboard = false;
 
 	//Actions used in the message popup menu
 	private final int POPUP_MENU_ACTION_COPY_TEXT = 1;
 	private final int POPUP_MENU_ACTION_FORWARD = 2;
 	private final int POPUP_MENU_ACTION_DELETE = 3;
-	
+	private final int POPUP_MENU_ACTION_RESEND = 4;
 	private final String TAG_CLIPBOARD_MESSAGE_TEXT = "messageText";
 
 
@@ -167,7 +168,8 @@ public class ViewConversationFragment extends Fragment{
 
 		//Get the pixel density of the screen. We need this as we have to set the height of some ImageView objects in pixels
 		pixelDensity = fragmentActivity.getResources().getDisplayMetrics().density;
-		
+		contactThumbnailSize = (int) (60 * pixelDensity + 0.5f);
+
 		//Get the notification manager
 		notificationManager = (NotificationManager) fragmentActivity.getSystemService(Context.NOTIFICATION_SERVICE);
 		//Get the clipboard manager. Used for copy and paste
@@ -179,13 +181,8 @@ public class ViewConversationFragment extends Fragment{
 		messageReceivedFilter.setPriority(5);		//This receiver should have a higher priority than the notification receiver
 		
 		textEntry = (EditText) fragmentLayout.findViewById(R.id.fragment_view_conversation_text_entry);
-		textEntry.setOnFocusChangeListener(new OnFocusChangeListener(){
-		    public void onFocusChange(View v, boolean hasFocus){
-		    	if(hasFocus){
-		    		//chatList.setTranscriptMode(ListView.TRANSCRIPT_MODE_DISABLED);
-		    	}
-		    }
-		});
+		textEntry.setFocusableInTouchMode(true);
+		textEntry.setFocusable(true);
 		
 		buttonSend = (Button) fragmentLayout.findViewById(R.id.fragment_view_conversation_send_message);
 		
@@ -320,14 +317,16 @@ public class ViewConversationFragment extends Fragment{
     @Override
     public void onResume(){
     	super.onResume();
-		//isVisible = true;
+		if(wasVisibleWhenPaused!=null){
+			isVisible = wasVisibleWhenPaused;
+		}
     	if(showKeyboard){		//Show the keyboard if it was requested in the intent
     	}
     	if(listViewScrollIndex!=-1){
     		chatList.setSelectionFromTop(listViewScrollIndex, listViewScrollOffset);
     	}
     	if(isVisible){
-    		registerMessageReceiver();
+    		//registerMessageReceiver();
     		clearNotificationAndPendingMessages();
 		}
     	//Check if there is text to load into the box
@@ -344,10 +343,8 @@ public class ViewConversationFragment extends Fragment{
 	@Override
 	public void onPause(){
 		super.onPause();
-		//isVisible = false;
-		if(isVisible){
-			unregisterMessageReceiver();
-		}
+		wasVisibleWhenPaused = isVisible;		//Need to remember this state so that we can restore it in onResume()
+		isVisible = false;
 		//The combination of the index of the first visible row, and the same row's offset from its parent will give us the exact scroll position. We can restore this in onResume() to preserve page scroll
 		//We can't use the saved state of the list as we have to-add the adapter to the list every time the view is regenerated, which resets the list's state 
     	listViewScrollIndex = chatList.getFirstVisiblePosition();
@@ -951,7 +948,7 @@ public class ViewConversationFragment extends Fragment{
 			}
 			else{
 				userImage.setVisibility(View.VISIBLE);
-				userImage.setImageBitmap(contact.getImageBitmap(100, 100, null));
+				contact.loadImage(userImage, contactThumbnailSize, contactThumbnailSize);
 				messageHeading.setVisibility(View.VISIBLE);
 				if(senderId.equals(localUserId)){		//True if the local user sent this message
 					senderFirstName = "Me";
@@ -1016,6 +1013,9 @@ public class ViewConversationFragment extends Fragment{
 																		//This means  it can be forwarded to any other recipient. Messages from other users automatically have the status ACK_RECIPIENT
 			menu.add(Menu.NONE, POPUP_MENU_ACTION_FORWARD, Menu.NONE, "Forward");
 		}
+		else{															//Message hasn't been acked from the server
+			menu.add(Menu.NONE, POPUP_MENU_ACTION_RESEND, Menu.NONE, "Resend");
+		}
 		
 		menu.add(Menu.NONE, POPUP_MENU_ACTION_DELETE, Menu.NONE, "Delete");
 		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -1035,6 +1035,9 @@ public class ViewConversationFragment extends Fragment{
 					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Choose contact");
 					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Choose a contact to forward this message to");
 					startActivityForResult(forwardMessageIntent, ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE);
+					break;
+				case POPUP_MENU_ACTION_RESEND:			//Resend the message
+					sendMessageUsingGCM(message);
 					break;
 				case POPUP_MENU_ACTION_DELETE:
 					database.deleteMessage(message, false);
@@ -1064,42 +1067,37 @@ public class ViewConversationFragment extends Fragment{
 	BroadcastReceiver gcmMessageReceiver = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context context, Intent intent){
-	    	if(isVisible){							//Only continue if this fragment is actually visible on screen and is the active fragment
-	    		Log.d(TAG, "MESSAGE: "+conversation.getId());
-		    	Message message = (Message) intent.getSerializableExtra("message");
-		    	if(message!=null){									//True if a message object was sent with this Intent
-		    		int messageType = message.getType();
-		    		switch(messageType){							//Do different things depending on the type of the message
-		    		case Message.MESSAGE_TYPE_ACK:					//ACK from another device
-		    			messageReceivedAck(message);
-		    			abortBroadcast();							//We don't want to do anything else with this ACK
-		    			Log.d(TAG, "GOT ACK, CONVERSATION: "+conversation.getId());
-		    			break;
-		    		case Message.MESSAGE_TYPE_TEXT:					//Standard text message from another user
-		    		case Message.MESSAGE_TYPE_IMAGE:				//Image message from another user
-		    			//Check if the message is intended for this particular conversation
-				    	String newConversationId = message.getConversationId();
-				    	if(newConversationId.equals(conversation.getId())){			//True if the message belongs to this conversation
-				    		//Refresh the list view
-				    		nMessagesToShow++;
-				    		chatListAdapter.refresh();
-				    		scrollListToBottom();
-				    		if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
-					    		abortBroadcast();
-					    	}
-					    	//Get the local user's ID from the preferences. We can't use the static USER_ID field in EpicChatActivity.java as that class may not exist when this activity is invoked from a notification
-							preferences = PreferenceManager.getDefaultSharedPreferences(context);
-							String localUserId = preferences.getString("userId", null);
-							
-							//Check if the message was sent from another device by the same user as is logged in on this device. If this is the case, we don't want a notification either
-					    	if(message.getSenderId().equals(localUserId)){	//True if the user ids match
-					    		abortBroadcast();
-					    	}
+    		Message message = (Message) intent.getSerializableExtra("message");
+	    	if(message!=null){									//True if a message object was sent with this Intent
+	    		int messageType = message.getType();
+	    		switch(messageType){							//Do different things depending on the type of the message
+	    		case Message.MESSAGE_TYPE_ACK:					//ACK from another device
+	    			messageReceivedAck(message);
+	    			abortBroadcast();							//We don't want to do anything else with this ACK
+	    			break;
+	    		case Message.MESSAGE_TYPE_TEXT:					//Standard text message from another user
+	    		case Message.MESSAGE_TYPE_IMAGE:				//Image message from another user
+	    			//Check if the message is intended for this particular conversation
+			    	String newConversationId = message.getConversationId();
+			    	if(newConversationId.equals(conversation.getId())){			//True if the message belongs to this conversation
+			    		//Refresh the list view
+			    		nMessagesToShow++;
+			    		chatListAdapter.refresh();
+			    		scrollListToBottom();
+			    		if(isVisible){								//If the activity is running and visible to the user, do not allow the broadcast to continue (i.e. the Notification Receiver will not receive it)
+				    		abortBroadcast();
 				    	}
-				    	else Log.d(TAG, "Conversation does not match");
-		    			break;
-		    		}		    	
-		    	}
+				    	//Get the local user's ID from the preferences. We can't use the static USER_ID field in EpicChatActivity.java as that class may not exist when this activity is invoked from a notification
+						preferences = PreferenceManager.getDefaultSharedPreferences(context);
+						String localUserId = preferences.getString("userId", null);
+						
+						//Check if the message was sent from another device by the same user as is logged in on this device. If this is the case, we don't want a notification either
+				    	if(message.getSenderId().equals(localUserId)){	//True if the user ids match
+				    		abortBroadcast();
+				    	}
+			    	}
+			    	break;
+	    		}		    	
 	    	}
 	    }
 	};
@@ -1128,7 +1126,6 @@ public class ViewConversationFragment extends Fragment{
 					int bytesTotal = messageData.getInt(UploadFileTask.EXTRA_BYTES_TOTAL, -1);
 					int percentComplete = (int) (((float) bytesUploaded / (float) bytesTotal) * 100);
 					messageProgressBar.setProgress(percentComplete);
-					Log.d(TAG, "UPDATING PROGRESS: "+percentComplete);
 				}
 				break;
 			case UploadFileTask.EVENT_UPLOAD_FAILED:		//Received when the image failed to be uploaded for some reason
