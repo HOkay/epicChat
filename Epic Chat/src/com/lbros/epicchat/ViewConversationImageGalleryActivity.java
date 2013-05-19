@@ -233,8 +233,6 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 	        imageHeight = newImageHeight;
 	        final Bundle data = new Bundle();
 	        data.putString(EXTRA_IMAGE_PATH, imageResource.getPath());
-	        Log.d("STUFF", "IMAGE PATH: "+imageResource.getPath());
-	        //data.putString(EXTRA_IMAGE_SENDER, imageResource.getFromUser());
 	        fragmentToReturn.setArguments(data);
 	        return fragmentToReturn;
 	    }
@@ -245,7 +243,6 @@ public class ViewConversationImageGalleryActivity extends FragmentActivity {
 	        //Retrieve the data we need
 	        Bundle data = getArguments();
 	        imagePath = data.getString(EXTRA_IMAGE_PATH, null);
-	        //imageSender = data.getString(EXTRA_IMAGE_SENDER, null);
 	    }
 
 	    @Override

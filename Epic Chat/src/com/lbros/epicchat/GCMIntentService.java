@@ -119,6 +119,7 @@ public class GCMIntentService extends GCMBaseIntentService{
 			switch(messageType){
 			case Message.MESSAGE_TYPE_ACK:		//For an ACK, most of the data will be null or 0
 				messageContents = intent.getStringExtra("messageId");
+				database.updateMessageStatus(messageContents, Message.MESSAGE_STATUS_ACK_RECIPIENT);
 				messageReadyForBroadcast = true;		//Set this flag, which is used at the end of this method
 				break;
 			case Message.MESSAGE_TYPE_TEXT:		//For a text message, all the fields should have valid values
@@ -130,7 +131,6 @@ public class GCMIntentService extends GCMBaseIntentService{
 				}
 				conversation = Conversation.sortConversationId(intent.getStringExtra("destinationIds"));
 				sender = intent.getStringExtra("sender");
-				Log.d(TAG, "SENDER A: "+sender);
 				messageContents = intent.getStringExtra("messageText");
 				messageContents = messageContents.replace("\\", "");		//Remove escaping slashes that are added by the server
 				messageReadyForBroadcast = true;		//Set this flag, which is used at the end of this method
@@ -144,7 +144,6 @@ public class GCMIntentService extends GCMBaseIntentService{
 				}
 				conversation = Conversation.sortConversationId(intent.getStringExtra("destinationIds"));
 				sender = intent.getStringExtra("sender");
-				Log.d(TAG, "SENDER: "+sender);
 				try {
 					messageContents = URLDecoder.decode(intent.getStringExtra("messageText"), "utf-8");
 				} catch (Exception e1) {
@@ -158,7 +157,6 @@ public class GCMIntentService extends GCMBaseIntentService{
 				String resourceId = null;
 				String imageCaption = null;
 				try {
-					Log.d(TAG, "CONTENTS: "+messageContents);
 					JSONObject messageJSON = new JSONObject(messageContents);
 					fileName = messageJSON.getString("fileName");
 					resourceId = messageJSON.getString("resourceId");

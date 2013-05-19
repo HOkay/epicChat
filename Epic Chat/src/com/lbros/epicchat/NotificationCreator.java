@@ -65,7 +65,7 @@ public class NotificationCreator extends BroadcastReceiver{
 		//Get the notification manager
 		notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 		
-		CharSequence textLine;
+		CharSequence textLine = null;
 		String senderName;
 		Message tempMessage;
 		String fromUser;
@@ -112,7 +112,7 @@ public class NotificationCreator extends BroadcastReceiver{
 			fromUser = firstMessage.getSenderId();	
 			
 			Contact senderContact = database.getContact(fromUser);
-				if(senderContact!=null){
+			if(senderContact!=null){
 				conversationId = firstMessage.getConversationId();
 
 				//Retrieve the sender's profile picture from the database and add it to the notification
@@ -148,6 +148,7 @@ public class NotificationCreator extends BroadcastReceiver{
 						notificationBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(textLine).setSummaryText(messageSentString));		//In this case we should also allow the notification to be expanded to view the entire text
 						//notificationBuilder.setSubText(messageSentString);
 						notificationBuilder.setContentText(textLine);		//Short one line text
+						notificationBuilder.setTicker(senderName+": "+messageInGroup.getContents(100));
 						break;
 					case Message.MESSAGE_TYPE_IMAGE:
 						//Get the bitmap of the image, so we can create a "big picture" notification
@@ -189,7 +190,7 @@ public class NotificationCreator extends BroadcastReceiver{
 							Log.e(TAG, "Error reading image JSON: "+e.toString());
 						}
 						notificationBuilder.setContentText(caption);		//Short one line text for when the notification is not expanded
-						//notificationBuilder.setSubText(caption);
+						notificationBuilder.setTicker(senderName+": "+caption+" (image)");
 						
 						//Add a button that allows the user to view the image directly in the gallery instead of navigating
 						Intent showChatInGalleryIntent = new Intent(context, ViewConversationImageGalleryActivity.class);
@@ -235,8 +236,8 @@ public class NotificationCreator extends BroadcastReceiver{
 						inboxStyle.setSummaryText(nMessagesString);
 					}
 					notificationBuilder.setStyle(inboxStyle);
-					//notificationBuilder.setSubText(nMessagesString);
 					notificationBuilder.setContentText(nMessagesString);
+					notificationBuilder.setTicker(textLine);
 				}
 				//Create various Intents for the notification. There are three standard intents: view, reply, and mark as read
 				String action = "com.lbros.newMessage."+conversationId;

@@ -181,8 +181,6 @@ public class ViewConversationFragment extends Fragment{
 		messageReceivedFilter.setPriority(5);		//This receiver should have a higher priority than the notification receiver
 		
 		textEntry = (EditText) fragmentLayout.findViewById(R.id.fragment_view_conversation_text_entry);
-		textEntry.setFocusableInTouchMode(true);
-		textEntry.setFocusable(true);
 		
 		buttonSend = (Button) fragmentLayout.findViewById(R.id.fragment_view_conversation_send_message);
 		
@@ -333,7 +331,7 @@ public class ViewConversationFragment extends Fragment{
     	String previousText = preferences.getString("entryBoxText"+conversation.getId(), null);
     	if(previousText!=null){
     		textEntry.setText(previousText);
-    		textEntry.requestFocus();
+    		//textEntry.requestFocus();
     	}
     }
 	
@@ -480,7 +478,6 @@ public class ViewConversationFragment extends Fragment{
 				String request = serverAddress+"sendMessage.php";
 				String gcmId = preferences.getString("gcmId", null);
 				String parameters = "messageId="+messageId+"&sentTimestamp="+timestamp+"&messageType="+messageType+"&fromUser="+fromUser+"&toUsers="+toUsers+"&messageText="+messageTextEncoded+"&senderDeviceId="+gcmId;
-				Log.d(TAG, "PARAMS: "+parameters);
 				String response = HTTP.doHttpPost(request, parameters, 5);
 				if(response!=null){
 					try {
@@ -521,8 +518,9 @@ public class ViewConversationFragment extends Fragment{
 	 */
 	protected void messageReceivedAck(Message message) {
 		//Update the status of the message in the database 
-		database.updateMessageStatus(message.getContents(null).toString(), Message.MESSAGE_STATUS_ACK_RECIPIENT);
+		//database.updateMessageStatus(message.getContents(null).toString(), Message.MESSAGE_STATUS_ACK_RECIPIENT);
 		//Refresh the list view
+		//Log.d(TAG, "GOT ACK");
 		chatListAdapter.refresh();
 	}
 	
@@ -555,7 +553,10 @@ public class ViewConversationFragment extends Fragment{
 							imageCaptionFinal = imageCaption;
 						}
 						sendImageAsMessage(imagePath, imageCaptionFinal);
-						dialog.dismiss();
+						storeMessage(pendingImageMessage);
+					    chatListAdapter.refresh();
+					    scrollListToBottom();
+					    dialog.dismiss();
 					}
 				});
 			}
@@ -594,7 +595,7 @@ public class ViewConversationFragment extends Fragment{
 
 	/**
 	 * Sends the provided Bitmap as an image to the other members of this conversation
-	 * @param imagePath		The bitmap to be sent, uncompressed
+	 * @param imagePath		The path of the image to be sent
 	 * @param imageCaption  A caption for the image. This will displayed with the image
 	 */
 	private void sendImageAsMessage(String imagePath, String imageCaption) {
@@ -665,10 +666,6 @@ public class ViewConversationFragment extends Fragment{
 			//The message will be stored in this variable and sent once the image has been uploaded. The final parameter will be overwritten once we have created a thumbnail, it's just there so we have a reference to the source image
 		    pendingImageMessage = new Message(messageId, messageTimestamp, Message.MESSAGE_TYPE_IMAGE, Message.MESSAGE_STATUS_PENDING, conversation.getId(), localUserId, messageContents.toString());
 		    
-		    storeMessage(pendingImageMessage);
-		    chatListAdapter.refresh();
-		    scrollListToBottom();
-
 		    //Send this file to the server
 		    String serverAddress = preferences.getString("serverAddress", null);
 			String remoteAddress = serverAddress+"uploadResource.php?userId="+localUserId+"&fileName="+fileName;
@@ -743,12 +740,8 @@ public class ViewConversationFragment extends Fragment{
 		}
 		
 		public void refresh(){
-			//int topIndex = chatList.getFirstVisiblePosition();		//Save this index, so we can restore the list to a similar place after
-			//Parcelable state = chatList.onSaveInstanceState();
 			messageList = database.getMessagesByConversation(conversation.getId(), 0, nMessagesToShow, true);
 			notifyDataSetChanged();
-			//chatList.setSelectionFromTop(topIndex, 0);
-			//chatList.onRestoreInstanceState(state);
 		}
 		
 		@Override
@@ -1016,7 +1009,7 @@ public class ViewConversationFragment extends Fragment{
 		else{															//Message hasn't been acked from the server
 			menu.add(Menu.NONE, POPUP_MENU_ACTION_RESEND, Menu.NONE, "Resend");
 		}
-		
+
 		menu.add(Menu.NONE, POPUP_MENU_ACTION_DELETE, Menu.NONE, "Delete");
 		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
 			//Called when a popup menu item is touched
@@ -1037,7 +1030,31 @@ public class ViewConversationFragment extends Fragment{
 					startActivityForResult(forwardMessageIntent, ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE);
 					break;
 				case POPUP_MENU_ACTION_RESEND:			//Resend the message
-					sendMessageUsingGCM(message);
+					switch(message.getType()){									//What we do depends on the message type
+					case Message.MESSAGE_TYPE_TEXT:		//Text messages are ready to be resent immediately
+						sendMessageUsingGCM(message);
+						break;
+					case Message.MESSAGE_TYPE_IMAGE:	//Image messages need a bit more work
+						String imagePath = null, imageCaption = null;
+						try {
+							JSONObject imageMessageContents = new JSONObject(message.getContents(null).toString());
+							if(imageMessageContents.has("fileName")){
+								imagePath = MainActivity.DIRECTORY_RESOURCES+imageMessageContents.getString("fileName");
+							}
+							if(imageMessageContents.has("caption")){
+								imageCaption = imageMessageContents.getString("caption");
+							}
+							if(imagePath!=null && imageCaption!=null){
+								sendImageAsMessage(imagePath, imageCaption);
+							}
+						}
+						catch (JSONException e) {
+							Log.e(TAG, "Error reading image message contents: "+e.toString());
+						}
+						break;
+					default:
+						break;
+					}
 					break;
 				case POPUP_MENU_ACTION_DELETE:
 					database.deleteMessage(message, false);

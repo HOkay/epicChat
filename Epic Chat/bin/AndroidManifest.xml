@@ -74,10 +74,7 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="com.lbros.epicchat.ViewConversationsActivity"
-            android:configChanges="keyboardHidden|orientation|screenSize"
-            android:windowSoftInputMode="adjustResize" >
+        <activity android:name="com.lbros.epicchat.ViewConversationsActivity" >
         </activity>
 
         <service android:name="com.lbros.epicchat.GCMIntentService" />

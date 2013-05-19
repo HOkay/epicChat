@@ -249,12 +249,10 @@ public class MainActivity extends FragmentActivity {
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		Log.d(TAG, "CREATING MENU");
 		MenuInflater inflater = getMenuInflater();
 	    inflater.inflate(R.menu.menu_main_activity, menu);
 	    //If the user is signed in to Epic Chat, remove the sign in option from the menu
   		if(userIdSet){
-  			Log.d(TAG, "REMOVING");
   			menu.removeItem(R.id.menu_main_activity_setup_account);
   		}
   		return true;
