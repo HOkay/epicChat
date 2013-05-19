@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lbros.epicchat"
     android:versionCode="1"
-    android:versionName="0.49p" >
+    android:versionName="0.49q" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -74,7 +74,9 @@
                 <data android:mimeType="text/plain" />
             </intent-filter>
         </activity>
-        <activity android:name="com.lbros.epicchat.ViewConversationsActivity" >
+        <activity
+            android:name="com.lbros.epicchat.ViewConversationsActivity"
+            android:exported="true" >
         </activity>
 
         <service android:name="com.lbros.epicchat.GCMIntentService" />
@@ -129,6 +131,28 @@
             android:name="com.lbros.epicchat.SettingsActivity"
             android:label="@string/title_activity_settings" >
         </activity>
+
+        <service
+            android:name=".DashClockPlugin"
+            android:icon="@drawable/note_icon"
+            android:label="Epic Chat"
+            android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
+            <intent-filter>
+                <action android:name="com.google.android.apps.dashclock.Extension" />
+            </intent-filter>
+
+            <meta-data
+                android:name="protocolVersion"
+                android:value="1" />
+            <meta-data
+                android:name="description"
+                android:value="Displays information about any unread messages" />
+            <!--
+                 <meta-data
+                android:name="settingsActivity"
+                android:value=".ExampleSettingsActivity" />
+            -->
+        </service>
     </application>
 
 </manifest>

@@ -10,4 +10,6 @@
     <string name="title_activity_choose_contact">Choose Contact</string>
     <string name="title_activity_view_contact_information">ViewContactInformationActivity</string>
 
+    <color name="light_blue">#33B5E5</color>
+
 </resources>

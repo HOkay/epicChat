@@ -124,7 +124,6 @@ public class ContactsListFragment extends Fragment {
 	/**
 	 * An inner class that represents a custom list adapter that is used to show a list of contacts, each with an image and a name
 	 * @author Tom
-	 *
 	 */
 	public class ContactsListAdapter extends BaseAdapter {
 		private ArrayList<Contact> contactsList;
@@ -160,8 +159,7 @@ public class ContactsListFragment extends Fragment {
 
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view = convertView;
-			if (view == null)
-			{
+			if (view == null){
 				LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				view = vi.inflate(R.layout.fragment_contacts_list_list_item, null);
 			}

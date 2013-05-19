@@ -3,29 +3,38 @@ package com.lbros.epicchat;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.View.OnLongClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class ConversationsListFragment extends Fragment {
 	//private final String TAG = "ConversationsListFragment";
@@ -52,6 +61,9 @@ public class ConversationsListFragment extends Fragment {
 	
 	//UI stuff
 	private ListView listViewConversations;
+	
+	//Actions used in the message popup menu
+	private final int POPUP_MENU_ACTION_DELETE = 1;
 
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		parentActivity = (FragmentActivity) super.getActivity();
@@ -70,22 +82,15 @@ public class ConversationsListFragment extends Fragment {
 		preferences = PreferenceManager.getDefaultSharedPreferences(parentActivity);
 		userId = preferences.getString("userId", null);
 		
-		//Get the list of contacts from the database
-		conversationsList = database.getAllConversations(null);
-		
 		//Setup the UI
 		pixelDensity = parentActivity.getResources().getDisplayMetrics().density;
       	conversationThumbnailSize = (int) (60 * pixelDensity + 0.5f);
 		
 		listViewConversations = (ListView) fragmentLayout.findViewById(R.id.fragment_conversations_listview);
-		conversationsListAdapter = new ConversationsListAdapter(conversationsList, parentActivity);		//Create an instance of our custom adapter
+
+		conversationsListAdapter = new ConversationsListAdapter(parentActivity);		//Create an instance of our custom adapter
+
 		listViewConversations.setAdapter(conversationsListAdapter);											//And link it to the list view
-		listViewConversations.setOnItemClickListener(new OnItemClickListener() {
-			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {				//Add a listener to the list view
-				String conversationId = conversationsList.get(position).getId();							//Get the conversation ID
-				openChatWithUser(conversationId);
-			}
-		});
 
 		parentActivity.registerReceiver(conversationsUpdatedReceiver, messageReceivedFilter);
 		parentActivity.registerReceiver(conversationsUpdatedReceiver, pendingMessagesClearedFilter);
@@ -96,8 +101,7 @@ public class ConversationsListFragment extends Fragment {
 	
 	public void onResume(){
 		super.onResume();
-		conversationsListAdapter = new ConversationsListAdapter(conversationsList, parentActivity);
-    	listViewConversations.setAdapter(conversationsListAdapter);
+		conversationsListAdapter.refresh();
 	}
 	
 	public void onPause(){
@@ -184,11 +188,17 @@ public class ConversationsListFragment extends Fragment {
 		 * @param newConversationsList	An ArrayList of Conversation objects that this adapter will use
 		 * @param newContext			The context of the activity that instantiated this adapter
 		 */
-		ConversationsListAdapter (ArrayList<Conversation> newConversationsList, Context newContext){
-			conversationsList = newConversationsList;
+		ConversationsListAdapter (Context newContext){
 			context = newContext;
+			refresh();
 		}
 		
+		private void refresh() {
+			//Get the list of contacts from the database
+			conversationsList = database.getAllConversations(null);
+			notifyDataSetChanged();
+		}
+
 		public int getCount() {
 			return conversationsList.size();
 		}
@@ -217,7 +227,7 @@ public class ConversationsListFragment extends Fragment {
 			Conversation conversation = conversationsList.get(position);
 			
 			//Retrieve the list of user IDs contained in this conversation
-			String conversationId = conversation.getId();
+			final String conversationId = conversation.getId();
 			String[] conversationUsers = conversationId.split(",");
 			
 			//Use these IDs to get the first names of the users
@@ -281,6 +291,18 @@ public class ConversationsListFragment extends Fragment {
 			else{
 				conversationUnreadMessageCounter.setVisibility(View.INVISIBLE);					//Hide the counter
 			}
+			
+			//A reference to the item's wrapper layout
+			RelativeLayout itemLayout = (RelativeLayout) view.findViewById(R.id.fragment_conversations_list_list_item_wrapper);
+
+			//Add an on click listener to this layout
+			itemLayout.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					openChatWithUser(conversationId);
+				}
+			});
+			createPopupMenu(itemLayout, conversation);
 			return view;
 		}
 	}
@@ -291,10 +313,41 @@ public class ConversationsListFragment extends Fragment {
 	BroadcastReceiver conversationsUpdatedReceiver = new BroadcastReceiver(){
 	    @Override
 	    public void onReceive(Context context, Intent intent){
-	    	conversationsList = database.getAllConversations(null);
-	    	//TODO Refresh of adapter
-	    	conversationsListAdapter = new ConversationsListAdapter(conversationsList, context);
-	    	listViewConversations.setAdapter(conversationsListAdapter);
+	    	conversationsListAdapter.refresh();
 	    }
 	};
+
+	public void createPopupMenu(RelativeLayout itemLayout, final Conversation conversation) {
+		final PopupMenu popupMenu = new PopupMenu(parentActivity, itemLayout);
+		Menu menu = popupMenu.getMenu();
+		//Add various items to the menu
+		menu.add(Menu.NONE, POPUP_MENU_ACTION_DELETE, Menu.NONE, "Delete");
+		popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+			//Called when a popup menu item is touched
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				String toastText = null;
+				switch(menuItem.getItemId()){
+				case POPUP_MENU_ACTION_DELETE:
+					database.deleteConversation(conversation, true);
+					conversationsListAdapter.refresh();
+					toastText = "Conversation deleted";
+					break;
+				default:
+					break;
+				}
+				if(toastText!=null){
+					Toast.makeText(parentActivity, toastText, Toast.LENGTH_SHORT).show();
+				}
+				return false;
+			}
+		});
+		itemLayout.setOnLongClickListener(new OnLongClickListener() {
+			//Called when list row is long-pressed
+			public boolean onLongClick(View arg0) {
+				popupMenu.show();
+				return false;
+			}
+		});
+	}
 }
