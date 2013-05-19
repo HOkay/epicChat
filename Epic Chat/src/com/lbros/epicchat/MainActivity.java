@@ -267,6 +267,10 @@ public class MainActivity extends FragmentActivity {
 	    case R.id.menu_main_activity_setup_account:
 	    	showEnterAccountDetailsActivity();
 	    	return true;
+	    case R.id.menu_main_activity_settings:
+	    	Intent showSettingsIntent = new Intent(this, SettingsActivity.class);
+	    	startActivity(showSettingsIntent);
+	    	return true;
 	    default:
 	    	return super.onOptionsItemSelected(item);
 	    }

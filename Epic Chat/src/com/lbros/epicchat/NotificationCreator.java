@@ -14,6 +14,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -38,6 +39,8 @@ public class NotificationCreator extends BroadcastReceiver{
 	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
+		preferences = PreferenceManager.getDefaultSharedPreferences(context);
+		
 		Message message = (Message) intent.getSerializableExtra("message");
 		
 		database = new Database(context);
@@ -48,7 +51,6 @@ public class NotificationCreator extends BroadcastReceiver{
 		}
 		
 		//Add this message to pendingMessages table, if it is not a message from the same user on another device. If that is the case, exit straightaway
-		preferences = PreferenceManager.getDefaultSharedPreferences(context);
 		String localUserId = preferences.getString("userId", null);
 		if(message.getSenderId().equals(localUserId)){		//This message was sent by the same user from another device, so no need to add it to the list of pending messages
 			return;
@@ -56,6 +58,12 @@ public class NotificationCreator extends BroadcastReceiver{
 		
 		database.addPendingMessage(message);
 
+		//Check if the user has enabled notifications. If not, exit
+		boolean showNotifications = preferences.getBoolean("notifications_new_message", true);
+		if(!showNotifications){
+			return;
+		}
+				
 		//Now retrieve a list of all messages that have not been addressed by the user
 		ArrayList<Message> pendingMessages = database.getPendingMessages(null);
 		int nPendingMessages = pendingMessages.size();
@@ -267,7 +275,7 @@ public class NotificationCreator extends BroadcastReceiver{
 	
 				//Add the PendingIntents to the notification
 				notificationBuilder.setContentIntent(viewChatIntentPending);
-				//notificationBuilder.setDeleteIntent(deletePendingMessagesIntentPending);		//If the message is swiped away or cleared using the clear all button, remove the pending messages from the database
+				notificationBuilder.setDeleteIntent(deletePendingMessagesIntentPending);		//If the message is swiped away or cleared using the clear all button, remove the pending messages from the database
 
 				//Add a button that allows the user to reply
 				notificationBuilder.addAction(android.R.drawable.ic_menu_edit, "Reply", replyChatIntentPending);
@@ -280,10 +288,15 @@ public class NotificationCreator extends BroadcastReceiver{
 				Notification notification = notificationBuilder.build();					//Build the notification
 				
 				notification.flags |= Notification.FLAG_AUTO_CANCEL;		//We want it to be removed when touched
+
+				//Get the ringtone and vibration preferences
+				String notificationSound = preferences.getString("notifications_new_message_ringtone", "default ringtone");
+				notification.sound = Uri.parse(notificationSound);
 				
-				//notification.defaults |= Notification.DEFAULT_LIGHTS;		//Use the user-defined values for lights, sounds and vibration
-				notification.defaults |= Notification.DEFAULT_SOUND;
-				notification.defaults |= Notification.DEFAULT_VIBRATE;
+				boolean vibrate = preferences.getBoolean("notifications_new_message_vibrate", true);
+				if(vibrate){
+					notification.defaults |= Notification.DEFAULT_VIBRATE;
+				}
 				
 				//Send the notification to the OS. The first parameter is a unique tag that we can use to cancel this notification programatically if required
 				notificationManager.notify(action, MainActivity.NOTIFICATION_NEW_MESSAGE, notification);

@@ -715,6 +715,8 @@ public class ViewConversationFragment extends Fragment{
 		private ArrayList<Message> messageList;
 		LayoutInflater layoutInflater;
 		Context context;
+		
+		private int chatListFontSize;
 
 		/**
 		 * Constructor
@@ -741,6 +743,13 @@ public class ViewConversationFragment extends Fragment{
 		
 		public void refresh(){
 			messageList = database.getMessagesByConversation(conversation.getId(), 0, nMessagesToShow, true);
+			String fontSizeString = preferences.getString("chat_font_size", "16");
+			try{
+				chatListFontSize = Integer.parseInt(fontSizeString);
+			}
+			catch(NumberFormatException e){
+				chatListFontSize = 16;
+			}
 			notifyDataSetChanged();
 		}
 		
@@ -812,6 +821,7 @@ public class ViewConversationFragment extends Fragment{
 				}
 				messageBody = (TextView) view.findViewById(R.id.activity_view_conversation_message_list_item_contents);
 				messageBody.setText(message.getContents(null));
+				messageBody.setTextSize(chatListFontSize);
 				break;				
 			case Message.MESSAGE_TYPE_IMAGE:			//Image message
 				if(convertViewValid){
