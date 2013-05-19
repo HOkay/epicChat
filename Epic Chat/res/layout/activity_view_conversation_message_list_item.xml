@@ -51,7 +51,7 @@
         android:linksClickable="true"
         android:text="Hello this is some text"
         android:textColor="#333333"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/activity_view_conversation_message_list_item_time"

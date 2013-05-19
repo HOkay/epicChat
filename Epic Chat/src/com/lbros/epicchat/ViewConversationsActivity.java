@@ -141,7 +141,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 		String conversationId = conversation.getId();
 		if(conversationId!=null){				//True if we got the sender ID
 	    	//Also update the image
-			Bitmap conversationImage = conversation.getImageBitmap(100, 100, 8);
+			Bitmap conversationImage = conversation.getImageBitmap(100, 100, null);
 	    	Drawable imageDrawable = new BitmapDrawable(getResources(), conversationImage);
 	    	actionBar.setIcon(imageDrawable);
 	    	String userFirstNames = getUserList(conversation, false);

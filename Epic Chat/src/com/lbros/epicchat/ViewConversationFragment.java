@@ -346,7 +346,11 @@ public class ViewConversationFragment extends Fragment{
 		//The combination of the index of the first visible row, and the same row's offset from its parent will give us the exact scroll position. We can restore this in onResume() to preserve page scroll
 		//We can't use the saved state of the list as we have to-add the adapter to the list every time the view is regenerated, which resets the list's state 
     	listViewScrollIndex = chatList.getFirstVisiblePosition();
-    	listViewScrollOffset = chatList.getChildAt(0).getTop();
+    	//TODO NPE
+    	View child = chatList.getChildAt(0);
+    	if(child!=null){		//Check that there was a child returned
+    		listViewScrollOffset = child.getTop();
+    	}
     	//Save the text currently in the text entry box so that it can be resumed
     	String entryBoxText = textEntry.getText().toString().trim();    	
 		SharedPreferences.Editor editor = preferences.edit();

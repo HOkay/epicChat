@@ -85,7 +85,7 @@
                 android:layout_alignRight="@+id/activity_enter_account_details_viewflipper_name_details_phone_number"
                 android:layout_below="@+id/activity_enter_account_details_viewflipper_name_details_phone_number"
                 android:layout_marginTop="10dp"
-                android:text="Entering your phone number is optional, but it will make it easier your friends add you." >
+                android:text="Entering your phone number is optional, but it will make it easier for your friends to add you." >
             </TextView>
         </RelativeLayout>
 

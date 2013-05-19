@@ -164,32 +164,32 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
 		ArrayList<String> emailAddresses = new ArrayList<String>();
 		long start = System.currentTimeMillis();
         String[] projection = new String[] {
-            ContactsContract.CommonDataKinds.Email.DATA, ContactsContract.CommonDataKinds.Phone.NUMBER
+            ContactsContract.CommonDataKinds.Email.DATA
         };
 
 		TelephonyManager manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		Log.d(TAG, "CODE "+manager.getNetworkCountryIso());
         //Query the system for a list of contacts, returning only their email address
         ContentResolver contentResolver = context.getContentResolver();
-        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null, null);
+        Cursor cursor = contentResolver.query(ContactsContract.CommonDataKinds.Email.CONTENT_URI, projection, null, null, null);
         int n = 0;
         if (cursor != null) {
             try {
             	//Work out which column the email address lies in
                 final int emailIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Email.DATA);
-                final int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
+                //final int phoneIndex = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER);
                 Log.d(TAG, "INDEX: "+emailIndex);
-                Log.d(TAG, "INDEX: "+phoneIndex);
+                //Log.d(TAG, "INDEX: "+phoneIndex);
                 String emailAddress, phoneNumber;
                 while (cursor.moveToNext()) {
                 	//Retrieve the email address
                 	emailAddress = cursor.getString(emailIndex);
-                	phoneNumber = cursor.getString(phoneIndex);
-                	Log.d(TAG, "Phone: "+phoneNumber);
-                	boolean international = PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber);
-                	if(international){
-                		Log.d(TAG, "INTERNATIONAL");
-                	}
+                	//phoneNumber = cursor.getString(phoneIndex);
+                	//Log.d(TAG, "Phone: "+phoneNumber);
+                	//boolean international = PhoneNumberUtils.isGlobalPhoneNumber(phoneNumber);
+                	//if(international){
+                	//	Log.d(TAG, "INTERNATIONAL");
+                	//}
                 	//Check if the email address is a Google one
                 	if(emailAddress.endsWith("gmail.com") || emailAddress.endsWith("googlemail.com")){				//Found a gmail or googlemail address
                 		if(!contactExistsInDatabase(emailAddress)){
