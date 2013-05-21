@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
@@ -352,7 +353,8 @@ public class Database extends SQLiteOpenHelper {
   
         //Insert the row
         database.insert(TABLE_PENDING_MESSAGES, null, row);
-        database.close(); 										//Close the database connection
+        database.close();
+        updatePendingMessagesContentUri();									//Close the database connection
     }
 
     /**
@@ -363,6 +365,7 @@ public class Database extends SQLiteOpenHelper {
 		SQLiteDatabase database = this.getWritableDatabase();		//Connect to the database
     	database.execSQL("DELETE FROM "+TABLE_PENDING_MESSAGES+" WHERE "+KEY_ID+"=\""+message.getId()+"\"");	//Delete the Message from the table
         database.close();
+        updatePendingMessagesContentUri();
 	}
     
     /**
@@ -401,9 +404,10 @@ public class Database extends SQLiteOpenHelper {
     	SQLiteDatabase database = this.getReadableDatabase();		//Connect to the database
     	database.execSQL("DELETE FROM "+TABLE_PENDING_MESSAGES);	//Delete all items in the table
         database.close();
+        updatePendingMessagesContentUri();
     }
-    
-    /**
+
+	/**
      * Removes all messages from the specified Conversation from the pending messages table
      * @param conversation		The Conversation
      */
@@ -411,7 +415,15 @@ public class Database extends SQLiteOpenHelper {
     	SQLiteDatabase database = this.getReadableDatabase();		//Connect to the database
     	database.execSQL("DELETE FROM "+TABLE_PENDING_MESSAGES+" WHERE "+KEY_USER_LIST+"=\""+conversation.getId()+"\"");	//Delete all items in the table that match the provided user id
         database.close();
+        updatePendingMessagesContentUri();
     }
+    
+    /**
+     * Alerts applications watching this URI that the number of pending messages has changed
+     */
+    private void updatePendingMessagesContentUri() {
+    	context.getContentResolver().notifyChange(Uri.parse("content://com.lbros.epicchat.PendingMessages"), null);
+	}
     
     /**
      * Adds a contact to the database

@@ -126,10 +126,10 @@ public class ConversationsListFragment extends Fragment {
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	    case R.id.menu_conversations_list_fragment_create_group:
-	    	Intent createGroupIntent = new Intent(parentActivity, ChooseContactActivity.class);
-	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_MODE, ChooseContactActivity.MODE_MULTIPLE_CONTACTS);		//We want to pick multiple contacts
-	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Create group");									//Set the page title
-	    	createGroupIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Select contacts to add");						//Set the page subtitle
+	    	Intent createGroupIntent = new Intent(parentActivity, ChooseConversationActivity.class);
+	    	createGroupIntent.putExtra(ChooseConversationActivity.EXTRA_MODE, ChooseConversationActivity.MODE_MULTIPLE_CONTACTS);		//We want to pick multiple contacts
+	    	createGroupIntent.putExtra(ChooseConversationActivity.EXTRA_TITLE, "Create group");									//Set the page title
+	    	createGroupIntent.putExtra(ChooseConversationActivity.EXTRA_SUBTITLE, "Select contacts to add");						//Set the page subtitle
 	    	startActivityForResult(createGroupIntent, ACTION_CREATE_GROUP);
 	    	return true;
 	    	default:
@@ -143,21 +143,10 @@ public class ConversationsListFragment extends Fragment {
 	    switch(requestCode) { 
 	    case ACTION_CREATE_GROUP:			//We have returned from the user creating a group
 	    	if(resultCode==Activity.RESULT_OK){
-	    		//Create the new conversation
-	    		@SuppressWarnings("unchecked")
-				ArrayList<String> contacts = (ArrayList<String>) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT_LIST);
-	    		if(contacts!=null){
-	    			Iterator<String> iterator = contacts.iterator();
-	    			String contactId = null;
-	    			String conversationId = preferences.getString("userId", null);
-	    			while(iterator.hasNext()){
-	    				contactId = (String) iterator.next();
-	    				conversationId+= ','+contactId;
-	    				Conversation newConversation = new Conversation(conversationId, null);
-	    				database.addConversation(newConversation);
-			    		//Launch the conversation
-	    				openChatWithUser(conversationId);
-	    			}
+	    		//Retrieve the new conversation
+	    		Conversation chosenConversation = (Conversation) returnedIntent.getSerializableExtra(ChooseConversationActivity.EXTRA_CONVERSATION);
+	    		if(chosenConversation!=null){
+	    			openChatWithUser(chosenConversation.getId());
 	    		}
 	    	}
 	    	break;
@@ -170,7 +159,7 @@ public class ConversationsListFragment extends Fragment {
      */
     private void openChatWithUser(String conversationId){
     	Intent openChatIntent = new Intent(parentActivity, ViewConversationsActivity.class);
-    	openChatIntent.putExtra("conversationId", conversationId);
+    	openChatIntent.putExtra(ViewConversationsActivity.EXTRA_CONVERSATION_ID, conversationId);
     	startActivity(openChatIntent);
     }
     

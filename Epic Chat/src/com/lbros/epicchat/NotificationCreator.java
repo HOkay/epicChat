@@ -63,7 +63,7 @@ public class NotificationCreator extends BroadcastReceiver{
 		if(!showNotifications){
 			return;
 		}
-				
+		
 		//Now retrieve a list of all messages that have not been addressed by the user
 		ArrayList<Message> pendingMessages = database.getPendingMessages(null);
 		int nPendingMessages = pendingMessages.size();

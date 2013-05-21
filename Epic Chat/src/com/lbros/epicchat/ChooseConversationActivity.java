@@ -1,12 +1,15 @@
 package com.lbros.epicchat;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,7 +28,7 @@ import android.widget.TextView;
  * @author Tom
  *
  */
-public class ChooseContactActivity extends Activity {
+public class ChooseConversationActivity extends Activity {
 	//private final String TAG = "ChooseContactActivity";
 
 	//Intent extra keys
@@ -33,15 +36,18 @@ public class ChooseContactActivity extends Activity {
 	public static final String EXTRA_TITLE = "title";
 	public static final String EXTRA_SUBTITLE = "subTitle";
 	
-	public static final String EXTRA_CONTACT = "contact";
-	public static final String EXTRA_CONTACT_LIST = "contactList";
+	public static final String EXTRA_CONVERSATION = "conversation";
+	public static final String EXTRA_CONTACT_LIST = "conversationList";
 	
 	//The two modes this Activity may operate in	
 	public static final int MODE_SINGLE_CONTACT = 1;
 	public static final int MODE_MULTIPLE_CONTACTS = 2;
 
 	private Database database;
+	private SharedPreferences preferences;
 	
+	private String localUserId;
+
 	private int mode;
 	private String pageTitle = null;
 	private String pageSubtitle = null;
@@ -64,10 +70,12 @@ public class ChooseContactActivity extends Activity {
 		setResult(RESULT_CANCELED);					//In case the user backs out of this activity
 		
 		database = new Database(this);
+		preferences = PreferenceManager.getDefaultSharedPreferences(this);	//Load the preferences
+		localUserId = preferences.getString("userId", null);
 		
 		actionBar = getActionBar();
 		
-		setContentView(R.layout.activity_choose_contact);
+		setContentView(R.layout.activity_choose_conversation);
 
 		contactsSelectedList = new ArrayList<String>();
 
@@ -120,8 +128,15 @@ public class ChooseContactActivity extends Activity {
 	    switch (item.getItemId()) {
 	        case R.id.menu_choose_contact_done:					//The done button was touched, so finish up and return the list of contacts currently selected            
 	            if(contactsSelectedList.size()>0){				//At least one contact is selected
+	            	//Convert the list of user Ids into a conversation ID
+	            	String conversationId = localUserId;
+	            	Iterator<String> iterator = contactsSelectedList.iterator();
+	            	while(iterator.hasNext()){
+	            		conversationId+= ','+iterator.next();
+	            	}
+	            	Conversation chosenConversation = new Conversation(conversationId, null);
 	            	Intent result = new Intent();
-	            	result.putExtra(EXTRA_CONTACT_LIST, contactsSelectedList);
+	            	result.putExtra(EXTRA_CONVERSATION, chosenConversation);			//Return this conversation object to the calling activity
 	            	setResult(RESULT_OK, result);
 	            }
 	            finish();
@@ -207,8 +222,9 @@ public class ChooseContactActivity extends Activity {
 			//This method behaves differently, depending on the mode
 			if(mode==MODE_SINGLE_CONTACT){			//Single Contact mode, so just return with this contact
 				//Add the Contact object to the return Intent and finish the activity
+				Conversation chosenConversation = new Conversation(contact.getId()+','+localUserId, null);
 				Intent returnIntent = new Intent();
-				returnIntent.putExtra(EXTRA_CONTACT, contact);
+				returnIntent.putExtra(EXTRA_CONVERSATION, chosenConversation);
 				setResult(RESULT_OK, returnIntent);
 				finish();
 			}

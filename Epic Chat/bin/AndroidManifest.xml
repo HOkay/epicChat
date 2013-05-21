@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lbros.epicchat"
     android:versionCode="1"
-    android:versionName="0.49q" >
+    android:versionName="0.49r" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -120,7 +120,7 @@
         </receiver>
 
         <activity
-            android:name="com.lbros.epicchat.ChooseContactActivity"
+            android:name="com.lbros.epicchat.ChooseConversationActivity"
             android:label="@string/title_activity_choose_contact" >
         </activity>
         <activity
@@ -150,7 +150,7 @@
             <!--
                  <meta-data
                 android:name="settingsActivity"
-                android:value=".ExampleSettingsActivity" />
+                android:value=".ExampleSettingsActivity" />
             -->
         </service>
     </application>

@@ -24,9 +24,10 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerTabStrip;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 
 public class ViewConversationsActivity extends FragmentActivity {
-	//private final String TAG = "ViewConversationsActivity";
+	private final String TAG = "ViewConversationsActivity";
 
 	public final static String EXTRA_CONVERSATION_ID = "conversationId";
 	
@@ -63,9 +64,11 @@ public class ViewConversationsActivity extends FragmentActivity {
 		Bundle intentData = intent.getExtras();
 		if(intentData!=null){
 			requestedConversationId = intentData.getString(EXTRA_CONVERSATION_ID, null);
+			Log.d(TAG, "ID: "+requestedConversationId);
 			//Check if the conversation exists. If not, the user has most likely requested a new conversation, so add one to the database
 	    	Conversation conversation = database.getConversation(requestedConversationId);
 	    	if(conversation==null){				//Create a new conversation in this case
+	    		Log.d(TAG, "CONV NULL");
 	    		String[] conversationUsers = requestedConversationId.split(",");
 	    		String conversationImagePath = database.getContact(conversationUsers[0]).getImagePath();
 	    		Conversation newConversation = new Conversation(requestedConversationId, conversationImagePath);
@@ -121,7 +124,7 @@ public class ViewConversationsActivity extends FragmentActivity {
 		conversationPager.setOnPageChangeListener(conversationChangedListener);		//This listener listens for when the contents of this pager change
 		//conversationPager.setPageTransformer(false, new ZoomOutPageTransformer(0.5f, 1.0f));
 		conversationPagerTabStrip = (PagerTabStrip) findViewById(R.id.activity_view_conversations_viewpager_tab_strip);
-		conversationPagerTabStrip.setDrawFullUnderline(false);					//Makes the tab indicator fill the whole width
+		conversationPagerTabStrip.setDrawFullUnderline(false);
 		conversationPagerTabStrip.setTabIndicatorColor(0xFFFF8800);
 		
 		//Get the index of the requested conversation, this is the one we should show

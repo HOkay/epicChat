@@ -7,28 +7,35 @@ import com.google.android.apps.dashclock.api.DashClockExtension;
 import com.google.android.apps.dashclock.api.ExtensionData;
 
 import android.content.Intent;
-import android.preference.PreferenceManager;
+import android.util.Log;
 
 public class DashClockPlugin extends DashClockExtension {
-    //private final String TAG = "ExampleExtension";
+    private final String TAG = "ExampleExtension";
     
     private Database database;
     
     @Override
     protected void onInitialize(boolean isReconnect){
     	setUpdateWhenScreenOn(true);			//Makes DashClock update our plugin when the screen is turned on
+    	addWatchContentUris(new String[]{"content://com.lbros.epicchat.PendingMessages"});
+    	Log.d(TAG, "INIT");
     }
     
     @Override
     protected void onUpdateData(int reason) {
-    	
+    	Log.d(TAG, "UPDATE");
     	database = new Database(this);
 
     	ArrayList<Message> pendingMessages = database.getPendingMessages(null);		//Get all pending messages
     	
     	int nPendingMessages = pendingMessages.size();
     	
-    	if(nPendingMessages>0){			//True if there is at least one unread message
+    	ExtensionData extensionData = new ExtensionData();
+    	
+    	boolean showNotification = false;
+    	
+		if(nPendingMessages>0){			//True if there is at least one unread message
+			showNotification = true;
     		String expandedTitle = nPendingMessages+" unread message";
     		if(nPendingMessages!=1){
     			expandedTitle+= 's';
@@ -64,19 +71,18 @@ public class DashClockPlugin extends DashClockExtension {
     			expandedBody = "In "+nConversations+" conversations";
     		}
     		
-    		ExtensionData extensionData = new ExtensionData();
-    		extensionData.visible(true);							//Show the item
-            extensionData.icon(R.drawable.note_icon);				//Use the small white icon
+    		extensionData.icon(R.drawable.note_icon);				//Use the small white icon
     		extensionData.status(nPendingMessages+"");				//Small title should be just the number
-            extensionData.expandedTitle(expandedTitle);				//Large title shoudl have the number of unread messages
+            extensionData.expandedTitle(expandedTitle);				//Large title should have the number of unread messages
             extensionData.expandedBody(expandedBody);				//And the large body describes the conversations they belong to
             Intent showConversation = new Intent(this, ViewConversationsActivity.class);
             //This intent will launch the view conversations activity. The conversation to view is conversation to which the first pending message belongs
             showConversation.putExtra(ViewConversationsActivity.EXTRA_CONVERSATION_ID, pendingMessages.get(0).getConversationId());
             extensionData.clickIntent(showConversation);
-        	
-            // Publish the extension data update.
-            publishUpdate(extensionData);
     	}
+    	
+		extensionData.visible(showNotification);							//Show the item if there are messages to display
+		// Publish the extension data update.
+        publishUpdate(extensionData);
     }
 }

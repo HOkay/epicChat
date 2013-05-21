@@ -72,7 +72,7 @@ public class ViewConversationFragment extends Fragment{
 	//Activity intent codes
 	private final int ACTION_SELECT_IMAGE_FROM_GALLERY = 1;
 	private final int ACTION_TAKE_PHOTO_WITH_CAMERA = 2;
-	private final int ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE = 3;
+	private final int ACTION_CHOOSE_CONVERSATION_FOR_FORWARDING_MESSAGE = 3;
 	private final int ACTION_SHOW_CONVERSATION_IMAGE_GALLERY = 10;
 	
 	//These tags are used when placing values in the data Bundle which we return to the calling activity, and when retrieving these values
@@ -413,15 +413,15 @@ public class ViewConversationFragment extends Fragment{
 	        	}
 	        }
 	    	break;
-	    case ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE:				//A photo has been taken with the camera
+	    case ACTION_CHOOSE_CONVERSATION_FOR_FORWARDING_MESSAGE:				//A photo has been taken with the camera
 	    	if(resultCode == Activity.RESULT_OK){
-	        	Contact chosenContact= (Contact) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT);
-	        	if(chosenContact!=null && messageToBeForwarded!=null){
+	    		Conversation chosenConversation = (Conversation) returnedIntent.getSerializableExtra(ChooseConversationActivity.EXTRA_CONVERSATION);
+	        	if(chosenConversation!=null && messageToBeForwarded!=null){
 	        		//First, we need a timestamp for the message
 	        		int messageTimestamp = createTimestampForMessage();
 	        		//Also need a unique ID for the message
 	        		String messageId = createMessageId(messageTimestamp);
-	        		String newConversationId = chosenContact.getId()+','+localUserId;
+	        		String newConversationId = chosenConversation.getId();
 	        		Message newMessage = new Message(messageId, messageTimestamp, messageToBeForwarded.getType(), Message.MESSAGE_STATUS_PENDING, newConversationId, localUserId, messageToBeForwarded.getContents(null).toString());
 	        		sendMessageUsingGCM(newMessage);			//Send the message
 	        		storeMessage(newMessage);					//And store it in the database
@@ -1038,10 +1038,10 @@ public class ViewConversationFragment extends Fragment{
 					break;
 				case POPUP_MENU_ACTION_FORWARD:			//Start the message forwarding process. The first step is to choose a recipient
 					messageToBeForwarded = message;
-					Intent forwardMessageIntent = new Intent(fragmentActivity, ChooseContactActivity.class);
-					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_TITLE, "Choose contact");
-					forwardMessageIntent.putExtra(ChooseContactActivity.EXTRA_SUBTITLE, "Choose a contact to forward this message to");
-					startActivityForResult(forwardMessageIntent, ACTION_CHOOSE_CONTACT_FOR_FORWARDING_MESSAGE);
+					Intent forwardMessageIntent = new Intent(fragmentActivity, ChooseConversationActivity.class);
+					forwardMessageIntent.putExtra(ChooseConversationActivity.EXTRA_TITLE, "Choose contact");
+					forwardMessageIntent.putExtra(ChooseConversationActivity.EXTRA_SUBTITLE, "Choose a contact to forward this message to");
+					startActivityForResult(forwardMessageIntent, ACTION_CHOOSE_CONVERSATION_FOR_FORWARDING_MESSAGE);
 					break;
 				case POPUP_MENU_ACTION_RESEND:			//Resend the message
 					switch(message.getType()){									//What we do depends on the message type

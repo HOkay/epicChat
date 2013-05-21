@@ -49,7 +49,7 @@ public class MainActivity extends FragmentActivity {
 	
 	//Activity intent signatures
 	private final int ACTION_ENTER_ACCOUNT_DETAILS = 1;
-	private final int ACTION_CHOOSE_CONTACT = 2;
+	private final int ACTION_CHOOSE_CONVERSATION = 2;
 	
 	private Intent receivedDataIntent;
 	
@@ -156,8 +156,8 @@ public class MainActivity extends FragmentActivity {
         }
         else if(action.equals(Intent.ACTION_SEND)){		//Something was sent to this activity, we should handle it
         	receivedDataIntent = intent;			//Just store the intent for now, we need to choose a user first before doing any processing on it
-        	Intent chooseContact = new Intent(this, ChooseContactActivity.class);
-        	startActivityForResult(chooseContact, ACTION_CHOOSE_CONTACT);		//We will do the rest of the processing when this activity returns to us with a contact
+        	Intent chooseContact = new Intent(this, ChooseConversationActivity.class);
+        	startActivityForResult(chooseContact, ACTION_CHOOSE_CONVERSATION);		//We will do the rest of the processing when this activity returns to us with a contact
         }
 	}
 	
@@ -286,14 +286,12 @@ public class MainActivity extends FragmentActivity {
 	        }
 	        userIdSet = userIdSet();
 	        break;
-	    case ACTION_CHOOSE_CONTACT:				//A contact was successfully chosen by the user
+	    case ACTION_CHOOSE_CONVERSATION:				//A contact was successfully chosen by the user
 	    	if(resultCode==RESULT_OK){
-		    	Contact chosenContact = (Contact) returnedIntent.getSerializableExtra(ChooseContactActivity.EXTRA_CONTACT);
-		    	String localUserId = preferences.getString("userId", null);
-		    	if(localUserId!=null && chosenContact!=null){
-		    		String contactId = chosenContact.getId();
-		    		String conversationId = Conversation.sortConversationId(contactId+','+localUserId);		//Create the conversation ID we need using the local user's ID and the ID of the selected contact. Sort to avoid ID problems
-			    	String dataType = receivedDataIntent.getType();		//The data we want was stored earlier in this variable
+		    	Conversation chosenConversation = (Conversation) returnedIntent.getSerializableExtra(ChooseConversationActivity.EXTRA_CONVERSATION);
+		    	if(chosenConversation!=null){
+		    		String conversationId = chosenConversation.getId();		//Use the conversation that the choice activity returned
+			    	String dataType = receivedDataIntent.getType();			//The data we want was stored earlier in this variable
 			    	Uri dataPath = null;
 		        	
 			    	//Open the required conversation using an Intent

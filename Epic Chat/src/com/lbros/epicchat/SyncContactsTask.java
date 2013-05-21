@@ -191,7 +191,7 @@ public class SyncContactsTask extends AsyncTask<Void, Void, Boolean>{
                 	//	Log.d(TAG, "INTERNATIONAL");
                 	//}
                 	//Check if the email address is a Google one
-                	if(emailAddress.endsWith("gmail.com") || emailAddress.endsWith("googlemail.com")){				//Found a gmail or googlemail address
+                	if(emailAddress!=null && (emailAddress.endsWith("gmail.com") || emailAddress.endsWith("googlemail.com"))){				//Found a gmail or googlemail address
                 		if(!contactExistsInDatabase(emailAddress)){
                 			emailAddresses.add(emailAddress);
                 		}
