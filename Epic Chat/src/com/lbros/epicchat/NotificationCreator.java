@@ -15,9 +15,13 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 
 public class NotificationCreator extends BroadcastReceiver{
 	private final String TAG = "NotificationCreator";
@@ -63,6 +67,15 @@ public class NotificationCreator extends BroadcastReceiver{
 		if(!showNotifications){
 			return;
 		}
+		
+		//If enabled in the preferences, turn the screen on by acquirung a wakelock and releasing it immediately
+		boolean turnScreenOn = preferences.getBoolean("notifications_turn_screen_on", false);
+		if(turnScreenOn){
+			 PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
+		     WakeLock wl = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK | PowerManager.ACQUIRE_CAUSES_WAKEUP, TAG);
+		     wl.acquire();
+		     wl.release();
+	    }
 		
 		//Now retrieve a list of all messages that have not been addressed by the user
 		ArrayList<Message> pendingMessages = database.getPendingMessages(null);
