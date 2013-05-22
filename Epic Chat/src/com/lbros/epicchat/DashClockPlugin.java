@@ -23,7 +23,7 @@ public class DashClockPlugin extends DashClockExtension {
     
     @Override
     protected void onUpdateData(int reason) {
-    	Log.d(TAG, "UPDATE");
+    	Log.d(TAG, "UPDATE, REASON: "+reason);
     	database = new Database(this);
 
     	ArrayList<Message> pendingMessages = database.getPendingMessages(null);		//Get all pending messages

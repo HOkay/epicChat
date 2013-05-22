@@ -482,6 +482,7 @@ public class ViewConversationFragment extends Fragment{
 				String request = serverAddress+"sendMessage.php";
 				String gcmId = preferences.getString("gcmId", null);
 				String parameters = "messageId="+messageId+"&sentTimestamp="+timestamp+"&messageType="+messageType+"&fromUser="+fromUser+"&toUsers="+toUsers+"&messageText="+messageTextEncoded+"&senderDeviceId="+gcmId;
+				Log.d(TAG, parameters);
 				String response = HTTP.doHttpPost(request, parameters, 5);
 				if(response!=null){
 					try {
