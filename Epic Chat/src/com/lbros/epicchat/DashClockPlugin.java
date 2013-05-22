@@ -10,7 +10,7 @@ import android.content.Intent;
 import android.util.Log;
 
 public class DashClockPlugin extends DashClockExtension {
-    private final String TAG = "ExampleExtension";
+    private final String TAG = "DashClockPlugin";
     
     private Database database;
     
