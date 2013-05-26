@@ -27,21 +27,25 @@ public class Game implements Serializable{
 	private Integer rating;
 	private Integer releaseDate;
 	private String imagePath;
+	private Boolean ownedByUser;
 	
-	public Game(String newId, Integer newGenre, String newShortName, String newLongName, String newDescription, Integer newRating, Integer newReleaseDate, String newImagePath){
-		id = newId;
-		genre = newGenre;
-		shortName = newShortName;
-		longName = newLongName;
-		description = newDescription;
-		rating = newRating;
-		releaseDate = newReleaseDate;
-		if(newImagePath==null){
-			imagePath = defaultImagePath;
+	//HI THERE!!
+	
+	public Game(String id, Integer genre, String shortName, String longName, String description, Integer rating, Integer releaseDate, String imagePath, Boolean ownedByUser){
+		this.id = id;
+		this.genre = genre;
+		this.shortName = shortName;
+		this.longName = longName;
+		this.description = description;
+		this.rating = rating;
+		this.releaseDate = releaseDate;
+		if(imagePath==null){
+			this.imagePath = defaultImagePath;
 		}
 		else{
-			imagePath = newImagePath;
+			this.imagePath = imagePath;
 		}
+		this.ownedByUser= ownedByUser; 
 	}
 
 	/**
@@ -100,6 +104,13 @@ public class Game implements Serializable{
 		return imagePath;
 	}
 	
+	/**
+	 * @return the ownedByUser
+	 */
+	public Boolean getOwnedByUser() {
+		return ownedByUser;
+	}
+
 	/**
 	 * Returns a Bitmap of the game's image ready for use with ImageView objects, or null if a bitmap could not be produced for some reason
 	 * This method uses bitmap caching to improve performance. The cache is a static global LruCache located in the MainActivity, so that all classes may share it

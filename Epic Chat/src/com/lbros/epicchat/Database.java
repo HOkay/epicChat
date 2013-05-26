@@ -26,7 +26,7 @@ public class Database extends SQLiteOpenHelper {
 	private Context context;
 	 
     //Database Version
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
  
     //Database Name
     private static final String DATABASE_NAME = "epicChatDatabase";
@@ -69,6 +69,7 @@ public class Database extends SQLiteOpenHelper {
     private final String KEY_LONG_NAME = "longName";
     private final String KEY_DESCRIPTION = "description";
     private final String KEY_RATING = "rating";
+    private final String KEY_OWNED_BY_USER = "ownedByUser";
     
     //Creation statements for each of the tables
     private String createTableMessages = "CREATE TABLE IF NOT EXISTS "+TABLE_MESSAGES+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_TIMESTAMP+" INTEGER,"+KEY_USER_LIST+" TEXT,"+KEY_FROM_USER+" TEXT, "+KEY_CONTENTS+" TEXT, "+KEY_MESSAGE_TYPE+" INTEGER , "+KEY_STATUS+" INTEGER)";
@@ -76,7 +77,7 @@ public class Database extends SQLiteOpenHelper {
     private String createTableContacts = "CREATE TABLE IF NOT EXISTS "+TABLE_CONTACTS+" ("+KEY_ID+" TEXT PRIMARY KEY,"+KEY_FIRST_NAME+" TEXT,"+KEY_LAST_NAME+" TEXT,"+KEY_PHONE_NUMBER+" TEXT, "+KEY_IMAGE_PATH+" TEXT)";
     private String createTableConversations = "CREATE TABLE IF NOT EXISTS "+TABLE_CONVERSATIONS+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_IMAGE_PATH+" TEXT)";
     private String createTableResources = "CREATE TABLE IF NOT EXISTS "+TABLE_RESOURCES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_TYPE+" INTEGER, "+KEY_TIMESTAMP+" INTEGER, "+KEY_CONVERSATION_ID+" TEXT, "+KEY_PATH+" TEXT, "+KEY_FROM_USER+" TEXT, "+KEY_TEXT+" TEXT)";
-    private String createTableGames = "CREATE TABLE IF NOT EXISTS "+TABLE_GAMES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_GENRE+" INTEGER, "+KEY_SHORT_NAME+" TEXT, "+KEY_LONG_NAME+" TEXT, "+KEY_DESCRIPTION+" TEXT, "+KEY_RATING+" INTEGER, "+KEY_RELEASE_DATE+" INTEGER, "+KEY_IMAGE_PATH+" TEXT)";
+    private String createTableGames = "CREATE TABLE IF NOT EXISTS "+TABLE_GAMES+" ("+KEY_ID+" TEXT PRIMARY KEY, "+KEY_GENRE+" INTEGER, "+KEY_SHORT_NAME+" TEXT, "+KEY_LONG_NAME+" TEXT, "+KEY_DESCRIPTION+" TEXT, "+KEY_RATING+" INTEGER, "+KEY_RELEASE_DATE+" INTEGER, "+KEY_IMAGE_PATH+" TEXT, "+KEY_OWNED_BY_USER+" INTEGER)";
 
     /**
      * Constructor for the Database. Upgrading between database versions is handled by the system
@@ -139,8 +140,11 @@ public class Database extends SQLiteOpenHelper {
     			break;
     		case 13:			//Version 13 doesn't exist (I screwed up the versions somehow)
     			break;
-    		case 14:			//Versaion 14 adds the games table
+    		case 14:			//Version 14 adds the games table
     			updateOperation = createTableGames;
+    			break;
+    		case 15:			//Version 15 adds the owned by user column
+    			updateOperation = "ALTER TABLE "+TABLE_GAMES+" ADD COLUMN "+KEY_OWNED_BY_USER+" INTEGER";
     			break;
     		default:
     			updateOperation = null;
@@ -795,7 +799,8 @@ public class Database extends SQLiteOpenHelper {
  
         Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, KEY_ID + "=?", new String[] { gameId },  null, null, null, null);
         if (cursor.moveToFirst()){		//True if we got a result from the database
-            game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+        	boolean ownedByUser = cursor.getInt(8)==1;
+            game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7), ownedByUser);
         }
         database.close(); 										//Close the database connection
     	return game;
@@ -826,8 +831,9 @@ public class Database extends SQLiteOpenHelper {
     	//Simply get all messages in the table
         Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, null, null,  null, null, null, limitText);
         if (cursor.moveToFirst()){		//True if there is at least one result to process
-        	do {						//Loop through        		
-	            Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+        	do {						//Loop through       
+        		boolean ownedByUser = cursor.getInt(8)==1;
+	            Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7), ownedByUser);
 	            gamesList.add(game);
         		
             } while (cursor.moveToNext());
@@ -865,7 +871,8 @@ public class Database extends SQLiteOpenHelper {
    	 	Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, KEY_GENRE + "=?", new String[] { genre+"" },  null, null, KEY_RELEASE_DATE+" ASC", limitText);
         if (cursor.moveToFirst()){		//True if there is at least one result to process
         	do {						//Loop through
-        		Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7));
+        		boolean ownedByUser = cursor.getInt(8)==1;
+	            Game game = new Game(cursor.getString(0), cursor.getInt(1), cursor.getString(2), cursor.getString(3), cursor.getString(4), cursor.getInt(5), cursor.getInt(6), cursor.getString(7), ownedByUser);
         		gamesList.add(game);
             } while (cursor.moveToNext());
         }
