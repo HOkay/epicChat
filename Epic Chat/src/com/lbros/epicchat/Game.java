@@ -132,7 +132,6 @@ public class Game implements Serializable{
 		}
 		if(imageBitmap==null){		//True if the bitmap was not in the cache. So we must load from disk instead
 			//Open the file
-			long startTime = System.currentTimeMillis();
 			FileInputStream imageInputStream;
 			try {
 				imageInputStream = new FileInputStream(imagePath);
@@ -144,9 +143,6 @@ public class Game implements Serializable{
 			catch (FileNotFoundException e) {
 				Log.e(TAG, "Error opening image input stream: "+e.toString());
 			}
-			long endTime = System.currentTimeMillis();
-			int kB = imageBitmap.getByteCount() / 1024;
-			Log.d(TAG, "Image loaded from disk, time = "+(endTime - startTime)+"ms, size: "+kB);
 			MainActivity.bitmapCache.put(imagePathFull, imageBitmap);
 		}
 		if(cornerRadius!=null){		//If the calling class specified a corner radius, round the bitmap

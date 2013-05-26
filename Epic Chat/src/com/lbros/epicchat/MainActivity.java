@@ -77,12 +77,14 @@ public class MainActivity extends FragmentActivity {
 	private final int TAB_CONTACTS = 1;
 	private final int TAB_GAMES = 2;
 
-	//This is a global cache for the bitmaps we will load. All activities may share this cache to increase the overal cache hit rate
+	//This is a global cache for the bitmaps we will load. All activities may share this cache to increase the overall cache hit rate
 	public static LruCache<String, Bitmap> bitmapCache;
 	public static final int cacheSize = 4096;		//Size of the cache in KB
 
 	private ActionBar actionBar;
 	private boolean userIdSet;
+	
+	Database database = new Database(this);
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,13 @@ public class MainActivity extends FragmentActivity {
 		loadBitmapCache();
 
 		preferences = PreferenceManager.getDefaultSharedPreferences(this);	//Load the preferences
+		
+		Game sups = new Game("sups", Game.GENRE_RTS, "Supreme", "Supreme Commander - Forged Alliance", "", 100, 1, DIRECTORY_GAME_IMAGES+"sups.jpg", true);
+		database.addGame(sups);
 
+		Game bf3 = new Game("bf3", Game.GENRE_FPS, "BF3", "Battlefield 3", "", 98, 1, null, true);
+		database.addGame(bf3);
+		
 		//This is for getting the WiFi MAC from the device, which we use as a UUID for the device
         WifiManager wifiManager = (WifiManager) getSystemService(Context.WIFI_SERVICE);
         String UUID = wifiManager.getConnectionInfo().getMacAddress();

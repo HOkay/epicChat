@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.lbros.epicchat"
     android:versionCode="1"
-    android:versionName="0.49r" >
+    android:versionName="0.49s" >
 
     <uses-sdk
         android:minSdkVersion="16"
@@ -134,7 +134,7 @@
         </activity>
 
         <service
-            android:name=".DashClockPlugin"
+            android:name="com.lbros.epicchat.DashClockPlugin"
             android:icon="@drawable/note_icon"
             android:label="Epic Chat"
             android:permission="com.google.android.apps.dashclock.permission.READ_EXTENSION_DATA" >
@@ -151,9 +151,14 @@
             <!--
                  <meta-data
                 android:name="settingsActivity"
-                android:value=".ExampleSettingsActivity" />
+                android:value=".ExampleSettingsActivity" />
             -->
         </service>
+
+        <activity
+            android:name="com.lbros.epicchat.CreateGameInviteActivity"
+            android:label="@string/title_activity_create_game_invite" >
+        </activity>
     </application>
 
 </manifest>

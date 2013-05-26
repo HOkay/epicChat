@@ -762,6 +762,7 @@ public class Database extends SQLiteOpenHelper {
 	        row.put(KEY_RATING, game.getRating()); 				//Rating
 	        row.put(KEY_RELEASE_DATE, game.getReleaseDate()); 	//Release date
 	        row.put(KEY_IMAGE_PATH, game.getImagePath()); 		//Image path (optional)
+	        row.put(KEY_OWNED_BY_USER, game.getOwnedByUser()); 	//Owned by user
 	  
 	        //Insert the row
 	        if(database.insert(TABLE_GAMES, null, row)!=-1){
@@ -794,7 +795,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public Game getGame(String gameId){
     	Game game = null;    	
-    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH, KEY_OWNED_BY_USER};
     	SQLiteDatabase database = this.getReadableDatabase();	//Connect to the database
  
         Cursor cursor = database.query(TABLE_GAMES, columnsToRetrieve, KEY_ID + "=?", new String[] { gameId },  null, null, null, null);
@@ -812,7 +813,7 @@ public class Database extends SQLiteOpenHelper {
      */
     public ArrayList<Game> getAllGames(Integer startFrom, Integer limit){
     	ArrayList<Game> gamesList = new ArrayList<Game>();
-    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH, KEY_OWNED_BY_USER};
     	
     	//If a start point or limit was provided, set it in a string, ready for passing to the query
     	
@@ -839,7 +840,7 @@ public class Database extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         database.close(); 										//Close the database connection
-        //Return the list of games, or null if none were found    	
+        //Return the list of games, or an empty list if none were found    	
     	return gamesList;
     }
     
@@ -855,7 +856,7 @@ public class Database extends SQLiteOpenHelper {
     	
     	ArrayList<Game> gamesList = new ArrayList<Game>();
     	
-    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH};
+    	String[] columnsToRetrieve = {KEY_ID, KEY_GENRE, KEY_SHORT_NAME, KEY_LONG_NAME, KEY_IMAGE_PATH, KEY_RATING, KEY_RELEASE_DATE, KEY_IMAGE_PATH, KEY_OWNED_BY_USER};
     	
     	//If a start point or limit was provided, set it in a string, ready for passing to the query
     	
