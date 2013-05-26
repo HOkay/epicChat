@@ -111,7 +111,7 @@ public class MainActivity extends FragmentActivity {
 		fragments = new Vector<Fragment>();
 		addFragmentAsTab(TAB_CONVERSATIONS);
 		addFragmentAsTab(TAB_CONTACTS);
-		//addFragmentAsTab(TAB_GAMES);
+		addFragmentAsTab(TAB_GAMES);
 		
 		sectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager(), fragments);
 
