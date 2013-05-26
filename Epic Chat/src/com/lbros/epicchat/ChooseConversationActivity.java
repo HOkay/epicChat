@@ -137,6 +137,7 @@ public class ChooseConversationActivity extends Activity {
 	            	Conversation chosenConversation = new Conversation(conversationId, null);
 	            	Intent result = new Intent();
 	            	result.putExtra(EXTRA_CONVERSATION, chosenConversation);			//Return this conversation object to the calling activity
+	            	result.putExtra(EXTRA_CONTACT_LIST, contactsSelectedList);			//Also return the list of Contacts selected
 	            	setResult(RESULT_OK, result);
 	            }
 	            finish();
