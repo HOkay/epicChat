@@ -29,7 +29,7 @@ public class Game implements Serializable{
 	private String imagePath;
 	private Boolean ownedByUser;
 	
-	//HI THERE!!
+	//COMMENT ALTERED.
 	
 	public Game(String id, Integer genre, String shortName, String longName, String description, Integer rating, Integer releaseDate, String imagePath, Boolean ownedByUser){
 		this.id = id;
